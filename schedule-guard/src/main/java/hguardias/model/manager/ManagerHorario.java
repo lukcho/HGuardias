@@ -23,6 +23,7 @@ public class ManagerHorario {
 	private static HgGuardia hg_gua;
 	private static HgLugare hg_lug;
 	private static HgTurno hg_turno;
+	private static HgHorarioCab hg_hcab;
 
 	private Timestamp fecha_creacion;
 
@@ -104,6 +105,17 @@ public class ManagerHorario {
 						+ fechaf + "'",
 				" o.hdetFechaInicio desc , o.hdetHoraInicio desc");
 	}
+	
+	/**
+	 * buscar hcab por ID
+	 * 
+	 * @param turno_id
+	 * @throws Exception
+	 */
+	public HgHorarioCab horarioCabByID(Integer turno_id) throws Exception {
+		return (HgHorarioCab) mDAO.findById(HgHorarioCab.class, turno_id);
+	}
+	
 	
 	/**
 	 * Agrega horariosdet y horariocab
@@ -243,5 +255,22 @@ public class ManagerHorario {
 			e.printStackTrace();
 		}
 		return hg_turno;
+	}
+	
+	/**
+	 * metodo para asignar el lugar
+	 * 
+	 * @param u
+	 *            lugar a analizar
+	 * @return true o false
+	 */
+	public HgHorarioCab asignarHorarioCab(Integer horcab_id) {
+		try {
+			hg_hcab = this.horarioCabByID(horcab_id);
+		} catch (Exception e) {
+			// TODO Auto-generated prodch block
+			e.printStackTrace();
+		}  
+		return hg_hcab;
 	}
 }

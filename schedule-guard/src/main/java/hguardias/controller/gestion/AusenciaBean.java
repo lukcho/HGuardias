@@ -312,7 +312,7 @@ public class AusenciaBean implements Serializable {
 	 * 
 	 */
 	public String asignarLugarDestino() {
-		managergest.asignarguardia(gua_id);
+		managergest.asignarGuardia(gua_id);
 		return "";
 	}
 

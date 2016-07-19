@@ -16,7 +16,6 @@ public class ManagerGestion {
 	private ManagerDAO mDAO;
 	
 	private static HgGuardia hg_gua;
-
 	String h = "";
 
 	public ManagerGestion() {
@@ -441,7 +440,7 @@ public class ManagerGestion {
 		 *            guardia a analizar
 		 * @return true o false
 		 */
-		public HgGuardia asignarguardia(String gua_id) {
+		public HgGuardia asignarGuardia(String gua_id) {
 			try {
 				hg_gua = this.guardiaByID(gua_id);
 			} catch (Exception e) {
