@@ -1,0 +1,331 @@
+package hguardias.model.dao.entities;
+
+import java.sql.Timestamp;
+import java.util.Date;
+
+public class Datos {
+	
+	private String perDNI;
+	private String perTipoDNI;
+	private String perNombres;
+	private String perApellidos;
+	private String perTelefono;
+	private String perCelular;
+	private String perCorreo;
+	private String perPais;
+	private Date perFechaNacimiento;
+	private String perGenero;
+	private String perDireccion;
+	private String perGerencia;
+	private String perDiscapacidadTipo;
+	private String perDiscapacidadGrado;
+	private String perDiscapacidadCarnet;
+	private String cargo;
+	private String jefeInmediato;
+	
+	private Timestamp sol_fecha;
+	private String sol_lugar_origen;
+	private String sol_lugar_destino;
+	private String sol_novedades;
+	
+	
+	public Datos() {}
+	
+	public Datos(String perDNI){
+		this.perDNI = perDNI;
+	}
+	
+	public Datos(String perDNI, String perTipoDNI, String perNombres,
+			String perApellidos, String perTelefono, String perCelular,
+			String perCorreo, String perPais, Date perFechaNacimiento,
+			String cargo, String jefeInmediato, String pergerencia,
+			String perDireccion, String perGenero,
+			String perDiscapacidadTipo, String perDiscapacidadGrado,
+			String perDiscapacidadCarnet, Timestamp sol_fecha, String sol_lugar_origen, String sol_lugar_destino, String sol_novedades) {
+		this.perDNI = perDNI;
+		this.perTipoDNI = perTipoDNI;
+		this.perNombres = perNombres;
+		this.perApellidos = perApellidos;
+		this.perTelefono = perTelefono;
+		this.perCelular = perCelular;
+		this.perCorreo = perCorreo;
+		this.perGerencia = pergerencia;
+		this.perPais = perPais;
+		this.perFechaNacimiento = perFechaNacimiento;
+		this.perDireccion = perDireccion;
+		this.perGenero = perGenero;
+		this.perDiscapacidadTipo = perDiscapacidadTipo;
+		this.perDiscapacidadGrado = perDiscapacidadGrado;
+		this.perDiscapacidadCarnet = perDiscapacidadCarnet;
+		this.cargo = cargo;
+		this.jefeInmediato = jefeInmediato;
+		this.sol_fecha = sol_fecha;
+		this.sol_lugar_origen = sol_lugar_origen;
+		this.sol_lugar_destino = sol_lugar_destino;
+		this.sol_novedades = sol_novedades;
+	}
+	
+	public String getPerGerencia() {
+		return perGerencia;
+	}
+
+	public void setPerGerencia(String perGerencia) {
+		this.perGerencia = perGerencia;
+	}
+
+	/**
+	 * @return the perDNI
+	 */
+	public String getPerDNI() {
+		return perDNI;
+	}
+
+	/**
+	 * @param perDNI the perDNI to set
+	 */
+	public void setPerDNI(String perDNI) {
+		this.perDNI = perDNI;
+	}
+
+	/**
+	 * @return the perTipoDNI
+	 */
+	public String getPerTipoDNI() {
+		return perTipoDNI;
+	}
+
+	/**
+	 * @param perTipoDNI the perTipoDNI to set
+	 */
+	public void setPerTipoDNI(String perTipoDNI) {
+		this.perTipoDNI = perTipoDNI;
+	}
+
+	/**
+	 * @return the perNombres
+	 */
+	public String getPerNombres() {
+		return perNombres;
+	}
+
+	/**
+	 * @param perNombres the perNombres to set
+	 */
+	public void setPerNombres(String perNombres) {
+		this.perNombres = perNombres;
+	}
+
+	/**
+	 * @return the perApellidos
+	 */
+	public String getPerApellidos() {
+		return perApellidos;
+	}
+
+	/**
+	 * @param perApellidos the perApellidos to set
+	 */
+	public void setPerApellidos(String perApellidos) {
+		this.perApellidos = perApellidos;
+	}
+
+	/**
+	 * @return the perTelefono
+	 */
+	public String getPerTelefono() {
+		return perTelefono;
+	}
+
+	/**
+	 * @param perTelefono the perTelefono to set
+	 */
+	public void setPerTelefono(String perTelefono) {
+		this.perTelefono = perTelefono;
+	}
+
+	/**
+	 * @return the perCelular
+	 */
+	public String getPerCelular() {
+		return perCelular;
+	}
+
+	/**
+	 * @param perCelular the perCelular to set
+	 */
+	public void setPerCelular(String perCelular) {
+		this.perCelular = perCelular;
+	}
+
+	/**
+	 * @return the perCorreo
+	 */
+	public String getPerCorreo() {
+		return perCorreo;
+	}
+
+	/**
+	 * @param perCorreo the perCorreo to set
+	 */
+	public void setPerCorreo(String perCorreo) {
+		this.perCorreo = perCorreo;
+	}
+
+	/**
+	 * @return the perPais
+	 */
+	public String getPerPais() {
+		return perPais;
+	}
+
+	/**
+	 * @param perPais the perPais to set
+	 */
+	public void setPerPais(String perPais) {
+		this.perPais = perPais;
+	}
+
+	/**
+	 * @return the perFechaNacimiento
+	 */
+	public Date getPerFechaNacimiento() {
+		return perFechaNacimiento;
+	}
+
+	/**
+	 * @param perFechaNacimiento the perFechaNacimiento to set
+	 */
+	public void setPerFechaNacimiento(Date perFechaNacimiento) {
+		this.perFechaNacimiento = perFechaNacimiento;
+	}
+	
+	/**
+	 * @return the perDireccion
+	 */
+	public String getPerDireccion() {
+		return perDireccion;
+	}
+
+	/**
+	 * @param perDireccion the perDireccion to set
+	 */
+	public void setPerDireccion(String perDireccion) {
+		this.perDireccion = perDireccion;
+	}
+	
+	/**
+	 * @return the perGenero
+	 */
+	public String getPerGenero() {
+		return perGenero;
+	}
+
+	/**
+	 * @param perGenero the perGenero to set
+	 */
+	public void setPerGenero(String perGenero) {
+		this.perGenero = perGenero;
+	}
+
+	/**
+	 * @return the perDiscapacidadTipo
+	 */
+	public String getPerDiscapacidadTipo() {
+		return perDiscapacidadTipo;
+	}
+
+	/**
+	 * @param perDiscapacidadTipo the perDiscapacidadTipo to set
+	 */
+	public void setPerDiscapacidadTipo(String perDiscapacidadTipo) {
+		this.perDiscapacidadTipo = perDiscapacidadTipo;
+	}
+
+	/**
+	 * @return the perDiscapacidadGrado
+	 */
+	public String getPerDiscapacidadGrado() {
+		return perDiscapacidadGrado;
+	}
+
+	/**
+	 * @param perDiscapacidadGrado the perDiscapacidadGrado to set
+	 */
+	public void setPerDiscapacidadGrado(String perDiscapacidadGrado) {
+		this.perDiscapacidadGrado = perDiscapacidadGrado;
+	}
+
+	/**
+	 * @return the perDiscapacidadCarnet
+	 */
+	public String getPerDiscapacidadCarnet() {
+		return perDiscapacidadCarnet;
+	}
+
+	/**
+	 * @param perDiscapacidadCarnet the perDiscapacidadCarnet to set
+	 */
+	public void setPerDiscapacidadCarnet(String perDiscapacidadCarnet) {
+		this.perDiscapacidadCarnet = perDiscapacidadCarnet;
+	}
+	
+	/**
+	 * @return the cargo
+	 */
+	public String getCargo() {
+		return cargo;
+	}
+
+	/**
+	 * @param cargo the cargo to set
+	 */
+	public void setCargo(String cargo) {
+		this.cargo = cargo;
+	}
+
+	/**
+	 * @return the jefeInmediato
+	 */
+	public String getJefeInmediato() {
+		return jefeInmediato;
+	}
+
+	/**
+	 * @param jefeInmediato the jefeInmediato to set
+	 */
+	public void setJefeInmediato(String jefeInmediato) {
+		this.jefeInmediato = jefeInmediato;
+	}
+
+	public Timestamp getSol_fecha() {
+		return sol_fecha;
+	}
+
+	public void setSol_fecha(Timestamp sol_fecha) {
+		this.sol_fecha = sol_fecha;
+	}
+
+	public String getSol_lugar_origen() {
+		return sol_lugar_origen;
+	}
+
+	public void setSol_lugar_origen(String sol_lugar_origen) {
+		this.sol_lugar_origen = sol_lugar_origen;
+	}
+
+	public String getSol_lugar_destino() {
+		return sol_lugar_destino;
+	}
+
+	public void setSol_lugar_destino(String sol_lugar_destino) {
+		this.sol_lugar_destino = sol_lugar_destino;
+	}
+
+	public String getSol_novedades() {
+		return sol_novedades;
+	}
+
+	public void setSol_novedades(String sol_novedades) {
+		this.sol_novedades = sol_novedades;
+	}
+}
