@@ -9,7 +9,7 @@
 
 <ui:composition template="template.xhtml">
 	<ui:define name="titulo">
-            Horario Cabecera
+            Horarios
         </ui:define>
 	<ui:define name="contenido">
 		<h:form>
@@ -19,7 +19,7 @@
 		<br />
 		<h:form id="frm">
 			<p:growl id="messages" showDetail="false" />
-			<b:panel title="Registro de Horarios Cabecera" look="primary">
+			<b:panel title="Registro de Horarios" look="primary">
 				<b:row>
 					<b:column span="2">
 						<h:outputLabel value="Solicitante:  " />
@@ -55,7 +55,7 @@
 						<h:outputLabel value="Fecha Fin*:" for="fechaf" />
 					</b:column>
 					<b:column span="4">
-						<p:calendar required="true" mindate="#{ausenciaBean.date}"
+						<p:calendar required="true" mindate="#{horarioCDBean.date}"
 							requiredMessage="Requerido Fecha Fin" id="fechaf"
 							value="#{horarioCDBean.horcab_fechafin}" pattern="yyyy/MM/dd" mask="true">
 						</p:calendar>

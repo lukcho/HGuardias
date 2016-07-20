@@ -18,7 +18,7 @@
 			<b:row>
 				<b:column span="1">
 					<b:commandButton value="Nuevo" iconAwesome="file-o"
-						action="#{ausenciaBean.nuevoAusencia()}" />
+						action="#{horarioCDBean.nuevoHorarioCab()}" />
 				</b:column>
 				<b:column span="1">
 					<b:commandButton value="Volver" iconAwesome="angle-left"
@@ -29,32 +29,37 @@
 		<br />
 		<h:form id="frm">
 			<p:growl id="messages" showDetail="true" />
-			<b:panel title="Listado de Ausencias" look="primary">
-				<p:dataTable id="tbb" value="#{ausenciaBean.listaAusencias}"
-					reflow="true" var="aus" rows="8" emptyMessage="Sin Datos"
+			<b:panel title="Listado de Horarios" look="primary">
+				<p:dataTable id="tbb" value="#{horarioCDBean.listaHorarioCab}"
+					reflow="true" var="horc" rows="8" emptyMessage="Sin Datos"
 					paginator="true"
 					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
 					<p:column headerText="OPCIONES" width="50">
 						<p:commandButton id="btnE" icon="ui-icon-pencil"
-							action="#{ausenciaBean.cargarAusencia(aus)}">
+							action="#{horarioCDBean.cargarHorarioCab(horc)}">
 							<p:tooltip id="toolTipTrack1" for="btnE"
-								value="Bot&oacute;n para modificar la ausencia" trackMouse="true" />
+								value="Bot&oacute;n para modificar el Horario" trackMouse="true" />
 						</p:commandButton>
 					</p:column>
-					<p:column filterBy="#{aus.ausId}" filterMatchMode="contains"
+					<p:column filterBy="#{horc.hcabId}" filterMatchMode="contains"
 						headerText="ID" width="70">
-						<h:outputText value="#{aus.ausId}"></h:outputText>
+						<h:outputText value="#{horc.hcabId}"></h:outputText>
 					</p:column>
-					<p:column filterBy="#{aus.hgGuardia.guaApellido}" filterMatchMode="contains"
-						headerText="GUARDIA" width="70">
-						<h:outputText value="#{aus.hgGuardia.guaNombre} #{aus.hgGuardia.guaApellido}"></h:outputText>
+					<p:column filterBy="#{horc.hcabUsuario}" filterMatchMode="contains"
+						headerText="USUARIO" width="70">
+						<h:outputText value="#{horc.hcabUsuario}"></h:outputText>
 					</p:column>
-					<p:column filterBy="#{aus.ausDescripcion}" filterMatchMode="contains"
-						headerText="DESCRIPCIÓN" width="70">
-						<h:outputText value="#{aus.ausDescripcion}"></h:outputText>
+					<p:column filterBy="#{horc.hcabNombre}" filterMatchMode="contains"
+						headerText="NOMBRE" width="70">
+						<h:outputText value="#{horc.hcabNombre}"></h:outputText>
+					</p:column>
+					<p:column headerText="FECHA CREACIÓN" width="60">
+						<h:outputText value="#{horc.hcabFechaRegistro}">
+							<f:convertDateTime pattern="yyyy/MM/dd HH:mm" timeZone="GMT-5"  />
+						</h:outputText>
 					</p:column>
 					<p:column headerText="FECHA INICIO/FIN" width="100">
-						<h:outputText value="#{aus.ausFechaInicio} - #{aus.ausFechaFin}">
+						<h:outputText value="#{horc.hcabFechaInicio} - #{horc.hcabFechaFin}">
 						</h:outputText>
 					</p:column>
 				</p:dataTable>
