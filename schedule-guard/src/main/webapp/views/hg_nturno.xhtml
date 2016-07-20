@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="titulo">
+            Turno
+        </ui:define>
+	<ui:define name="contenido">
+		<h:form>
+			<p:remoteCommand name="onload"
+				actionListener="#{sesionBean.validaIndex()}" autoRun="true" />
+		</h:form>
+		<br />
+		<h:form id="frm">
+			<p:growl id="messages" showDetail="false" />
+			<b:panel title="Registro de Turno" look="primary">
+				<b:row>
+					<b:column span="2">
+						<h:outputLabel value="Descripción:* " for="desc" />
+					</b:column>
+					<b:column span="4">
+						<p:inputTextarea id="desc" value="#{turnoBean.turno_descripcion}"
+							styleClass="form-control" style="width:100%; margin-bottom:15px;"
+							fieldSize="2" rows="2" disabled="#{turnoBean.edicion}"
+							required="true" requiredMessage="Campo descripción requerido"
+							maxlength="255">
+						</p:inputTextarea>
+					</b:column>
+				</b:row>
+				<b:row>
+					<b:column span="2">
+						<h:outputLabel value="Hora Inicio:* " for="trackseleccionar4" />
+					</b:column>
+					<b:column span="4">
+						<h:panelGroup>
+							<h:selectOneMenu id="trackseleccionar4" required="true"
+								disabled="#{turnoBean.edicion}" styleClass="form-control"
+								requiredMessage="Requerido Hora Inicio"
+								value="#{turnoBean.turno_hora_inicio}">
+								<f:selectItem itemLabel="Selecci&oacute;n Hora Inicio"
+									itemValue="" />
+								<f:selectItems value="#{turnoBean.listHoras}" />
+							</h:selectOneMenu>
+						</h:panelGroup>
+					</b:column>
+					<b:column span="2">
+						<h:outputLabel value="Hora Fin:* " for="trackseleccionar5" />
+					</b:column>
+					<b:column span="4">
+						<h:panelGroup>
+							<h:selectOneMenu id="trackseleccionar5" required="true"
+								disabled="#{turnoBean.edicion}" styleClass="form-control"
+								requiredMessage="Requerido Hora Fin"
+								value="#{turnoBean.turno_hora_fin}">
+								<f:selectItem itemLabel="Selecci&oacute;n Hora Fin"
+									itemValue="" />
+								<f:selectItems value="#{turnoBean.listHoras}" />
+							</h:selectOneMenu>
+						</h:panelGroup>
+					</b:column>
+				</b:row>
+				<br />
+				<b:row>
+					<b:column span="2">
+						<h:outputLabel value="Estado*" for="est"
+							rendered="#{turnoBean.edicion}" />
+					</b:column>
+					<b:column span="4">
+						<b:selectOneMenu id="est" value="#{turnoBean.turno_estado}"
+							rendered="#{turnoBean.edicion}">
+							<f:selectItems value="#{turnoBean.listEstados}" />
+						</b:selectOneMenu>
+					</b:column>
+				</b:row>
+				<b:row>
+					<b:column span="5">
+						<p:commandButton value="Guardar" styleClass="btn btn-info"
+							style="padding:7px;" actionListener="#{turnoBean.abrirDialog()}"
+							update="frm messages">
+						</p:commandButton>&nbsp;&nbsp;&nbsp;
+						<b:commandButton value="Volver"
+							action="#{turnoBean.volverTurno()}" update="frm" look="info"
+							process="@this">
+						</b:commandButton>&nbsp;&nbsp;&nbsp;
+					</b:column>
+				</b:row>
+				<br />
+				<br />
+			</b:panel>
+		</h:form>
+		<p:confirmDialog header="Confirmación"
+			message="Está seguro de guardar la información?" closable="false"
+			showEffect="fade" hideEffect="explode" widgetVar="gu">
+			<h:form>
+				<p:commandButton value="Si" styleClass="ui-confirmdialog-yes"
+					icon="ui-icon-check" action="#{turnoBean.crearTurno()}"
+					oncomplete="PF('gu').hide();" update="frm" />
+				<p:commandButton value="No" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					onclick="PF('gu').hide();" />
+			</h:form>
+		</p:confirmDialog>
+	</ui:define>
+</ui:composition>
+</html>

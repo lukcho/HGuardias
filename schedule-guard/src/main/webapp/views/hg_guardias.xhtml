@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="titulo">
+            Guardias
+        </ui:define>
+	<ui:define name="contenido">
+	<h:form>
+			<p:remoteCommand name="onload"
+				actionListener="#{sesionBean.validaIndex()}" autoRun="true" />
+		</h:form>
+		<h:form>
+			<center>
+				<h1>Gestión de Guardias</h1>
+			</center>
+			<b:row>
+				<b:column span="1">
+					<b:commandButton value="Nuevo" iconAwesome="file-o"
+						action="#{guardiaBean.nuevoGuardia()}" />
+				</b:column>
+				<b:column span="1">
+					<b:commandButton value="Volver" iconAwesome="angle-left"
+						action="index?faces-redirect=true" />
+				</b:column>
+			</b:row>
+		</h:form>
+		<br />
+		<h:form id="frm">
+			<p:growl id="messages" showDetail="false" />
+			<b:panel title="Listado de Guardias" look="primary">
+				<p:dataTable id="tbb" value="#{guardiaBean.listaguardias}"
+					reflow="true" var="gua" rows="8" emptyMessage="Sin Datos"
+					paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+					<p:column headerText="OPCIONES" width="40">
+						<b:commandButton id="btnE" iconAwesome="fa fa-pencil"
+							action="#{guardiaBean.cargarGuardia(gua)}">
+							<p:tooltip id="toolTipTrack1" for="btnE"
+								value="Bot&oacute;n para modificar el guardia"
+								trackMouse="true" />
+						</b:commandButton>
+							&nbsp;&nbsp;&nbsp;
+							<b:commandButton id="trackcamb" iconAwesome="fa fa-refresh"
+							action="#{guardiaBean.cambiarEstadoGuardiaa(gua)}">
+							<p:tooltip id="toolTipTrack2" for="trackcamb"
+								value="Bot&oacute;n para cambiar el estado del guardia"
+								trackMouse="true" />
+						</b:commandButton>
+					</p:column>
+					<p:column filterBy="#{gua.guaCedula}" filterMatchMode="contains"
+						headerText="CÉDULA" width="80">
+						<h:outputText value="#{gua.guaCedula}"></h:outputText>
+					</p:column>
+					<p:column filterBy="#{gua.guaApellido}" filterMatchMode="contains"
+						headerText="NOMBRE/APELLIDO" width="80">
+						<h:outputText value="#{gua.guaNombre} #{gua.guaApellido}"></h:outputText>
+					</p:column>
+					<p:column headerText="SEXO" filterBy="#{gua.guaSexo}" filterMatchMode="contains" width="50">
+						<h:outputText value="#{gua.guaSexo}"></h:outputText>
+					</p:column>
+					<p:column headerText="CORREO" width="80">
+						<h:outputText value="#{gua.guaCorreo}"></h:outputText>
+					</p:column>
+					<p:column headerText="TELÉFONO" width="60">
+						<h:outputText value="#{gua.guaTelefono}"></h:outputText>
+					</p:column>
+					<p:column headerText="CELULAR" width="60">
+						<h:outputText value="#{gua.guaCelular}"></h:outputText>
+					</p:column>
+					<p:column headerText="ESTADO" filterBy="#{gua.guaEstado}" filterMatchMode="contains" width="60">
+						<h:outputText value="#{gua.guaEstado}"></h:outputText>
+					</p:column>
+				</p:dataTable>
+			</b:panel>
+		</h:form>
+		<p:confirmDialog header="Confirmación"
+			message="Está seguro de cambiar el estado?" closable="false"
+			showEffect="fade" hideEffect="explode" widgetVar="ce">
+			<h:form>
+				<p:commandButton value="Si" styleClass="ui-confirmdialog-yes"
+					icon="ui-icon-check" action="#{guardiaBean.cambiarEstadoGuardia()}"
+					oncomplete="PF('ce').hide();" update=":frm:messages :frm:tbb" />
+				<p:commandButton value="No" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					onclick="PF('ce').hide();" />
+			</h:form>
+		</p:confirmDialog>
+	</ui:define>
+</ui:composition>
+</html>

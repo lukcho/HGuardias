@@ -63,7 +63,7 @@ public class ManagerHorario {
 	@SuppressWarnings("unchecked")
 	public List<HgHorarioDet> findAllHorariosDetOrdenadosaaprorecha() {
 		return mDAO.findWhere(HgHorarioDet.class,
-				" o.hdetEstado not like 'P' ",
+				" o.hdetEstado not like 'A' ",
 				" o.hdetFechaInicio desc, o.hdetHoraInicio desc ");
 	}
 
@@ -74,7 +74,7 @@ public class ManagerHorario {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public List<HgHorarioDet> findAllHorairosDetOrdenadosXGua(String gua_cid) {
+	public List<HgHorarioDet> findAllHorariosDetOrdenadosXGua(String gua_cid) {
 		return mDAO.findWhere(HgHorarioDet.class, " o.HgGuardia.guaCedula = '"
 				+ gua_cid + "' ",
 				" o.hdetFechaInicio desc , o.hdetHoraInicio desc ");
@@ -105,17 +105,6 @@ public class ManagerHorario {
 						+ fechaf + "'",
 				" o.hdetFechaInicio desc , o.hdetHoraInicio desc");
 	}
-	
-	/**
-	 * buscar hcab por ID
-	 * 
-	 * @param turno_id
-	 * @throws Exception
-	 */
-	public HgHorarioCab horarioCabByID(Integer turno_id) throws Exception {
-		return (HgHorarioCab) mDAO.findById(HgHorarioCab.class, turno_id);
-	}
-	
 	
 	/**
 	 * Agrega horariosdet y horariocab
@@ -158,18 +147,6 @@ public class ManagerHorario {
 	}
 
 	/**
-	 * Cargar datos fecha
-	 * 
-	 * @throws Exception
-	 */
-	public void cargafecha() {
-		Calendar calendar = Calendar.getInstance();
-		java.sql.Timestamp ourJavaTimestampObject = new java.sql.Timestamp(
-				calendar.getTime().getTime());
-		fecha_creacion = ourJavaTimestampObject;
-	}
-	
-	/**
 	 * Cambiar estado horariodet
 	 * 
 	 * @param sol_id
@@ -179,9 +156,9 @@ public class ManagerHorario {
 		String h = "";
 		HgHorarioDet hor_det = horarioDetByID(sol_id);
 		if (hor_det.getHdetEstado().equals("A")) {
-			hor_det.setHdetEstado("D");
+			hor_det.setHdetEstado("I");
 			h = "Estado Modificado";
-		} else if (hor_det.getHdetEstado().equals("D")) {
+		} else if (hor_det.getHdetEstado().equals("I")) {
 			hor_det.setHdetEstado("A");
 			h = "Estado Modificado";
 		}
@@ -202,6 +179,85 @@ public class ManagerHorario {
 			resp = true;
 		}
 		return resp;
+	}
+	
+	//Horariocabecera
+	
+	/**
+	 * buscar todas los horarioscab
+	 * 
+	 * @throws Exception
+	 */
+
+	@SuppressWarnings("unchecked")
+	public List<HgHorarioCab> findHorariocab() {
+		return mDAO.findWhere(HgHorarioCab.class, "1=1", null);
+	}
+
+	/**
+	 * listar todas las horarioscab
+	 * 
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<HgHorarioCab> findAllHorariosCab() {
+		return mDAO.findAll(HgHorarioCab.class);
+	}
+
+	/**
+	 * listar todos las horarioscab ordenados por fecha y estado
+	 * 
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<HgHorarioCab> findAllHorariosCabOrdenadosaaprorecha() {
+		return mDAO.findWhere(HgHorarioCab.class," 1=1 ",
+				" o.hcabFechaRegistro desc, o.hcabFechaInicio desc ");
+	}
+
+	/**
+	 * buscar los horarioscab por ID
+	 * 
+	 * @param hdet_id
+	 * @throws Exception
+	 */
+	public HgHorarioCab horarioCabByID(Integer hcab_id) throws Exception {
+		return (HgHorarioCab) mDAO.findById(HgHorarioCab.class, hcab_id);
+	}
+
+	/**
+	 * listar todos los horarioscab con la fecha
+	 * 
+	 * @param fechai
+	 * @param fechaf
+
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<HgHorarioCab> findAllHorarioCabXFecha(Date fechai, Date fechaf) {
+		return mDAO.findWhere(HgHorarioCab.class,
+				"o.hcabFechaInicio between '" + fechai + "' and  '"	+ fechaf + "'",	" o.hcabFechaInicio desc");
+	}	
+	
+	/**
+	 * Agrega horariocab
+	 * 
+	 * @param cab_fechaini
+	 * @param cab_fechafin
+	 * @param hor_cab
+	 * @throws Exception
+	 */
+	public void insertarHorarioCab(Date cab_fechaini, Date cab_fechafin, String det_nombre,String det_usuario) throws Exception {
+		
+		HgHorarioCab hor_cab = new HgHorarioCab();
+		cargafecha();
+		hor_cab.setHcabNombre(det_nombre);
+		hor_cab.setHcabUsuario(det_usuario);
+		hor_cab.setHcabFechaInicio(cab_fechaini);
+		hor_cab.setHcabFechaFin(cab_fechafin);
+		hor_cab.setHcabFechaRegistro(fecha_creacion);
+
+		mDAO.insertar(hor_cab);
 	}
 
 	// asignaciones
@@ -272,5 +328,17 @@ public class ManagerHorario {
 			e.printStackTrace();
 		}  
 		return hg_hcab;
+	}
+	
+	/**
+	 * Cargar datos fecha
+	 * 
+	 * @throws Exception
+	 */
+	public void cargafecha() {
+		Calendar calendar = Calendar.getInstance();
+		java.sql.Timestamp ourJavaTimestampObject = new java.sql.Timestamp(
+				calendar.getTime().getTime());
+		fecha_creacion = ourJavaTimestampObject;
 	}
 }

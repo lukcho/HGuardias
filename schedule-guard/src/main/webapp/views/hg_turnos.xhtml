@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="titulo">
+            Turnos
+        </ui:define>
+	<ui:define name="contenido">
+		<h:form>
+			<center>
+				<h1>Gesti&oacute;n de Turnos</h1>
+			</center>
+			<b:row>
+				<b:column span="1">
+					<b:commandButton value="Nuevo" iconAwesome="file-o"
+						action="#{turnoBean.nuevoTurno()}" />
+				</b:column>
+				<b:column span="1">
+					<b:commandButton value="Volver" iconAwesome="angle-left"
+						action="index?faces-redirect=true" />
+				</b:column>
+			</b:row>
+		</h:form>
+		<br />
+		<h:form id="frm">
+			<p:growl id="messages" showDetail="true" />
+			<b:panel title="Listado de Lugares" look="primary">
+				<p:dataTable id="tbb" value="#{turnoBean.listaTurnos}"
+					reflow="true" var="tur" rows="8" emptyMessage="Sin Datos"
+					paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+					<p:column headerText="OPCIONES" width="50">
+						<p:commandButton id="btnE" icon="ui-icon-pencil"
+							action="#{turnoBean.cargarTurno(tur)}">
+							<p:tooltip id="toolTipTrack1" for="btnE"
+								value="Bot&oacute;n para modificar el lugar" trackMouse="true" />
+						</p:commandButton>
+							&nbsp;&nbsp;&nbsp;
+							<p:commandButton id="trackcamb" icon="ui-icon-refresh"
+							action="#{turnoBean.cambiarEstadoTurnoa(lug)}">
+							<p:tooltip id="toolTipTrack2" for="trackcamb"
+								value="Bot&oacute;n para cambiar el estado del condutor"
+								trackMouse="true" />
+						</p:commandButton>
+					</p:column>
+					<p:column filterBy="#{tur.turId}" filterMatchMode="contains"
+						headerText="ID" width="70">
+						<h:outputText value="#{tur.turId}"></h:outputText>
+					</p:column>
+					<p:column filterBy="#{tur.turDescripcion}" filterMatchMode="contains"
+						headerText="Descripción" width="70">
+						<h:outputText value="#{tur.turDescripcion}"></h:outputText>
+					</p:column>
+					<p:column headerText="HORA INICIO/FIN" width="100">
+						<h:outputText value="#{tur.turHoraInicio} - #{tur.turHoraFin}">
+						</h:outputText>
+					</p:column>
+					<p:column filterBy="#{tur.turEstado}" filterMatchMode="contains"
+						headerText="ESTADO" width="30">
+						<h:outputText value="#{tur.turEstado}"></h:outputText>
+					</p:column>
+				</p:dataTable>
+			</b:panel>
+		</h:form>
+		<p:confirmDialog header="Confirmación"
+			message="Está seguro de cambiar el estado?" closable="false"
+			showEffect="fade" hideEffect="explode" widgetVar="ce">
+			<h:form>
+				<p:commandButton value="Si" styleClass="ui-confirmdialog-yes"
+					icon="ui-icon-check" action="#{turnoBean.cambiarEstadoTurno()}"
+					oncomplete="PF('ce').hide();" update="frm" />
+				<p:commandButton value="No" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					onclick="PF('ce').hide();" />
+			</h:form>
+		</p:confirmDialog>
+	</ui:define>
+</ui:composition>
+</html>

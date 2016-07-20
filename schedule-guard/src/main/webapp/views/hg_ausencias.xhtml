@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="titulo">
+            Ausencias
+        </ui:define>
+	<ui:define name="contenido">
+		<h:form>
+			<center>
+				<h1>Gesti&oacute;n de Ausencias</h1>
+			</center>
+			<b:row>
+				<b:column span="1">
+					<b:commandButton value="Nuevo" iconAwesome="file-o"
+						action="#{ausenciaBean.nuevoAusencia()}" />
+				</b:column>
+				<b:column span="1">
+					<b:commandButton value="Volver" iconAwesome="angle-left"
+						action="index?faces-redirect=true" />
+				</b:column>
+			</b:row>
+		</h:form>
+		<br />
+		<h:form id="frm">
+			<p:growl id="messages" showDetail="true" />
+			<b:panel title="Listado de Ausencias" look="primary">
+				<p:dataTable id="tbb" value="#{ausenciaBean.listaAusencias}"
+					reflow="true" var="aus" rows="8" emptyMessage="Sin Datos"
+					paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+					<p:column headerText="OPCIONES" width="50">
+						<p:commandButton id="btnE" icon="ui-icon-pencil"
+							action="#{ausenciaBean.cargarAusencia(aus)}">
+							<p:tooltip id="toolTipTrack1" for="btnE"
+								value="Bot&oacute;n para modificar la ausencia" trackMouse="true" />
+						</p:commandButton>
+					</p:column>
+					<p:column filterBy="#{aus.ausId}" filterMatchMode="contains"
+						headerText="ID" width="70">
+						<h:outputText value="#{aus.ausId}"></h:outputText>
+					</p:column>
+					<p:column filterBy="#{aus.hgGuardia.guaApellido}" filterMatchMode="contains"
+						headerText="GUARDIA" width="70">
+						<h:outputText value="#{aus.hgGuardia.guaNombre} #{aus.hgGuardia.guaApellido}"></h:outputText>
+					</p:column>
+					<p:column filterBy="#{aus.ausDescripcion}" filterMatchMode="contains"
+						headerText="DESCRIPCIÓN" width="70">
+						<h:outputText value="#{aus.ausDescripcion}"></h:outputText>
+					</p:column>
+					<p:column headerText="FECHA INICIO/FIN" width="100">
+						<h:outputText value="#{aus.ausFechaInicio} - #{aus.ausFechaFin}">
+						</h:outputText>
+					</p:column>
+				</p:dataTable>
+			</b:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

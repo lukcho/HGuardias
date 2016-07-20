@@ -1,0 +1,264 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="titulo">
+           Guardia 
+        </ui:define>
+	<ui:define name="contenido">
+		<h:form>
+			<p:remoteCommand name="onload"
+				actionListener="#{sesionBean.validaIndex()}" autoRun="true" />
+		</h:form>
+		<br />
+		<h:form id="frm">
+			<p:growl id="messages" showDetail="false" />
+			<b:panel title="Registro de Guardia" look="primary">
+				<b:row>
+					<b:column span="2">
+						<h:outputLabel value="Cédula:* " for="cedu" />
+					</b:column>
+					<b:column span="3">
+						<p:inputText id="cedu" value="#{guardiaBean.guardia_id}"
+							required="true" styleClass="form-control"
+							disabled="#{guardiaBean.mostrarguardia_id}"
+							requiredMessage="Campo cédula/pasaporte requerido">
+						</p:inputText>
+					</b:column>
+					<b:column span="2">
+						<h:outputLabel value="Nombre:* " for="nom" />
+					</b:column>
+					<b:column span="3">
+						<p:inputText id="nom" value="#{guardiaBean.guardia_nombre}"
+							required="true" styleClass="form-control"
+							requiredMessage="Campo nombre requerido">
+						</p:inputText>
+					</b:column>
+				</b:row>
+				<br />
+				<b:row>
+					<b:column span="2">
+						<h:outputLabel value="Apellido:* " for="ape" />
+					</b:column>
+					<b:column span="3">
+						<p:inputText id="ape" value="#{guardiaBean.guardia_apellido}"
+							required="true" styleClass="form-control"
+							requiredMessage="Campo apellido requerido">
+						</p:inputText>
+					</b:column>
+					<b:column span="2">
+						<h:outputLabel value="Dirección:* " for="dire" />
+					</b:column>
+					<b:column span="3">
+						<p:inputText id="dire" value="#{guardiaBean.guardia_direccion}"
+							required="true" styleClass="form-control"
+							requiredMessage="Campo dirección requerido">
+						</p:inputText>
+					</b:column>
+				</b:row>
+				<br />
+				<b:row>
+					<b:column span="2">
+						<h:outputLabel value="Fecha Nacimiento:* " for="fechanac" />
+					</b:column>
+					<b:column span="3">
+						<p:calendar required="true" disabled="#{guardiaBean.edicion}"
+							label="fechanac" style="width:100%; margin-bottom:15px;"
+							requiredMessage="Requerido Fecha nacimiento" id="fechai"
+							mode="popup" value="#{guardiaBean.guardia_fechanac}"
+							pattern="yyyy/MM/dd" mask="true">
+						</p:calendar>
+					</b:column>
+					<b:column span="2">
+						<h:outputLabel value="Sexo:* " for="sex" />
+					</b:column>
+					<b:column span="3">
+						<b:selectOneMenu id="sex" value="#{guardiaBean.guardia_sexo}"
+							rendered="#{guardiaBean.edicion}">
+							<f:selectItems value="#{guardiaBean.listEstadosSexo}" />
+						</b:selectOneMenu>
+					</b:column>
+				</b:row>
+				<br />
+				<b:row>
+					<b:column span="2">
+						<h:outputLabel value="Ciudad:* " for="ciu" />
+					</b:column>
+					<b:column span="3">
+						<p:inputText id="ciu" value="#{guardiaBean.guardia_ciudad}"
+							required="true" styleClass="form-control"
+							requiredMessage="Campo ciudad requerido">
+						</p:inputText>
+					</b:column>
+					<b:column span="2">
+						<h:outputLabel value="Correo:* " for="corr" />
+					</b:column>
+					<b:column span="3">
+						<p:inputText id="corr" required="true" styleClass="form-control"
+							requiredMessage="Por favor ingrese su Correo."
+							validatorMessage="Formato de correo inv&aacute;lido"
+							value="#{guardiaBean.guardia_correo}">
+							<f:validateRegex
+								pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+						</p:inputText>
+					</b:column>
+				</b:row>
+				<br />
+				<b:row>
+					<b:column span="2">
+						<h:outputLabel value="Teléfono:* " for="tele" />
+					</b:column>
+					<b:column span="3">
+						<p:inputText id="tele" value="#{guardiaBean.guardia_telefono}"
+							required="true" styleClass="form-control" maxlength="10"
+							requiredMessage="Campo teléfono requerido"
+							validatorMessage="Campo teléfono solo ingrese números">
+							<f:validateRegex pattern="[0-9]+" />
+						</p:inputText>
+					</b:column>
+					<b:column span="2">
+						<h:outputLabel value="Celular:* " for="celu" />
+					</b:column>
+					<b:column span="3">
+						<p:inputText id="celu" value="#{guardiaBean.guardia_celular}"
+							required="true" styleClass="form-control" maxlength="10"
+							requiredMessage="Campo celular requerido"
+							validatorMessage="Campo celular solo números">
+							<f:validateRegex pattern="[0-9]+" />
+						</p:inputText>
+					</b:column>
+				</b:row>
+				<br />
+				<b:row>
+					<b:column span="2">
+						<h:outputLabel value="Maneja CCTV:* " for="cctv" />
+					</b:column>
+					<b:column span="3" style="margin-bottom:10px">
+						<p:selectOneRadio id="cctv" value="#{guardiaBean.guardia_CCTV}"
+							style="margin-top:10px">
+							<f:selectItem itemLabel="SI" itemValue="true" />
+							<f:selectItem itemLabel="NO" itemValue="false" />
+						</p:selectOneRadio>
+					</b:column>
+					<b:column span="2">
+						<h:outputLabel value="Maneja Control de accesos:* " for="cntrl" />
+					</b:column>
+					<b:column span="3" style="margin-bottom:10px">
+						<p:selectOneRadio id="cntrl"
+							value="#{guardiaBean.guardia_controlaccesos}"
+							style="margin-top:10px">
+							<f:selectItem itemLabel="SI" itemValue="true" />
+							<f:selectItem itemLabel="NO" itemValue="false" />
+						</p:selectOneRadio>
+					</b:column>
+				</b:row>
+				<br />
+				<b:row>
+					<b:column span="2">
+						<h:outputLabel value="Es Motorizado:* " for="motor" />
+					</b:column>
+					<b:column span="3" style="margin-bottom:10px">
+						<p:selectOneRadio id="motor"
+							value="#{guardiaBean.guardia_motorizado}" style="margin-top:10px">
+							<f:selectItem itemLabel="SI" itemValue="true" />
+							<f:selectItem itemLabel="NO" itemValue="false" />
+						</p:selectOneRadio>
+					</b:column>
+					<b:column span="2">
+						<h:outputLabel value="Es Chofer:* " for="chof" />
+					</b:column>
+					<b:column span="3" style="margin-bottom:10px">
+						<p:selectOneRadio id="chof" value="#{guardiaBean.guardia_chofer}"
+							style="margin-top:10px">
+							<f:selectItem itemLabel="SI" itemValue="true" />
+							<f:selectItem itemLabel="NO" itemValue="false" />
+						</p:selectOneRadio>
+					</b:column>
+				</b:row>
+				<br />
+				<b:row>
+					<b:column span="2">
+						<h:outputLabel value="Caso Turno:* " for="turn" />
+					</b:column>
+					<b:column span="3" style="margin-bottom:10px">
+						<p:selectOneRadio id="turn"
+							value="#{guardiaBean.guardia_casoturno}" style="margin-top:10px">
+							<f:selectItem itemLabel="SI" itemValue="true" />
+							<f:selectItem itemLabel="NO" itemValue="false" />
+						</p:selectOneRadio>
+					</b:column>
+					<b:column span="2">
+						<h:outputLabel value="Caso estudio:* " for="estu" />
+					</b:column>
+					<b:column span="3" style="margin-bottom:10px">
+						<p:selectOneRadio id="estu"
+							value="#{guardiaBean.guardia_casoestudio}"
+							style="margin-top:10px">
+							<f:selectItem itemLabel="SI" itemValue="true" />
+							<f:selectItem itemLabel="NO" itemValue="false" />
+						</p:selectOneRadio>
+					</b:column>
+				</b:row>
+				<br />
+				<b:row>
+					<b:column span="2">
+						<h:outputLabel value="Caso nocturno:* " for="noc" />
+					</b:column>
+					<b:column span="3" style="margin-bottom:10px">
+						<p:selectOneRadio id="noc"
+							value="#{guardiaBean.guardia_casonocturno}"
+							style="margin-top:10px">
+							<f:selectItem itemLabel="SI" itemValue="true" />
+							<f:selectItem itemLabel="NO" itemValue="false" />
+						</p:selectOneRadio>
+					</b:column>
+					<b:column span="2">
+						<h:outputLabel value="Estado*" for="est"
+							rendered="#{postulantesBean.edicion}" />
+					</b:column>
+					<b:column span="3">
+						<b:selectOneMenu id="est" value="#{postulantesBean.pos_estado}"
+							rendered="#{postulantesBean.edicion}">
+							<f:selectItems value="#{postulantesBean.listEstados}" />
+						</b:selectOneMenu>
+					</b:column>
+				</b:row>
+				<br />
+				<b:row>
+					<b:column span="5">
+						<p:commandButton value="Guardar" styleClass="btn btn-info"
+							style="padding:7px;"
+							actionListener="#{guardiaBean.abrirDialog()}"
+							update="frm messages">
+						</p:commandButton>&nbsp;&nbsp;&nbsp;
+						<b:commandButton value="Volver"
+							action="#{guardiaBean.volverGuardia()}" update="frm" look="info"
+							process="@this">
+						</b:commandButton>
+					</b:column>
+				</b:row>
+				<br />
+				<br />
+			</b:panel>
+		</h:form>
+		<p:confirmDialog header="Confirmación"
+			message="Está seguro de registrar la información?" closable="false"
+			showEffect="fade" hideEffect="explode" widgetVar="gu">
+			<h:form>
+				<p:commandButton value="Si" styleClass="ui-confirmdialog-yes"
+					icon="ui-icon-check" action="#{guardiaBean.crearGuardia()}"
+					oncomplete="PF('gu').hide();" update=":frm:messages" />
+				<p:commandButton value="No" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					onclick="PF('gu').hide();" />
+			</h:form>
+		</p:confirmDialog>
+	</ui:define>
+</ui:composition>
+</html>

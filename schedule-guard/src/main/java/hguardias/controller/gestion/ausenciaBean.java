@@ -1,7 +1,8 @@
 package hguardias.controller.gestion;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,7 @@ import hguardias.model.manager.ManagerGestion;
 
 @SessionScoped
 @ManagedBean
-public class AusenciaBean implements Serializable {
+public class ausenciaBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -37,50 +38,65 @@ public class AusenciaBean implements Serializable {
 	private Date aus_fechainicio;
 	private Date aus_fechafin;
 	private String aus_descripcion;
-	
+
 	private String gua_id;
 	private HgGuardia guardia;
+	private String nombreguardia;
+	private String apellidoguardia;
 
 	// mmostrar
 	private boolean mostrarlug_id;
 	private boolean edicion;
 	private boolean ediciontipo;
 
-	private List<HgAusencia> listaAusencia;
+	private Date date;
+
+	private List<HgAusencia> listaAusencias;
 
 	private String usuario;
 
 	@Inject
 	SesionBean ms;
 
-	public AusenciaBean() {
+	public ausenciaBean() {
 	}
 
 	@PostConstruct
 	public void ini() {
-		aus_id=null;
-		aus_fechainicio=null;
-		aus_fechafin=null;
-		aus_descripcion=null;
+		aus_id = null;
+		aus_fechainicio = null;
+		aus_fechafin = null;
+		aus_descripcion = null;
 		edicion = false;
 		ediciontipo = false;
 		mostrarlug_id = false;
-		listaAusencia= managergest.findAllAusencias();
+		nombreguardia="";
+		apellidoguardia="";
+		listaAusencias = managergest.findAllAusencias();
 		usuario = ms.validarSesion("hg_ausencia.xhtml");
 	}
-	
+
 	public String getGua_id() {
 		return gua_id;
 	}
-	
+
 	public void setGua_id(String gua_id) {
 		this.gua_id = gua_id;
 	}
-	
+
+	public Date getDate() {
+		date = new Date();
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
 	public HgGuardia getGuardia() {
 		return guardia;
 	}
-	
+
 	public void setGuardia(HgGuardia guardia) {
 		this.guardia = guardia;
 	}
@@ -121,12 +137,12 @@ public class AusenciaBean implements Serializable {
 		this.aus_descripcion = aus_descripcion;
 	}
 
-	public List<HgAusencia> getListaAusencia() {
-		return listaAusencia;
+	public List<HgAusencia> getListaAusencias() {
+		return listaAusencias;
 	}
-	
-	public void setListaAusencia(List<HgAusencia> listaAusencia) {
-		this.listaAusencia = listaAusencia;
+
+	public void setListaAusencias(List<HgAusencia> listaAusencias) {
+		this.listaAusencias = listaAusencias;
 	}
 
 	public boolean isMostrarlug_id() {
@@ -152,8 +168,22 @@ public class AusenciaBean implements Serializable {
 	public void setEdiciontipo(boolean ediciontipo) {
 		this.ediciontipo = ediciontipo;
 	}
-
 	
+	public String getNombreguardia() {
+		return nombreguardia;
+	}
+	
+	public void setNombreguardia(String nombreguardia) {
+		this.nombreguardia = nombreguardia;
+	}
+	
+	public String getApellidoguardia() {
+		return apellidoguardia;
+	}
+	
+	public void setApellidoguardia(String apellidoguardia) {
+		this.apellidoguardia = apellidoguardia;
+	}
 
 	// ausenciaes
 	/**
@@ -167,29 +197,44 @@ public class AusenciaBean implements Serializable {
 	 */
 	public String crearAusencia() {
 		try {
+			
+			java.util.Date fechai = aus_fechainicio;
+			SimpleDateFormat dateFormati = new SimpleDateFormat("yyyy-MM-dd");
+			final String stringDatei= dateFormati.format(fechai);
+			final java.sql.Date sqlfechai=  java.sql.Date.valueOf(stringDatei);
+			
+			java.util.Date fechaf = aus_fechafin;
+			SimpleDateFormat dateFormatf = new SimpleDateFormat("yyyy-MM-dd");
+			final String stringDatef= dateFormatf.format(fechaf);
+			final java.sql.Date sqlfechaf=  java.sql.Date.valueOf(stringDatef);
+			
 			if (edicion) {
-				managergest.editarAusencia(aus_id, aus_fechainicio, aus_fechafin, aus_descripcion.trim());
-				getListaAusencia().clear();
-				getListaAusencia().addAll(managergest.findAllAusencias());
+				managergest.editarAusencia(aus_id, sqlfechai, sqlfechaf, aus_descripcion.trim());
+				getListaAusencias().clear();
+				getListaAusencias().addAll(managergest.findAllAusencias());
 				Mensaje.crearMensajeINFO("Actualizado - Modificado");
 				aus_id=null;
 				aus_fechainicio=null;
 				aus_fechafin=null;
 				aus_descripcion=null;
 				gua_id=null;
+				nombreguardia="";
+				apellidoguardia="";
 				
 			} else {
-				managergest.insertarAusencia(aus_fechainicio, aus_fechafin, aus_descripcion.trim());
+				managergest.insertarAusencia(sqlfechai, sqlfechaf, aus_descripcion.trim());
 				Mensaje.crearMensajeINFO("Registrado - Creado");
-				getListaAusencia().clear();
-				getListaAusencia().addAll(managergest.findAllAusencias());
+				getListaAusencias().clear();
+				getListaAusencias().addAll(managergest.findAllAusencias());
 				aus_id=null;
 				aus_fechainicio=null;
 				aus_fechafin=null;
 				aus_descripcion=null;
 				gua_id=null;
+				nombreguardia="";
+				apellidoguardia="";
 			}
-			return "hg_ausenciaes?faces-redirect=true";
+			return "hg_ausencias?faces-redirect=true";
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
@@ -222,10 +267,10 @@ public class AusenciaBean implements Serializable {
 	 */
 	public String cargarAusencia(HgAusencia aus) {
 		try {
-			aus_id=aus.getAusId();
-			aus_fechainicio=(Date) aus.getAusFechaInicio();
-			aus_fechafin=(Date) aus.getAusFechaFin();
-			aus_descripcion=aus.getAusDescripcion();
+			aus_id = aus.getAusId();
+			aus_fechainicio = (Date) aus.getAusFechaInicio();
+			aus_fechafin = (Date) aus.getAusFechaFin();
+			aus_descripcion = aus.getAusDescripcion();
 			gua_id = aus.getHgGuardia().getGuaCedula();
 			edicion = true;
 			ediciontipo = false;
@@ -240,9 +285,9 @@ public class AusenciaBean implements Serializable {
 	/**
 	 * metodo para conocer el ausencia si esta usado
 	 * 
-	 *  * @param lug_id
+	 * * @param lug_id
 	 */
-	public boolean averiguarausenciaId(Integer aus_id) {
+	public boolean averiguarAusenciaId(Integer aus_id) {
 		Integer t = 0;
 		boolean r = false;
 		List<HgAusencia> lug = managergest.findAllAusencias();
@@ -283,9 +328,15 @@ public class AusenciaBean implements Serializable {
 	 * 
 	 * @return
 	 */
-	public String nuevoausencia() {
-		
-		
+	public String nuevoAusencia() {
+		aus_id = null;
+		aus_fechainicio = null;
+		aus_fechafin = null;
+		aus_descripcion = null;
+		gua_id = null;
+		nombreguardia="";
+		apellidoguardia="";
+		ediciontipo = false;
 		mostrarlug_id = false;
 		edicion = false;
 		return "lug_nausencia?faces-redirect=true";
@@ -297,26 +348,30 @@ public class AusenciaBean implements Serializable {
 	 * @return
 	 * @throws Exception
 	 */
-	public String volverausencia() throws Exception {
-		
-		
+	public String volverAusencia() throws Exception {
+		aus_id = null;
+		aus_fechainicio = null;
+		aus_fechafin = null;
+		aus_descripcion = null;
+		gua_id = null;
+		nombreguardia="";
+		apellidoguardia="";
 		mostrarlug_id = false;
 		edicion = false;
-		getListaAusencia().clear();
-		getListaAusencia().addAll(managergest.findAllAusencias());
-		return "hg_ausenciaes?faces-redirect=true";
+		getListaAusencias().clear();
+		getListaAusencias().addAll(managergest.findAllAusencias());
+		return "hg_ausencias?faces-redirect=true";
 	}
-	
+
 	/**
 	 * metodo para asignar el guardia
 	 * 
 	 */
-	public String asignarLugarDestino() {
+	public String asignarGuardia() {
 		managergest.asignarGuardia(gua_id);
 		return "";
 	}
 
-	
 	/**
 	 * metodo para mostrar los guardias
 	 * 
@@ -325,9 +380,30 @@ public class AusenciaBean implements Serializable {
 		List<SelectItem> listadoSI = new ArrayList<SelectItem>();
 		for (HgGuardia t : managergest.findAllGuardias()) {
 			if (!t.getGuaEstado().equals("I")) {
-				listadoSI.add(new SelectItem(t.getGuaCedula(), t.getGuaNombre()+" "+t.getGuaApellido()));
-				}
+				listadoSI.add(new SelectItem(t.getGuaCedula(), t.getGuaNombre()
+						+ " " + t.getGuaApellido()));
+			}
 		}
 		return listadoSI;
+	}
+
+	/**
+	 * Mestodo q carga datos del guardia
+	 * 
+	 * @return guardia
+	 */
+	public void mostrara() {
+		HgGuardia gua;
+		try {
+			nombreguardia="";
+			apellidoguardia="";
+			gua = managergest.guardiaByID(gua_id);
+			// poner los datos del usuario
+			nombreguardia= gua.getGuaNombre();
+			apellidoguardia = gua.getGuaApellido();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

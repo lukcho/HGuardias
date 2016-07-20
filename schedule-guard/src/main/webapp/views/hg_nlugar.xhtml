@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="titulo">
+            Lugar
+        </ui:define>
+	<ui:define name="contenido">
+		<h:form>
+			<p:remoteCommand name="onload"
+				actionListener="#{sesionBean.validaIndex()}" autoRun="true" />
+		</h:form>
+		<br />
+		<h:form id="frm">
+			<p:growl id="messages" showDetail="false" />
+			<b:panel title="Registro de Lugares" look="primary">
+				<b:row>
+					<b:column span="2">
+						<h:outputLabel value="Nombre:* " for="lug" />
+					</b:column>
+					<b:column span="4">
+						<p:inputText id="lug" value="#{lugarBean.lug_nombre}"
+							required="true" requiredMessage="Campo nombre requerido"
+							styleClass="form-control" maxlength="100"
+							validatorMessage="Nombre no debe caracteres especiales.">
+						</p:inputText>
+					</b:column>
+					<b:column span="2">
+						<h:outputLabel value="Ciudad:* " for="ciu" />
+					</b:column>
+					<b:column span="4">
+						<p:inputText id="ciu" value="#{lugarBean.lug_ciudad}"
+							required="true" requiredMessage="Campo ciudad requerido"
+							styleClass="form-control" maxlength="100"
+							validatorMessage="Ciudad no debe contener caracteres especiales.">
+						</p:inputText>
+					</b:column>
+				</b:row>
+				<b:row>
+					<b:column span="2">
+						<h:outputLabel value="Nro. Guardias:* " for="nroguardias" />
+					</b:column>
+					<b:column span="4">
+						<p:inputText id="nroguardias" value="#{lugarBean.lug_nroguardias}"
+							disabled="#{lugarBean.edicion}" required="true"
+							styleClass="form-control" style="width:100%; margin-bottom:15px;"
+							requiredMessage="Campo nro. guardias requerido" maxlength="10"
+							validatorMessage="Campo nro. guardias ingresar solo n&uacute;meros.">
+							<f:validateRegex pattern="[0-9]+" />
+						</p:inputText>
+					</b:column>
+					<b:column span="2">
+						<h:outputLabel value="Contiene CCTV:* " for="cctv" />
+					</b:column>
+					<b:column span="4" style="margin-bottom:10px">
+						<p:selectOneRadio value="#{lugarBean.lug_CCTV}"
+							style="margin-top:10px">
+							<f:selectItem itemLabel="SI" itemValue="true" />
+							<f:selectItem itemLabel="NO" itemValue="false" />
+						</p:selectOneRadio>
+					</b:column>
+				</b:row>
+				<b:row>
+					<b:column span="6" />
+					<b:column span="2">
+						<h:outputLabel value="Contiene control de accesos:* " for="cntrl" />
+					</b:column>
+					<b:column span="4" style="margin-bottom:10px">
+						<p:selectOneRadio value="#{lugarBean.lug_controlaccs}"
+							style="margin-top:10px">
+							<f:selectItem itemLabel="SI" itemValue="true" />
+							<f:selectItem itemLabel="NO" itemValue="false" />
+						</p:selectOneRadio>
+					</b:column>
+				</b:row>
+				<br />
+				<b:row>
+					<b:column span="2">
+						<h:outputLabel value="Estado*" for="est"
+							rendered="#{lugarBean.edicion}" />
+					</b:column>
+					<b:column span="4">
+						<b:selectOneMenu id="est" value="#{lugarBean.lug_estado}"
+							rendered="#{lugarBean.edicion}">
+							<f:selectItems value="#{lugarBean.listEstados}" />
+						</b:selectOneMenu>
+					</b:column>
+				</b:row>
+				<b:row>
+					<b:column span="5">
+						<p:commandButton value="Guardar" styleClass="btn btn-info"
+							style="padding:7px;" actionListener="#{lugarBean.abrirDialog()}"
+							update="frm messages">
+						</p:commandButton>&nbsp;&nbsp;&nbsp;
+						<b:commandButton value="Volver"
+							action="#{lugarBean.volverLugar()}" update="frm" look="info"
+							process="@this">
+						</b:commandButton>&nbsp;&nbsp;&nbsp;
+					</b:column>
+				</b:row>
+				<br />
+				<br />
+			</b:panel>
+		</h:form>
+		<p:confirmDialog header="Confirmación"
+			message="Está seguro de guardar la información?" closable="false"
+			showEffect="fade" hideEffect="explode" widgetVar="gu">
+			<h:form>
+				<p:commandButton value="Si" styleClass="ui-confirmdialog-yes"
+					icon="ui-icon-check" action="#{lugarBean.crearLugar()}"
+					oncomplete="PF('gu').hide();" update="frm" />
+				<p:commandButton value="No" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					onclick="PF('gu').hide();" />
+			</h:form>
+		</p:confirmDialog>
+	</ui:define>
+</ui:composition>
+</html>

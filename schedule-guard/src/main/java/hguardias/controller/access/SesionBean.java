@@ -147,7 +147,7 @@ public class SesionBean implements Serializable{
 	/**
 	   * Método para validar sesión en el INDEX
 	   */
-	  public void validaIndex(){
+	public void validaIndex(){
 	   HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
 	                 .getExternalContext().getSession(false);
 	      SesionBean user = (SesionBean) session.getAttribute("sesionBean");

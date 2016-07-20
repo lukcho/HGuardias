@@ -23,7 +23,7 @@ import hguardias.model.manager.ManagerGestion;
 
 @SessionScoped
 @ManagedBean
-public class LugarBean implements Serializable {
+public class lugarBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -53,7 +53,7 @@ public class LugarBean implements Serializable {
 	@Inject
 	SesionBean ms;
 
-	public LugarBean() {
+	public lugarBean() {
 	}
 
 	@PostConstruct
@@ -284,7 +284,7 @@ public class LugarBean implements Serializable {
 	 * @param cond
 	 * @throws Exception
 	 */
-	public void cambiarEstadoLugar(HgLugare cond) {
+	public void cambiarEstadoLugara(HgLugare cond) {
 		setLug(cond);
 		RequestContext.getCurrentInstance().execute("PF('ce').show();");
 		System.out.println("holi");
@@ -347,7 +347,7 @@ public class LugarBean implements Serializable {
 		lug_controlaccs=false;
 		mostrarlug_id = false;
 		edicion = false;
-		return "lug_nlugar?faces-redirect=true";
+		return "hg_nlugar?faces-redirect=true";
 	}
 
 	/**

@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="titulo">
+            Lugares
+        </ui:define>
+	<ui:define name="contenido">
+		<h:form>
+			<center>
+				<h1>Gesti&oacute;n de Lugares</h1>
+			</center>
+			<b:row>
+				<b:column span="1">
+					<b:commandButton value="Nuevo" iconAwesome="file-o"
+						action="#{lugarBean.nuevoLugar()}" />
+				</b:column>
+				<b:column span="1">
+					<b:commandButton value="Volver" iconAwesome="angle-left"
+						action="index?faces-redirect=true" />
+				</b:column>
+			</b:row>
+		</h:form>
+		<br />
+		<h:form id="frm">
+			<p:growl id="messages" showDetail="true" />
+			<b:panel title="Listado de Lugares" look="primary">
+				<p:dataTable id="tbb" value="#{lugarBean.listaLugares}"
+					reflow="true" var="lug" rows="8" emptyMessage="Sin Datos"
+					paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+					<p:column headerText="OPCIONES" width="50">
+						<p:commandButton id="btnE" icon="ui-icon-pencil"
+							action="#{lugarBean.cargarLugar(lug)}">
+							<p:tooltip id="toolTipTrack1" for="btnE"
+								value="Bot&oacute;n para modificar el lugar" trackMouse="true" />
+						</p:commandButton>
+							&nbsp;&nbsp;&nbsp;
+							<p:commandButton id="trackcamb" icon="ui-icon-refresh"
+							action="#{lugarBean.cambiarEstadoLugara(lug)}">
+							<p:tooltip id="toolTipTrack2" for="trackcamb"
+								value="Bot&oacute;n para cambiar el estado del condutor"
+								trackMouse="true" />
+						</p:commandButton>
+					</p:column>
+					<p:column filterBy="#{lug.lugNombre}" filterMatchMode="contains"
+						headerText="NOMBRE" width="70">
+						<h:outputText value="#{lug.lugNombre}"></h:outputText>
+					</p:column>
+					<p:column filterBy="#{lug.lugCiudad}" filterMatchMode="contains"
+						headerText="CIUDAD" width="70">
+						<h:outputText value="#{lug.lugCiudad}"></h:outputText>
+					</p:column>
+					<p:column filterBy="#{lug.lugNroGuardias}"
+						filterMatchMode="contains" headerText="Nro. Guardias" width="70">
+						<h:outputText value="#{lug.lugNroGuardias}"></h:outputText>
+					</p:column>
+					<p:column headerText="CCTV"	sortBy="#{lug.lugCctv}">
+						<p:selectBooleanCheckbox disabled="true" value="#{lug.lugCctv}">
+						</p:selectBooleanCheckbox>
+					</p:column>
+					<p:column headerText="Control Accesos"	sortBy="#{lug.lugControlAccesos}">
+						<p:selectBooleanCheckbox disabled="true" value="#{lug.lugControlAccesos}">
+						</p:selectBooleanCheckbox>
+					</p:column>
+					<p:column filterBy="#{lug.lugEstado}" filterMatchMode="contains"
+						headerText="ESTADO" width="30">
+						<h:outputText value="#{lug.lugEstado}"></h:outputText>
+					</p:column>
+				</p:dataTable>
+			</b:panel>
+		</h:form>
+		<p:confirmDialog header="Confirmación"
+			message="Está seguro de cambiar el estado?" closable="false"
+			showEffect="fade" hideEffect="explode" widgetVar="ce">
+			<h:form>
+				<p:commandButton value="Si" styleClass="ui-confirmdialog-yes"
+					icon="ui-icon-check" action="#{lugarBean.cambiarEstadoLugar()}"
+					oncomplete="PF('ce').hide();" update="frm" />
+				<p:commandButton value="No" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					onclick="PF('ce').hide();" />
+			</h:form>
+		</p:confirmDialog>
+	</ui:define>
+</ui:composition>
+</html>

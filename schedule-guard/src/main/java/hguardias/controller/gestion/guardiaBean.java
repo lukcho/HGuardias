@@ -24,7 +24,7 @@ import hguardias.model.manager.ManagerGestion;
 
 @SessionScoped
 @ManagedBean
-public class GuardiaBean implements Serializable {
+public class guardiaBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -65,7 +65,7 @@ public class GuardiaBean implements Serializable {
 	@Inject
 	SesionBean ms;
 
-	public GuardiaBean() {
+	public guardiaBean() {
 	}
 
 	@PostConstruct
@@ -398,6 +398,22 @@ public class GuardiaBean implements Serializable {
 		try {
 			guardia_id = guardia.getGuaCedula();
 			guardia_estado = guardia.getGuaEstado();
+			guardia_nombre = guardia.getGuaNombre();
+			guardia_apellido = guardia.getGuaApellido();
+			guardia_fechanac = (Date) guardia.getGuaFechanac();
+			guardia_ciudad = guardia.getGuaCiudad();
+			guardia_sexo = guardia.getGuaSexo();
+			guardia_telefono = guardia.getGuaTelefono();
+			guardia_celular = guardia.getGuaCelular();
+			guardia_correo = guardia.getGuaCorreo();
+			guardia_direccion = guardia.getGuaDireccion();
+			guardia_CCTV = guardia.getGuaCctv();
+			guardia_motorizado = guardia.getGuaMotorizado();
+			guardia_chofer = guardia.getGuaChofer();
+			guardia_controlaccesos = guardia.getGuaControlAccesos();
+			guardia_casoturno = guardia.getGuaCasoTurno();
+			guardia_casoestudio = guardia.getGuaCasoEstudio();
+			guardia_casonocturno = guardia.getGuaCasoNocturno();
 			edicion = true;
 			ediciontipo = false;
 			return "hg_nguardia?faces-redirect=true";
@@ -434,7 +450,7 @@ public class GuardiaBean implements Serializable {
 	 * @param cond
 	 * @throws Exception
 	 */
-	public void cambiarEstadoGuardia(HgGuardia cond) {
+	public void cambiarEstadoGuardiaa(HgGuardia cond) {
 		setGuardia(cond);
 		RequestContext.getCurrentInstance().execute("PF('ce').show();");
 		System.out.println("holi");
@@ -480,13 +496,28 @@ public class GuardiaBean implements Serializable {
 						+ Funciones.valorEstadoInactivo));
 		return lista;
 	}
+	
+	/**
+	 * Lista de estados
+	 * 
+	 * @return lista de items de estados
+	 */
+	public List<SelectItem> getlistEstadosSexo() {
+		List<SelectItem> lista = new ArrayList<SelectItem>();
+		lista.add(new SelectItem(Funciones.estadoMasculino, Funciones.estadoMasculino
+				+ " : " + Funciones.valorEstadoMasculino));
+		lista.add(new SelectItem(Funciones.estadoFemenino,
+				Funciones.estadoFemenino + " : "
+						+ Funciones.valorEstadoFemenino));
+		return lista;
+	}
 
 	/**
 	 * Redirecciona a la pagina de creacion de guardias
 	 * 
 	 * @return
 	 */
-	public String nuevoLugar() {
+	public String nuevoGuardia() {
 		guardia_id = null;
 		guardia_estado = "A";
 		guardia_nombre = null;
@@ -516,7 +547,7 @@ public class GuardiaBean implements Serializable {
 	 * @return
 	 * @throws Exception
 	 */
-	public String volverLugar() throws Exception {
+	public String volverGuardia() throws Exception {
 		guardia_id = null;
 		guardia_estado = "A";
 		guardia_nombre = null;

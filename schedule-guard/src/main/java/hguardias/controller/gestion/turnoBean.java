@@ -26,7 +26,7 @@ import hguardias.model.manager.ManagerGestion;
 
 @SessionScoped
 @ManagedBean
-public class TurnoBean implements Serializable {
+public class turnoBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -58,7 +58,7 @@ public class TurnoBean implements Serializable {
 	@Inject
 	SesionBean ms;
 
-	public TurnoBean() {
+	public turnoBean() {
 	}
 
 	@PostConstruct
@@ -277,7 +277,7 @@ public class TurnoBean implements Serializable {
 	 * @param cond
 	 * @throws Exception
 	 */
-	public void cambiarEstadoLugar(HgTurno cond) {
+	public void cambiarEstadoTurnoa(HgTurno cond) {
 		setTurno(cond);
 		RequestContext.getCurrentInstance().execute("PF('ce').show();");
 		System.out.println("holi");
@@ -329,7 +329,7 @@ public class TurnoBean implements Serializable {
 	 * 
 	 * @return
 	 */
-	public String nuevoLugar() {
+	public String nuevoTurno() {
 		turno_id = null;
 		turno_descripcion = null;
 		turno_estado = "A";
@@ -348,7 +348,7 @@ public class TurnoBean implements Serializable {
 	 * @return
 	 * @throws Exception
 	 */
-	public String volverLugar() throws Exception {
+	public String volverTurno() throws Exception {
 		turno_id = null;
 		turno_descripcion = null;
 		turno_estado = "A";
@@ -361,5 +361,39 @@ public class TurnoBean implements Serializable {
 		getListaTurnos().clear();
 		getListaTurnos().addAll(managergest.findAllTurnos());
 		return "hg_turnos?faces-redirect=true";
+	}
+	
+	/**
+	 * Lista de horas
+	 * 
+	 * @return lista de items de horas
+	 */
+	public List<SelectItem> getlistHoras() {
+		List<SelectItem> lista = new ArrayList<SelectItem>();
+		lista.add(new SelectItem(Funciones.hora_1, Funciones.hora_1));
+		lista.add(new SelectItem(Funciones.hora_2, Funciones.hora_2));
+		lista.add(new SelectItem(Funciones.hora_3, Funciones.hora_3));
+		lista.add(new SelectItem(Funciones.hora_4, Funciones.hora_4));
+		lista.add(new SelectItem(Funciones.hora_5, Funciones.hora_5));
+		lista.add(new SelectItem(Funciones.hora_6, Funciones.hora_6));
+		lista.add(new SelectItem(Funciones.hora_7, Funciones.hora_7));
+		lista.add(new SelectItem(Funciones.hora_8, Funciones.hora_8));
+		lista.add(new SelectItem(Funciones.hora_9, Funciones.hora_9));
+		lista.add(new SelectItem(Funciones.hora_10, Funciones.hora_10));
+		lista.add(new SelectItem(Funciones.hora_11, Funciones.hora_11));
+		lista.add(new SelectItem(Funciones.hora_12, Funciones.hora_12));
+		lista.add(new SelectItem(Funciones.hora_13, Funciones.hora_13));
+		lista.add(new SelectItem(Funciones.hora_14, Funciones.hora_14));
+		lista.add(new SelectItem(Funciones.hora_15, Funciones.hora_15));
+		lista.add(new SelectItem(Funciones.hora_16, Funciones.hora_16));
+		lista.add(new SelectItem(Funciones.hora_17, Funciones.hora_17));
+		lista.add(new SelectItem(Funciones.hora_18, Funciones.hora_18));
+		lista.add(new SelectItem(Funciones.hora_19, Funciones.hora_19));
+		lista.add(new SelectItem(Funciones.hora_20, Funciones.hora_20));
+		lista.add(new SelectItem(Funciones.hora_21, Funciones.hora_21));
+		lista.add(new SelectItem(Funciones.hora_22, Funciones.hora_22));
+		lista.add(new SelectItem(Funciones.hora_23, Funciones.hora_23));
+		lista.add(new SelectItem(Funciones.hora_24, Funciones.hora_24));
+		return lista;
 	}
 }

@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="titulo">
+            Gestión de Horarios Guardias de Yachay
+        </ui:define>
+	<ui:define name="contenido">
+			<h:form>
+			<p:remoteCommand name="onload"
+				actionListener="#{sesionBean.validaIndex()}" autoRun="true" />
+		</h:form>
+		<b:well>
+			<h1>Sistema de Horarios Guardias de Yachay</h1>
+			<p>Este módulo permite la Gestión de los horarios de guardias de Yachay </p>
+		</b:well>
+		<center>
+			<h:graphicImage value="#{facesContex}/resources/img/logo.png"
+				styleClass="img-responsive" />
+		</center>
+	</ui:define>
+</ui:composition>
+
+</html>

@@ -40,10 +40,10 @@ public class Funciones {
 	public static String valorEstadoAnulado= "Anulado";
 
 	//Atributos de Genero
-	public static String estadoFemenino = "F";
-	public static String valorEstadoFemenino = "Femenino";
-	public static String estadoMasculino = "M";
-	public static String valorEstadoMasculino = "Masculino";
+	public static String estadoFemenino = "Femenino";
+	public static String valorEstadoFemenino = "F";
+	public static String estadoMasculino = "Masculino";
+	public static String valorEstadoMasculino = "M";
 	
 	public static Integer mayoriaDeEdad = 18;
 		
@@ -311,8 +311,14 @@ public class Funciones {
 			return false;
 	}
 	
-	
-	public static String hora_8 = "08:30:00";
+	public static String hora_1 = "01:00:00";
+	public static String hora_2 = "02:00:00";
+	public static String hora_3 = "03:00:00";
+	public static String hora_4 = "04:00:00";
+	public static String hora_5 = "05:00:00";
+	public static String hora_6 = "06:00:00";
+	public static String hora_7 = "07:00:00";
+	public static String hora_8 = "08:00:00";
 	public static String hora_9 = "09:00:00";
 	public static String hora_10 = "10:00:00";
 	public static String hora_11 = "11:00:00";
@@ -321,7 +327,14 @@ public class Funciones {
 	public static String hora_14 = "14:00:00";
 	public static String hora_15 = "15:00:00";
 	public static String hora_16 = "16:00:00";
-	public static String hora_17 = "17:30:00";
+	public static String hora_17 = "17:00:00";
+	public static String hora_18 = "18:00:00";
+	public static String hora_19 = "19:00:00";
+	public static String hora_20 = "20:00:00";
+	public static String hora_21 = "21:00:00";
+	public static String hora_22 = "22:00:00";
+	public static String hora_23 = "23:00:00";
+	public static String hora_24 = "24:00:00";
 	
 	public static String automovil = "Automóvil";
 	public static String camioneta = "Camioneta";
