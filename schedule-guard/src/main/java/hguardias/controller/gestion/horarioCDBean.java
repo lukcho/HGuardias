@@ -74,7 +74,7 @@ public class horarioCDBean implements Serializable {
 
 	@PostConstruct
 	public void ini() {
-		usuario = ms.validarSesion("hg_ausencia.xhtml");
+		usuario = ms.validarSesion("hg_horarios.xhtml");
 		System.out.println(usuario);
 		BuscarPersona();
 		horcab_id = null;
@@ -215,7 +215,7 @@ public class horarioCDBean implements Serializable {
 			horcab_nombre = null;
 			horcab_usuarioreg=null;
 
-			return "hg_hcabeceras?faces-redirect=true";
+			return "hg_horarios?faces-redirect=true";
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
@@ -252,7 +252,7 @@ public class horarioCDBean implements Serializable {
 			horcab_usuarioreg = horcab.getHcabUsuario();
 			edicion = true;
 			ediciontipo = false;
-			return "hg_nhcabcera?faces-redirect=true";
+			return "hg_nhorario?faces-redirect=true";
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -288,7 +288,7 @@ public class horarioCDBean implements Serializable {
 		horcab_nombre = null;
 		ediciontipo = false;
 		edicion = false;
-		return "lug_nhcabecera?faces-redirect=true";
+		return "hg_nhorario?faces-redirect=true";
 	}
 
 	/**
@@ -305,7 +305,7 @@ public class horarioCDBean implements Serializable {
 		edicion = false;
 		getlistaHorarioCab().clear();
 		getlistaHorarioCab().addAll(managerhorario.findAllHorariosCab());
-		return "hg_hcabeceras?faces-redirect=true";
+		return "hg_horarios?faces-redirect=true";
 	}
 
 	/**

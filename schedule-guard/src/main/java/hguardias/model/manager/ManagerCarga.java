@@ -32,6 +32,7 @@ public class ManagerCarga {
 		Connection conexion = null;
 		Statement comando = null;
 		ResultSet resultado = null;
+		System.out.println(usr);
 		try {
 			Class.forName("org.postgresql.Driver");
 			conexion = DriverManager.getConnection(cc);

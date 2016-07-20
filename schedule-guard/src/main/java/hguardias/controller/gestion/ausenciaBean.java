@@ -73,7 +73,7 @@ public class ausenciaBean implements Serializable {
 		nombreguardia="";
 		apellidoguardia="";
 		listaAusencias = managergest.findAllAusencias();
-		usuario = ms.validarSesion("hg_ausencia.xhtml");
+		usuario = ms.validarSesion("hg_ausencias.xhtml");
 	}
 
 	public String getGua_id() {
@@ -339,7 +339,7 @@ public class ausenciaBean implements Serializable {
 		ediciontipo = false;
 		mostrarlug_id = false;
 		edicion = false;
-		return "lug_nausencia?faces-redirect=true";
+		return "hg_nausencia?faces-redirect=true";
 	}
 
 	/**

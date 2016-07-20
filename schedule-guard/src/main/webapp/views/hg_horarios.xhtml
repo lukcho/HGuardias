@@ -12,6 +12,10 @@
         </ui:define>
 	<ui:define name="contenido">
 		<h:form>
+			<p:remoteCommand name="onload"
+				actionListener="#{sesionBean.validaIndex()}" autoRun="true" />
+		</h:form>
+		<h:form>
 			<center>
 				<h1>Gesti&oacute;n de Horarios</h1>
 			</center>
@@ -55,11 +59,12 @@
 					</p:column>
 					<p:column headerText="FECHA CREACIÓN" width="60">
 						<h:outputText value="#{horc.hcabFechaRegistro}">
-							<f:convertDateTime pattern="yyyy/MM/dd HH:mm" timeZone="GMT-5"  />
+							<f:convertDateTime pattern="yyyy/MM/dd HH:mm" timeZone="GMT-5" />
 						</h:outputText>
 					</p:column>
 					<p:column headerText="FECHA INICIO/FIN" width="100">
-						<h:outputText value="#{horc.hcabFechaInicio} - #{horc.hcabFechaFin}">
+						<h:outputText
+							value="#{horc.hcabFechaInicio} - #{horc.hcabFechaFin}">
 						</h:outputText>
 					</p:column>
 				</p:dataTable>
