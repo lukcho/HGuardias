@@ -3,7 +3,7 @@ package hguardias.model.dao.entities;
 import java.util.Date;
 
 public class Persona {
-	
+
 	private String perDNI;
 	private String perNombres;
 	private String perApellidos;
@@ -12,17 +12,17 @@ public class Persona {
 	private String perTelefono;
 	private String perCelular;
 	private String perCorreo;
-	
-	public Persona() {}
-	
-	public Persona(String perDNI){
+
+	public Persona() {
+	}
+
+	public Persona(String perDNI) {
 		this.perDNI = perDNI;
 	}
-	
-	public Persona(String perDNI, String perNombres,
-			String perApellidos, String perTelefono, String perCelular,
-			String perCorreo, Date perFechaNacimiento,
-	        String perGenero) {
+
+	public Persona(String perDNI, String perNombres, String perApellidos,
+			String perTelefono, String perCelular, String perCorreo,
+			Date perFechaNacimiento, String perGenero) {
 		this.perDNI = perDNI;
 		this.perNombres = perNombres;
 		this.perApellidos = perApellidos;
@@ -32,7 +32,7 @@ public class Persona {
 		this.perFechaNacimiento = perFechaNacimiento;
 		this.perGenero = perGenero;
 	}
-	
+
 	/**
 	 * @return the perDNI
 	 */
@@ -41,7 +41,8 @@ public class Persona {
 	}
 
 	/**
-	 * @param perDNI the perDNI to set
+	 * @param perDNI
+	 *            the perDNI to set
 	 */
 	public void setPerDNI(String perDNI) {
 		this.perDNI = perDNI;
@@ -55,7 +56,8 @@ public class Persona {
 	}
 
 	/**
-	 * @param perNombres the perNombres to set
+	 * @param perNombres
+	 *            the perNombres to set
 	 */
 	public void setPerNombres(String perNombres) {
 		this.perNombres = perNombres;
@@ -69,7 +71,8 @@ public class Persona {
 	}
 
 	/**
-	 * @param perApellidos the perApellidos to set
+	 * @param perApellidos
+	 *            the perApellidos to set
 	 */
 	public void setPerApellidos(String perApellidos) {
 		this.perApellidos = perApellidos;
@@ -83,7 +86,8 @@ public class Persona {
 	}
 
 	/**
-	 * @param perTelefono the perTelefono to set
+	 * @param perTelefono
+	 *            the perTelefono to set
 	 */
 	public void setPerTelefono(String perTelefono) {
 		this.perTelefono = perTelefono;
@@ -97,7 +101,8 @@ public class Persona {
 	}
 
 	/**
-	 * @param perCelular the perCelular to set
+	 * @param perCelular
+	 *            the perCelular to set
 	 */
 	public void setPerCelular(String perCelular) {
 		this.perCelular = perCelular;
@@ -111,7 +116,8 @@ public class Persona {
 	}
 
 	/**
-	 * @param perCorreo the perCorreo to set
+	 * @param perCorreo
+	 *            the perCorreo to set
 	 */
 	public void setPerCorreo(String perCorreo) {
 		this.perCorreo = perCorreo;
@@ -125,12 +131,13 @@ public class Persona {
 	}
 
 	/**
-	 * @param perFechaNacimiento the perFechaNacimiento to set
+	 * @param perFechaNacimiento
+	 *            the perFechaNacimiento to set
 	 */
 	public void setPerFechaNacimiento(Date perFechaNacimiento) {
 		this.perFechaNacimiento = perFechaNacimiento;
 	}
-	
+
 	/**
 	 * @return the perGenero
 	 */
@@ -139,9 +146,19 @@ public class Persona {
 	}
 
 	/**
-	 * @param perGenero the perGenero to set
+	 * @param perGenero
+	 *            the perGenero to set
 	 */
 	public void setPerGenero(String perGenero) {
 		this.perGenero = perGenero;
+	}
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		System.out.println(perDNI + " " + perNombres + " " + perApellidos + " "
+				+ perFechaNacimiento + " " + perGenero + " " + perTelefono
+				+ " " + perCelular + " " + perCorreo);
+		return super.toString();
 	}
 }

@@ -193,7 +193,6 @@ public class horarioCDBean implements Serializable {
 	 */
 	public String crearHorarioCab() {
 		try {
-
 			java.util.Date fechai = horcab_fechainicio;
 			SimpleDateFormat dateFormati = new SimpleDateFormat("yyyy-MM-dd");
 			final String stringDatei = dateFormati.format(fechai);

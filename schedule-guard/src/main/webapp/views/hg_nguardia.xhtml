@@ -17,28 +17,28 @@
 				actionListener="#{sesionBean.validaIndex()}" autoRun="true" />
 		</h:form>
 		<br />
-		<h:form id="frm">
-			<p:growl id="messages" showDetail="false" />
 			<b:panel title="Registro de Guardia" look="primary">
+				<h:form>
 				<b:row>
 					<b:column span="2">
 						<h:outputLabel value="Buscar Persona: " for="busccedu" />
 					</b:column>
 					<b:column span="4">
-						<p:inputText id="busccedu" value="#{guardiaBean.dniBuscar}"
+						<b:inputText id="busccedu" value="#{guardiaBean.dniBuscar}"
 							required="true" styleClass="form-control" maxlength="10"
 							disabled="#{guardiaBean.edicion}" 
 							requiredMessage="Campo cédula/pasaporte requerido">
-						</p:inputText>
+						</b:inputText>
 					</b:column>
 					<b:column span="5">
-						<p:commandButton value="Buscar" styleClass="btn btn-info"
-							style="padding:7px;"
-							actionListener="#{guardiaBean.buscarPersona()}"
-							update="frm messages">
-						</p:commandButton>
+						<p:commandButton value="Buscar" styleClass="btn btn-info" disabled="#{guardiaBean.edicion}"
+							style="padding:7px;" actionListener="#{guardiaBean.cargarPersona()}" update=":frm :frm:messages"/>
 					</b:column>
 				</b:row>
+				</h:form>
+				<br/>
+				<h:form id="frm">
+				<p:growl id="messages" showDetail="false" />
 				<b:row>
 					<b:column span="2">
 						<h:outputLabel value="Cédula:* " for="cedu" />
@@ -215,7 +215,11 @@
 
 					</b:column>
 					<b:column span="2">
-						<h:outputLabel value="Caso estudio:* " for="estu" />
+						<h:outputLabel value="Caso estudio:* " for="estu"  id="casoestudio" >
+						<p:tooltip id="toolTipTrack5" for="casoestudio"
+								value="Personas que se encuentren cursando estudios."
+								trackMouse="true" />
+						</h:outputLabel>
 					</b:column>
 					<b:column span="3" style="margin-bottom:10px">
 						<p:selectOneRadio id="estu"
@@ -264,10 +268,9 @@
 						</b:commandButton>
 					</b:column>
 				</b:row>
-				<br />
-				<br />
+				</h:form>
 			</b:panel>
-		</h:form>
+		
 		<p:confirmDialog header="Confirmación"
 			message="Está seguro de registrar la información?" closable="false"
 			showEffect="fade" hideEffect="explode" widgetVar="gu">

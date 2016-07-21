@@ -22,8 +22,6 @@ public class ManagerBuscar {
 
 	public Persona buscarPersonaWSReg(String dni) throws Exception {
 		HgParametro param = parametroByID("find_personas");
-		System.out.println(param.getParValor());
-		System.out.println("este es el dni:" + dni);
 		JSONObject respuesta = ConsumeREST.consumeGetRestEasyObject(param
 				.getParValor() + dni);
 		if (respuesta.isEmpty())
@@ -38,10 +36,7 @@ public class ManagerBuscar {
 			p.setPerGenero(Funciones.evaluarDatoWS(respuesta.get("perGenero")));
 			p.setPerTelefono(Funciones.evaluarDatoWS(respuesta.get("perTelefono")));
 			p.setPerCelular(Funciones.evaluarDatoWS(respuesta.get("perCelular")));
-			p.setPerCorreo(Funciones.evaluarDatoWS(respuesta.get("perCorreo")));
-			
-	
-			
+			p.setPerCorreo(Funciones.evaluarDatoWS(respuesta.get("perCorreo")));			
 			return p;
 		}
 	}

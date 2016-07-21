@@ -230,8 +230,14 @@ public class Funciones {
 	public static Date evaluarDatoWSDate(Object dato){
 		Date date = null;
 		try {
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-			date = dateFormat.parse("dato");
+			if(dato!=null)
+			{
+			System.out.println(dato);
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			date = dateFormat.parse((String) dato);
+			}
+			else
+			date = new Date();
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

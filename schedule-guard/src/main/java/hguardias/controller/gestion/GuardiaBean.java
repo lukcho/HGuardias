@@ -28,13 +28,14 @@ import hguardias.model.manager.ManagerGestion;
 
 @SessionScoped
 @ManagedBean
-public class guardiaBean implements Serializable {
+public class GuardiaBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@EJB
 	private ManagerGestion managergest;
 
+	@EJB
 	private ManagerBuscar managerBuscar;
 
 	// guardias
@@ -74,14 +75,14 @@ public class guardiaBean implements Serializable {
 	@Inject
 	SesionBean ms;
 
-	public guardiaBean() {
+	public GuardiaBean() {
 	}
 
 	@PostConstruct
 	public void ini() {
 		guardia_estado = "A";
 		listaguardias = managergest.findAllGuardias();
-		usuario = ms.validarSesion("hg_guardias.xhtml");
+		// usuario = ms.validarSesion("hg_guardias.xhtml");
 	}
 
 	public String getDniBuscar() {
@@ -291,6 +292,7 @@ public class guardiaBean implements Serializable {
 	 * @throws Exception
 	 */
 	public String crearGuardia() {
+		String r = "";
 		try {
 			java.util.Date fechai = guardia_fechanac;
 			SimpleDateFormat dateFormati = new SimpleDateFormat("yyyy-MM-dd");
@@ -329,19 +331,15 @@ public class guardiaBean implements Serializable {
 				guardia_casoestudio = false;
 				guardia_casonocturno = false;
 				edicion = true;
-
+				r = "hg_guardias?faces-redirect=true";
 			} else {
-				if (this.ccedula(guardia_id)) {
-					FacesContext context = FacesContext.getCurrentInstance();
-					context.addMessage(null, new FacesMessage(
-							"Cédula Repetida..!!!",
-							"La cédula ya esta siendo utilizada"));
-				} else if (this.ccorreo(guardia_correo)) {
-					FacesContext context = FacesContext.getCurrentInstance();
-					context.addMessage(null, new FacesMessage(
-							"Correo Repetido..!!!",
-							"El correo ya esta siendo utilizado"));
-				} else {
+				if (this.ccorreo(guardia_correo)) {
+					Mensaje.crearMensajeWARN("Correo Repetido..!!! El correo ya esta siendo utilizado");
+				}
+				else if(this.ccedula(dniBuscar)) {
+					Mensaje.crearMensajeWARN("Cédula Repetida..!!! La cédula ya esta siendo utilizada");
+				}
+				else{
 					managergest.insertarGuardia(guardia_id.trim(),
 							guardia_nombre.trim(), guardia_apellido.trim(),
 							sqlfechai, guardia_ciudad.trim(),
@@ -373,9 +371,10 @@ public class guardiaBean implements Serializable {
 					guardia_casoestudio = false;
 					guardia_casonocturno = false;
 					edicion = true;
+					r = "hg_guardias?faces-redirect=true";
 				}
 			}
-			return "hg_guardias?faces-redirect=true";
+			return r;
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
@@ -395,6 +394,7 @@ public class guardiaBean implements Serializable {
 	 */
 	public void abrirDialog() {
 		if (valida(guardia_id) == true) {
+			System.out.println(guardia_id);
 			RequestContext.getCurrentInstance().execute("PF('gu').show();");
 		} else {
 			FacesContext.getCurrentInstance().addMessage(
@@ -416,6 +416,7 @@ public class guardiaBean implements Serializable {
 	public String cargarGuardia(HgGuardia guardia) {
 		try {
 			guardia_id = guardia.getGuaCedula();
+			dniBuscar = guardia_id;
 			guardia_estado = guardia.getGuaEstado();
 			guardia_nombre = guardia.getGuaNombre();
 			guardia_apellido = guardia.getGuaApellido();
@@ -584,6 +585,7 @@ public class guardiaBean implements Serializable {
 	 * @throws Exception
 	 */
 	public String volverGuardia() throws Exception {
+		dniBuscar = null;
 		guardia_id = null;
 		guardia_estado = "A";
 		guardia_nombre = null;
@@ -685,23 +687,27 @@ public class guardiaBean implements Serializable {
 		}
 	}
 
-	public String buscarPersona(String per_dni) {
-		String r = "";
+	public void cargarPersona() {
 		try {
-
-			if (!Funciones.validacionCedula(per_dni)) {
-				Persona per = managerBuscar.buscarPersonaWSReg(per_dni);
-				mostrarCamposPersona(per);
+			System.out.println("VALOR-------------->" + getDniBuscar());
+			if (getDniBuscar() != null) {
+				if (this.ccedula(dniBuscar)) {
+					Mensaje.crearMensajeWARN("Cédula Repetida..!!! La cédula ya esta siendo utilizada");
+				} else if (Funciones.validacionCedula(getDniBuscar().trim())) {
+					Persona per = managerBuscar
+							.buscarPersonaWSReg(getDniBuscar().trim());
+					mostrarCamposPersona(per);
+				} else
+					Mensaje.crearMensajeWARN("La cédula es incorrecta.");
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			Mensaje.crearMensajeINFO("Error...Digite bien la cédula a buscar");
+			Mensaje.crearMensajeINFO("Error: " + e.getMessage());
 			e.printStackTrace();
 		}
-		return r;
 	}
 
-	private void mostrarCamposPersona(Persona per) {
+	public void mostrarCamposPersona(Persona per) {
 		setGuardia_id(per.getPerDNI());
 		setGuardia_nombre(per.getPerNombres());
 		setGuardia_apellido(per.getPerApellidos());
@@ -710,7 +716,7 @@ public class guardiaBean implements Serializable {
 		setGuardia_celular(per.getPerCelular());
 		setGuardia_sexo(per.getPerGenero());
 		setGuardia_fechanac(per.getPerFechaNacimiento());
-		
+
 	}
 
 }
