@@ -32,23 +32,24 @@
 						</p:inputText>
 					</b:column>
 					<b:column span="2">
-						<h:outputLabel value="Ciudad:* " for="ciu" />
+						<h:outputLabel value="Sector:* " for="ciu" />
 					</b:column>
 					<b:column span="4">
 						<p:inputText id="ciu" value="#{lugarBean.lug_ciudad}"
-							required="true" requiredMessage="Campo ciudad requerido"
+							required="true" requiredMessage="Campo sector requerido"
 							styleClass="form-control" maxlength="100"
-							validatorMessage="Ciudad no debe contener caracteres especiales.">
+							validatorMessage="Sector no debe contener caracteres especiales.">
 						</p:inputText>
 					</b:column>
 				</b:row>
+				<br/>
 				<b:row>
 					<b:column span="2">
 						<h:outputLabel value="Nro. Guardias:* " for="nroguardias" />
 					</b:column>
 					<b:column span="4">
 						<p:inputText id="nroguardias" value="#{lugarBean.lug_nroguardias}"
-							disabled="#{lugarBean.edicion}" required="true"
+							required="true"
 							styleClass="form-control" style="width:100%; margin-bottom:15px;"
 							requiredMessage="Campo nro. guardias requerido" maxlength="10"
 							validatorMessage="Campo nro. guardias ingresar solo n&uacute;meros.">
@@ -58,7 +59,7 @@
 					<b:column span="2">
 						<h:outputLabel value="Contiene CCTV:* " for="cctv" />
 					</b:column>
-					<b:column span="4" style="margin-bottom:10px">
+					<b:column span="4" id="cctv" style="margin-bottom:10px">
 						<p:selectOneRadio value="#{lugarBean.lug_CCTV}"
 							style="margin-top:10px">
 							<f:selectItem itemLabel="SI" itemValue="true" />
@@ -66,12 +67,13 @@
 						</p:selectOneRadio>
 					</b:column>
 				</b:row>
+				<br/>
 				<b:row>
 					<b:column span="6" />
 					<b:column span="2">
 						<h:outputLabel value="Contiene control de accesos:* " for="cntrl" />
 					</b:column>
-					<b:column span="4" style="margin-bottom:10px">
+					<b:column span="4" id="cntrl" style="margin-bottom:10px">
 						<p:selectOneRadio value="#{lugarBean.lug_controlaccs}"
 							style="margin-top:10px">
 							<f:selectItem itemLabel="SI" itemValue="true" />

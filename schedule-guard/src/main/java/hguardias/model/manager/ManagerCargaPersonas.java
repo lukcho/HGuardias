@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+
 import javax.ejb.EJB;
 
 import hguardias.general.connection.SingletonJDBC;
@@ -16,14 +17,14 @@ import hguardias.model.dao.entities.Persona;
  * 
  */
 
-public class ManagerCarga {
+public class ManagerCargaPersonas {
 
 	private SingletonJDBC conDao;
 
 	@EJB
 	private ManagerDAO mDAO;
 
-	public ManagerCarga() {
+	public ManagerCargaPersonas() {
 		conDao = SingletonJDBC.getInstance();
 	}
 
@@ -113,4 +114,36 @@ public class ManagerCarga {
 		}
 		return f;
 	}
+	
+	
+	/**
+	 * Devuelve un funcionario por gerencia
+	 * 
+	 * @param gerencia
+	 * @return PersonaFuncionario
+	 * @throws Exception
+	 */
+	public Persona personaByDNI(String ced_id)
+			throws Exception {
+		Persona f = null;
+		ResultSet consulta = conDao
+				.consultaSQL("SELECT p.per_dni as dni , p.per_nombres as nombres,  p.per_apellidos as apellidos,p.per_fecha_nacimiento as fechanac, "
+						+ "p.per_genero as sexo, p.per_telefono as telefono, p.per_celular as celular, p.per_correo as correo "
+						+ " FROM gen_persona p where p.per_dni = '"+ced_id+"' ;");
+		if (consulta != null) {
+			while (consulta.next()) {
+				f = new Persona();
+				f.setPerDNI(consulta.getString("dni"));
+				f.setPerNombres(consulta.getString("nombres"));
+				f.setPerApellidos(consulta.getString("apellidos"));
+				f.setPerFechaNacimiento(consulta.getDate("fechanac"));
+				f.setPerGenero(consulta.getString("sexo"));
+				f.setPerTelefono(consulta.getString("telefono"));
+				f.setPerCelular(consulta.getString("celular"));
+				f.setPerCorreo(consulta.getString("correo"));
+			}
+		}
+		return f;
+	}
+	
 }

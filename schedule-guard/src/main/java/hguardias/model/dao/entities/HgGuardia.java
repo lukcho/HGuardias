@@ -1,7 +1,9 @@
 package hguardias.model.dao.entities;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
 import java.util.Date;
 import java.util.List;
 
@@ -29,8 +31,8 @@ public class HgGuardia implements Serializable {
 	@Column(name="gua_caso_nocturno")
 	private Boolean guaCasoNocturno;
 
-	@Column(name="gua_caso_turno", length=50)
-	private String guaCasoTurno;
+	@Column(name="gua_caso_turno")
+	private Integer guaCasoTurno;
 
 	@Column(name="gua_cctv")
 	private Boolean guaCctv;
@@ -115,11 +117,11 @@ public class HgGuardia implements Serializable {
 		this.guaCasoNocturno = guaCasoNocturno;
 	}
 
-	public String getGuaCasoTurno() {
+	public Integer getGuaCasoTurno() {
 		return this.guaCasoTurno;
 	}
 
-	public void setGuaCasoTurno(String guaCasoTurno) {
+	public void setGuaCasoTurno(Integer guaCasoTurno) {
 		this.guaCasoTurno = guaCasoTurno;
 	}
 

@@ -109,7 +109,7 @@ create table HG_GUARDIAS (
    GUA_MOTORIZADO       BOOL                 null,
    GUA_CHOFER           BOOL                 null,
    GUA_CONTROL_ACCESOS  BOOL                 null,
-   GUA_CASO_TURNO       VARCHAR(50)          null,
+   GUA_CASO_TURNO       INT4	             null,
    GUA_CASO_ESTUDIO     BOOL                 null,
    GUA_CASO_NOCTURNO    BOOL                 null,
    constraint PK_HG_GUARDIAS primary key (GUA_CEDULA)

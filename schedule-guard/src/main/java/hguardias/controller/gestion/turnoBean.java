@@ -258,7 +258,7 @@ public class turnoBean implements Serializable {
 			turno_descripcion = turno.getTurDescripcion();
 			turno_estado = turno.getTurEstado();
 			turno_hora_inicio = turno.getTurHoraInicio().toString();
-			turno_hora_inicio = turno.getTurHoraFin().toString();
+			turno_hora_fin = turno.getTurHoraFin().toString();
 			edicion = true;
 			ediciontipo = false;
 			return "hg_nturno?faces-redirect=true";

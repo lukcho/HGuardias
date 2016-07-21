@@ -41,52 +41,36 @@
 								value="Bot&oacute;n para modificar el lugar" trackMouse="true" />
 						</p:commandButton>
 							&nbsp;&nbsp;&nbsp;
-							<p:commandButton id="trackcamb" icon="ui-icon-refresh"
-							action="#{lugarBean.cambiarEstadoLugara(lug)}">
-							<p:tooltip id="toolTipTrack2" for="trackcamb"
-								value="Bot&oacute;n para cambiar el estado del condutor"
-								trackMouse="true" />
-						</p:commandButton>
 					</p:column>
 					<p:column filterBy="#{lug.lugNombre}" filterMatchMode="contains"
-						headerText="NOMBRE" width="70">
+						headerText="NOMBRE" width="80">
 						<h:outputText value="#{lug.lugNombre}"></h:outputText>
 					</p:column>
 					<p:column filterBy="#{lug.lugCiudad}" filterMatchMode="contains"
-						headerText="CIUDAD" width="70">
+						headerText="SECTOR" width="40">
 						<h:outputText value="#{lug.lugCiudad}"></h:outputText>
 					</p:column>
 					<p:column filterBy="#{lug.lugNroGuardias}"
-						filterMatchMode="contains" headerText="Nro. Guardias" width="70">
+						filterMatchMode="contains" headerText="NRO. GUARDIAS" width="40">
 						<h:outputText value="#{lug.lugNroGuardias}"></h:outputText>
 					</p:column>
-					<p:column headerText="CCTV"	sortBy="#{lug.lugCctv}">
+					<p:column headerText="CCTV" width="30" sortBy="#{lug.lugCctv}">
 						<p:selectBooleanCheckbox disabled="true" value="#{lug.lugCctv}">
 						</p:selectBooleanCheckbox>
 					</p:column>
-					<p:column headerText="Control Accesos"	sortBy="#{lug.lugControlAccesos}">
-						<p:selectBooleanCheckbox disabled="true" value="#{lug.lugControlAccesos}">
+					<p:column headerText="CONTROL ACCESOS" width="30"
+						sortBy="#{lug.lugControlAccesos}">
+						<p:selectBooleanCheckbox disabled="true"
+							value="#{lug.lugControlAccesos}">
 						</p:selectBooleanCheckbox>
 					</p:column>
 					<p:column filterBy="#{lug.lugEstado}" filterMatchMode="contains"
-						headerText="ESTADO" width="30">
+						headerText="ESTADO" width="40">
 						<h:outputText value="#{lug.lugEstado}"></h:outputText>
 					</p:column>
 				</p:dataTable>
 			</b:panel>
 		</h:form>
-		<p:confirmDialog header="Confirmación"
-			message="Está seguro de cambiar el estado?" closable="false"
-			showEffect="fade" hideEffect="explode" widgetVar="ce">
-			<h:form>
-				<p:commandButton value="Si" styleClass="ui-confirmdialog-yes"
-					icon="ui-icon-check" action="#{lugarBean.cambiarEstadoLugar()}"
-					oncomplete="PF('ce').hide();" update="frm" />
-				<p:commandButton value="No" type="button"
-					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
-					onclick="PF('ce').hide();" />
-			</h:form>
-		</p:confirmDialog>
 	</ui:define>
 </ui:composition>
 </html>

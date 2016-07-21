@@ -226,6 +226,19 @@ public class Funciones {
 			return "";
 	}
 	
+	
+	public static Date evaluarDatoWSDate(Object dato){
+		Date date = null;
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+			date = dateFormat.parse("dato");
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return date;
+	}
+	
 	/**
 	 * Evalua un String para convertirlo a Entero
 	 * @param dato

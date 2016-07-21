@@ -1,7 +1,8 @@
 package hguardias.controller.gestion;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,10 +17,13 @@ import javax.inject.Inject;
 
 import org.primefaces.context.RequestContext;
 
+import hguardias.model.dao.entities.Persona;
 import hguardias.controller.access.SesionBean;
 import hguardias.model.generic.Funciones;
 import hguardias.model.dao.entities.HgGuardia;
+import hguardias.model.dao.entities.HgTurno;
 import hguardias.model.generic.Mensaje;
+import hguardias.model.manager.ManagerBuscar;
 import hguardias.model.manager.ManagerGestion;
 
 @SessionScoped
@@ -30,6 +34,8 @@ public class guardiaBean implements Serializable {
 
 	@EJB
 	private ManagerGestion managergest;
+
+	private ManagerBuscar managerBuscar;
 
 	// guardias
 	private String guardia_id;
@@ -47,11 +53,14 @@ public class guardiaBean implements Serializable {
 	private boolean guardia_motorizado;
 	private boolean guardia_chofer;
 	private boolean guardia_controlaccesos;
-	private String guardia_casoturno;
+	private Integer guardia_casoturno;
 	private boolean guardia_casoestudio;
 	private boolean guardia_casonocturno;
 
 	private HgGuardia guardia;
+
+	// Buscarxcedula
+	private String dniBuscar;
 
 	// mmostrar
 	private boolean mostrarguardia_id;
@@ -70,29 +79,17 @@ public class guardiaBean implements Serializable {
 
 	@PostConstruct
 	public void ini() {
-		guardia_id = null;
 		guardia_estado = "A";
-		guardia_nombre = null;
-		guardia_apellido = null;
-		guardia_fechanac = null;
-		guardia_ciudad = null;
-		guardia_sexo = null;
-		guardia_telefono = null;
-		guardia_celular = null;
-		guardia_correo = null;
-		guardia_direccion = null;
-		guardia_CCTV = false;
-		guardia_motorizado = false;
-		guardia_chofer = false;
-		guardia_controlaccesos = false;
-		guardia_casoturno = null;
-		guardia_casoestudio = false;
-		guardia_casonocturno = false;
-		edicion = false;
-		ediciontipo = false;
-		mostrarguardia_id = false;
 		listaguardias = managergest.findAllGuardias();
 		usuario = ms.validarSesion("hg_guardias.xhtml");
+	}
+
+	public String getDniBuscar() {
+		return dniBuscar;
+	}
+
+	public void setDniBuscar(String dniBuscar) {
+		this.dniBuscar = dniBuscar;
 	}
 
 	public String getUsuario() {
@@ -251,11 +248,11 @@ public class guardiaBean implements Serializable {
 		this.guardia_casoestudio = guardia_casoestudio;
 	}
 
-	public String getGuardia_casoturno() {
+	public Integer getGuardia_casoturno() {
 		return guardia_casoturno;
 	}
 
-	public void setGuardia_casoturno(String guardia_casoturno) {
+	public void setGuardia_casoturno(Integer guardia_casoturno) {
 		this.guardia_casoturno = guardia_casoturno;
 	}
 
@@ -295,15 +292,19 @@ public class guardiaBean implements Serializable {
 	 */
 	public String crearGuardia() {
 		try {
+			java.util.Date fechai = guardia_fechanac;
+			SimpleDateFormat dateFormati = new SimpleDateFormat("yyyy-MM-dd");
+			final String stringDatei = dateFormati.format(fechai);
+			final java.sql.Date sqlfechai = java.sql.Date.valueOf(stringDatei);
+
 			if (edicion) {
 				managergest.editarGuardia(guardia_id.trim(),
 						guardia_nombre.trim(), guardia_apellido.trim(),
-						guardia_fechanac, guardia_ciudad.trim(),
-						guardia_sexo.trim(), guardia_telefono.trim(),
-						guardia_celular.trim(), guardia_correo.trim(),
-						guardia_direccion.trim(), guardia_CCTV,
-						guardia_motorizado, guardia_chofer,
-						guardia_controlaccesos, guardia_casoturno.trim(),
+						sqlfechai, guardia_ciudad.trim(), guardia_sexo.trim(),
+						guardia_telefono.trim(), guardia_celular.trim(),
+						guardia_correo.trim(), guardia_direccion.trim(),
+						guardia_CCTV, guardia_motorizado, guardia_chofer,
+						guardia_controlaccesos, guardia_casoturno,
 						guardia_casoestudio, guardia_casonocturno,
 						guardia_estado.trim());
 				getListaguardias().clear();
@@ -330,38 +331,49 @@ public class guardiaBean implements Serializable {
 				edicion = true;
 
 			} else {
-				// controla cedula repite
-				managergest.insertarGuardia(guardia_id.trim(),
-						guardia_nombre.trim(), guardia_apellido.trim(),
-						guardia_fechanac, guardia_ciudad.trim(),
-						guardia_sexo.trim(), guardia_telefono.trim(),
-						guardia_celular.trim(), guardia_correo.trim(),
-						guardia_direccion.trim(), guardia_CCTV,
-						guardia_motorizado, guardia_chofer,
-						guardia_controlaccesos, guardia_casoturno.trim(),
-						guardia_casoestudio, guardia_casonocturno);
-				Mensaje.crearMensajeINFO("Registrado - Creado");
-				getListaguardias().clear();
-				getListaguardias().addAll(managergest.findAllGuardias());
-				guardia_id = null;
-				guardia_estado = "A";
-				guardia_nombre = null;
-				guardia_apellido = null;
-				guardia_fechanac = null;
-				guardia_ciudad = null;
-				guardia_sexo = null;
-				guardia_telefono = null;
-				guardia_celular = null;
-				guardia_correo = null;
-				guardia_direccion = null;
-				guardia_CCTV = false;
-				guardia_motorizado = false;
-				guardia_chofer = false;
-				guardia_controlaccesos = false;
-				guardia_casoturno = null;
-				guardia_casoestudio = false;
-				guardia_casonocturno = false;
-				edicion = true;
+				if (this.ccedula(guardia_id)) {
+					FacesContext context = FacesContext.getCurrentInstance();
+					context.addMessage(null, new FacesMessage(
+							"Cédula Repetida..!!!",
+							"La cédula ya esta siendo utilizada"));
+				} else if (this.ccorreo(guardia_correo)) {
+					FacesContext context = FacesContext.getCurrentInstance();
+					context.addMessage(null, new FacesMessage(
+							"Correo Repetido..!!!",
+							"El correo ya esta siendo utilizado"));
+				} else {
+					managergest.insertarGuardia(guardia_id.trim(),
+							guardia_nombre.trim(), guardia_apellido.trim(),
+							sqlfechai, guardia_ciudad.trim(),
+							guardia_sexo.trim(), guardia_telefono.trim(),
+							guardia_celular.trim(), guardia_correo.trim(),
+							guardia_direccion.trim(), guardia_CCTV,
+							guardia_motorizado, guardia_chofer,
+							guardia_controlaccesos, guardia_casoturno,
+							guardia_casoestudio, guardia_casonocturno);
+					Mensaje.crearMensajeINFO("Registrado - Creado");
+					getListaguardias().clear();
+					getListaguardias().addAll(managergest.findAllGuardias());
+					guardia_id = null;
+					guardia_estado = "A";
+					guardia_nombre = null;
+					guardia_apellido = null;
+					guardia_fechanac = null;
+					guardia_ciudad = null;
+					guardia_sexo = null;
+					guardia_telefono = null;
+					guardia_celular = null;
+					guardia_correo = null;
+					guardia_direccion = null;
+					guardia_CCTV = false;
+					guardia_motorizado = false;
+					guardia_chofer = false;
+					guardia_controlaccesos = false;
+					guardia_casoturno = null;
+					guardia_casoestudio = false;
+					guardia_casonocturno = false;
+					edicion = true;
+				}
 			}
 			return "hg_guardias?faces-redirect=true";
 		} catch (Exception e) {
@@ -382,7 +394,14 @@ public class guardiaBean implements Serializable {
 	 * 
 	 */
 	public void abrirDialog() {
-		RequestContext.getCurrentInstance().execute("PF('gu').show();");
+		if (valida(guardia_id) == true) {
+			RequestContext.getCurrentInstance().execute("PF('gu').show();");
+		} else {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO,
+							"Cédula Incorrecta", null));
+		}
 	}
 
 	/**
@@ -407,6 +426,7 @@ public class guardiaBean implements Serializable {
 			guardia_celular = guardia.getGuaCelular();
 			guardia_correo = guardia.getGuaCorreo();
 			guardia_direccion = guardia.getGuaDireccion();
+
 			guardia_CCTV = guardia.getGuaCctv();
 			guardia_motorizado = guardia.getGuaMotorizado();
 			guardia_chofer = guardia.getGuaChofer();
@@ -483,6 +503,21 @@ public class guardiaBean implements Serializable {
 	}
 
 	/**
+	 * metodo para mostrar los turnos en solicitud
+	 * 
+	 */
+	public List<SelectItem> getListaTurno() {
+		List<SelectItem> listadoSI = new ArrayList<SelectItem>();
+		for (HgTurno t : managergest.findAllTurnos()) {
+			if (!t.getTurEstado().equals("I")) {
+				listadoSI.add(new SelectItem(t.getTurId(), t
+						.getTurDescripcion()));
+			}
+		}
+		return listadoSI;
+	}
+
+	/**
 	 * Lista de estados
 	 * 
 	 * @return lista de items de estados
@@ -496,7 +531,7 @@ public class guardiaBean implements Serializable {
 						+ Funciones.valorEstadoInactivo));
 		return lista;
 	}
-	
+
 	/**
 	 * Lista de estados
 	 * 
@@ -504,9 +539,10 @@ public class guardiaBean implements Serializable {
 	 */
 	public List<SelectItem> getlistEstadosSexo() {
 		List<SelectItem> lista = new ArrayList<SelectItem>();
-		lista.add(new SelectItem(Funciones.estadoMasculino, Funciones.estadoMasculino
-				+ " : " + Funciones.valorEstadoMasculino));
-		lista.add(new SelectItem(Funciones.estadoFemenino,
+		lista.add(new SelectItem(Funciones.valorEstadoMasculino,
+				Funciones.estadoMasculino + " : "
+						+ Funciones.valorEstadoMasculino));
+		lista.add(new SelectItem(Funciones.valorEstadoFemenino,
 				Funciones.estadoFemenino + " : "
 						+ Funciones.valorEstadoFemenino));
 		return lista;
@@ -572,4 +608,109 @@ public class guardiaBean implements Serializable {
 		getListaguardias().addAll(managergest.findAllGuardias());
 		return "hg_guardias?faces-redirect=true";
 	}
+
+	/**
+	 * Método para comprobar la cedula
+	 * 
+	 * @param cedula
+	 * @return boolean
+	 */
+	public boolean ccedula(String cedula) {
+		List<HgGuardia> u = managergest.findAllGuardias();
+		for (HgGuardia us : u) {
+			if (cedula.equals(us.getGuaCedula())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * metodo para comprobar el correo
+	 * 
+	 * @param correo
+	 * @return boolean
+	 */
+	public boolean ccorreo(String correo) {
+		List<HgGuardia> u = managergest.findAllGuardias();
+		for (HgGuardia us : u) {
+			if (correo.equals(us.getGuaCorreo())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Método para validar la cedula
+	 * 
+	 * @param x
+	 */
+	public static boolean valida(String x) {
+		int suma = 0;
+		if (x.length() == 9) {
+			System.out.println("Ingrese su cedula de 10 digitos");
+			return false;
+		} else {
+			int a[] = new int[x.length() / 2];
+			int b[] = new int[(x.length() / 2)];
+			int c = 0;
+			int d = 1;
+			for (int i = 0; i < x.length() / 2; i++) {
+				a[i] = Integer.parseInt(String.valueOf(x.charAt(c)));
+				c = c + 2;
+				if (i < (x.length() / 2) - 1) {
+					b[i] = Integer.parseInt(String.valueOf(x.charAt(d)));
+					d = d + 2;
+				}
+			}
+
+			for (int i = 0; i < a.length; i++) {
+				a[i] = a[i] * 2;
+				if (a[i] > 9) {
+					a[i] = a[i] - 9;
+				}
+				suma = suma + a[i] + b[i];
+			}
+			int aux = suma / 10;
+			int dec = (aux + 1) * 10;
+			if ((dec - suma) == Integer.parseInt(String.valueOf(x.charAt(x
+					.length() - 1))))
+				return true;
+			else if (suma % 10 == 0 && x.charAt(x.length() - 1) == '0') {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
+
+	public String buscarPersona(String per_dni) {
+		String r = "";
+		try {
+
+			if (!Funciones.validacionCedula(per_dni)) {
+				Persona per = managerBuscar.buscarPersonaWSReg(per_dni);
+				mostrarCamposPersona(per);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			Mensaje.crearMensajeINFO("Error...Digite bien la cédula a buscar");
+			e.printStackTrace();
+		}
+		return r;
+	}
+
+	private void mostrarCamposPersona(Persona per) {
+		setGuardia_id(per.getPerDNI());
+		setGuardia_nombre(per.getPerNombres());
+		setGuardia_apellido(per.getPerApellidos());
+		setGuardia_correo(per.getPerCorreo());
+		setGuardia_telefono(per.getPerTelefono());
+		setGuardia_celular(per.getPerCelular());
+		setGuardia_sexo(per.getPerGenero());
+		setGuardia_fechanac(per.getPerFechaNacimiento());
+		
+	}
+
 }

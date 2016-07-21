@@ -33,12 +33,15 @@ public class ManagerBuscar {
 			Persona p = new Persona();
 			p.setPerDNI(Funciones.evaluarDatoWS(respuesta.get("perDni")));
 			p.setPerNombres(Funciones.evaluarDatoWS(respuesta.get("perNombres")));
-			p.setPerApellidos(Funciones.evaluarDatoWS(respuesta
-					.get("perApellidos")));
-			p.setPerCorreo(Funciones.evaluarDatoWS(respuesta.get("perCorreo")));
+			p.setPerApellidos(Funciones.evaluarDatoWS(respuesta.get("perApellidos")));
+			p.setPerFechaNacimiento(Funciones.evaluarDatoWSDate(respuesta.get("perFechaNacimiento")));
+			p.setPerGenero(Funciones.evaluarDatoWS(respuesta.get("perGenero")));
+			p.setPerTelefono(Funciones.evaluarDatoWS(respuesta.get("perTelefono")));
 			p.setPerCelular(Funciones.evaluarDatoWS(respuesta.get("perCelular")));
-			p.setPerTelefono(Funciones.evaluarDatoWS(respuesta
-					.get("perTelefono")));
+			p.setPerCorreo(Funciones.evaluarDatoWS(respuesta.get("perCorreo")));
+			
+	
+			
 			return p;
 		}
 	}

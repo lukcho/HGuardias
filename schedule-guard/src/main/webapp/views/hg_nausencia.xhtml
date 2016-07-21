@@ -22,13 +22,13 @@
 			<b:panel title="Registro de Ausencia" look="primary">
 				<b:row>
 					<b:column span="2">
-						<h:outputText value="Seleccione Guardia*: " />
+						<h:outputLabel value="Seleccione Guardia*: " for="gua" />
 					</b:column>
 					<b:column span="4">
 						<h:panelGroup>
-							<p:selectOneMenu required="true" styleClass="t"
-								value="#{ausenciaBean.gua_id}"
-								requiredMessage="Requerido guardia">
+							<p:selectOneMenu required="true"
+								value="#{ausenciaBean.gua_id}" id="gua" disabled="#{ausenciaBean.edicion}" style="width:200px"
+								requiredMessage="Requerido guardia" filter="true" filterMatchMode="startsWith">
 								<p:ajax listener="#{ausenciaBean.mostrara()}"
 									update="nombre apellido">
 								</p:ajax>
@@ -39,13 +39,11 @@
 							</p:selectOneMenu>
 						</h:panelGroup>
 					</b:column>
-				</b:row>
-				<br />
-				<b:row>
-				<b:column span="2">
-				<h:outputText id="nombre" value="#{ausenciaBean.nombreguardia}" />
-				<h:outputText id="apellido" value="#{ausenciaBean.apellidoguardia}" />
-				</b:column>
+					<b:column span="2">
+						<h:outputLabel id="nombre" value="#{ausenciaBean.nombreguardia}" />
+						&nbsp;
+						<h:outputLabel id="apellido" value="#{ausenciaBean.apellidoguardia}" />
+					</b:column>
 				</b:row>
 				<br />
 				<b:row>
@@ -53,9 +51,9 @@
 						<h:outputLabel value="Descripción:* " for="des" />
 					</b:column>
 					<b:column span="4">
-						<p:inputTextarea id="des" value="#{ausenciaBean.aus_descripcion}"
+						<p:inputTextarea id="des"  value="#{ausenciaBean.aus_descripcion}"
 							styleClass="form-control" style="width:100%; margin-bottom:15px;"
-							fieldSize="2" rows="2" disabled="#{ausenciaBean.edicion}"
+							fieldSize="2" rows="2"
 							required="true" requiredMessage="Campo descripción requerido"
 							maxlength="255">
 						</p:inputTextarea>
@@ -67,18 +65,22 @@
 						<h:outputLabel value="Fecha Inicio*:" for="fechai" />
 					</b:column>
 					<b:column span="4">
-						<p:calendar required="true" mindate="#{ausenciaBean.date}"
+						<p:calendar required="true" mindate="#{ausenciaBean.date}"  yearRange="c:c+5"
+							navigator="true" 
 							requiredMessage="Requerido Fecha Inicio" id="fechai"
-							value="#{ausenciaBean.aus_fechainicio}" pattern="yyyy/MM/dd" mask="true">
+							value="#{ausenciaBean.aus_fechainicio}" pattern="yyyy/MM/dd"
+							mask="true">
 						</p:calendar>
 					</b:column>
 					<b:column span="2">
 						<h:outputLabel value="Fecha Fin*:" for="fechaf" />
 					</b:column>
-					<b:column span="4">
-						<p:calendar required="true" mindate="#{ausenciaBean.date}"
+					<b:column span="4"> 
+						<p:calendar required="true" mindate="#{ausenciaBean.date}" yearRange="c:c+5"
+							navigator="true" 
 							requiredMessage="Requerido Fecha Fin" id="fechaf"
-							value="#{ausenciaBean.aus_fechafin}" pattern="yyyy/MM/dd" mask="true">
+							value="#{ausenciaBean.aus_fechafin}" pattern="yyyy/MM/dd"
+							mask="true">
 						</p:calendar>
 					</b:column>
 
@@ -92,7 +94,7 @@
 							update="frm messages">
 						</p:commandButton>&nbsp;&nbsp;&nbsp;
 						<b:commandButton value="Volver"
-							action="#{lugarBean.volverLugar()}" update="frm" look="info"
+							action="#{ausenciaBean.volverAusencia()}" update="frm" look="info"
 							process="@this">
 						</b:commandButton>&nbsp;&nbsp;&nbsp;
 					</b:column>

@@ -253,6 +253,13 @@ public class ausenciaBean implements Serializable {
 	 * 
 	 */
 	public void abrirDialog() {
+		if (aus_fechainicio.after(aus_fechafin)) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_WARN,
+							"Fecha inicio debe ser menor que la Fecha Fin",
+							null));
+		} else
 		RequestContext.getCurrentInstance().execute("PF('gu').show();");
 	}
 
@@ -272,6 +279,8 @@ public class ausenciaBean implements Serializable {
 			aus_fechafin = (Date) aus.getAusFechaFin();
 			aus_descripcion = aus.getAusDescripcion();
 			gua_id = aus.getHgGuardia().getGuaCedula();
+			asignarGuardia();
+			mostrara();
 			edicion = true;
 			ediciontipo = false;
 			return "hg_nausencia?faces-redirect=true";
@@ -380,7 +389,7 @@ public class ausenciaBean implements Serializable {
 		List<SelectItem> listadoSI = new ArrayList<SelectItem>();
 		for (HgGuardia t : managergest.findAllGuardias()) {
 			if (!t.getGuaEstado().equals("I")) {
-				listadoSI.add(new SelectItem(t.getGuaCedula(), t.getGuaNombre()
+				listadoSI.add(new SelectItem(t.getGuaCedula(),t.getGuaCedula()+" - "+ t.getGuaNombre()
 						+ " " + t.getGuaApellido()));
 			}
 		}

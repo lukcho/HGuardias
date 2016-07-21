@@ -2208,10 +2208,10 @@ LABL 0 Arial,8,N</a:FontList>
 <a:Code>GUA_CASO_TURNO</a:Code>
 <a:CreationDate>1468876627</a:CreationDate>
 <a:Creator>lcorrea</a:Creator>
-<a:ModificationDate>1468944924</a:ModificationDate>
+<a:ModificationDate>1469110973</a:ModificationDate>
 <a:Modifier>lcorrea</a:Modifier>
-<a:DataType>VARCHAR(50)</a:DataType>
-<a:Length>50</a:Length>
+<a:DataType>INT4</a:DataType>
+<a:Length>4</a:Length>
 </o:Column>
 <o:Column Id="o59">
 <a:ObjectID>89E73C29-79BC-4635-B395-E58D434FBE2C</a:ObjectID>

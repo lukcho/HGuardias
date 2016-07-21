@@ -41,44 +41,26 @@
 								value="Bot&oacute;n para modificar el lugar" trackMouse="true" />
 						</p:commandButton>
 							&nbsp;&nbsp;&nbsp;
-							<p:commandButton id="trackcamb" icon="ui-icon-refresh"
-							action="#{turnoBean.cambiarEstadoTurnoa(lug)}">
-							<p:tooltip id="toolTipTrack2" for="trackcamb"
-								value="Bot&oacute;n para cambiar el estado del condutor"
-								trackMouse="true" />
-						</p:commandButton>
 					</p:column>
 					<p:column filterBy="#{tur.turId}" filterMatchMode="contains"
-						headerText="ID" width="70">
+						headerText="ID" width="50">
 						<h:outputText value="#{tur.turId}"></h:outputText>
 					</p:column>
 					<p:column filterBy="#{tur.turDescripcion}" filterMatchMode="contains"
-						headerText="Descripción" width="70">
+						headerText="DESCRIPCIÓN" width="50">
 						<h:outputText value="#{tur.turDescripcion}"></h:outputText>
 					</p:column>
-					<p:column headerText="HORA INICIO/FIN" width="100">
+					<p:column headerText="HORA INICIO/FIN" width="50">
 						<h:outputText value="#{tur.turHoraInicio} - #{tur.turHoraFin}">
 						</h:outputText>
 					</p:column>
 					<p:column filterBy="#{tur.turEstado}" filterMatchMode="contains"
-						headerText="ESTADO" width="30">
+						headerText="ESTADO" width="40">
 						<h:outputText value="#{tur.turEstado}"></h:outputText>
 					</p:column>
 				</p:dataTable>
 			</b:panel>
 		</h:form>
-		<p:confirmDialog header="Confirmación"
-			message="Está seguro de cambiar el estado?" closable="false"
-			showEffect="fade" hideEffect="explode" widgetVar="ce">
-			<h:form>
-				<p:commandButton value="Si" styleClass="ui-confirmdialog-yes"
-					icon="ui-icon-check" action="#{turnoBean.cambiarEstadoTurno()}"
-					oncomplete="PF('ce').hide();" update="frm" />
-				<p:commandButton value="No" type="button"
-					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
-					onclick="PF('ce').hide();" />
-			</h:form>
-		</p:confirmDialog>
 	</ui:define>
 </ui:composition>
 </html>

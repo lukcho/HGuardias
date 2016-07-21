@@ -234,6 +234,13 @@ public class horarioCDBean implements Serializable {
 	 * 
 	 */
 	public void abrirDialog() {
+		if (horcab_fechainicio.after(horcab_fechafin)) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_WARN,
+							"Fecha inicio debe ser menor que la Fecha Fin",
+							null));
+		} else
 		RequestContext.getCurrentInstance().execute("PF('gu').show();");
 	}
 

@@ -27,7 +27,7 @@
 					<b:column span="4">
 						<p:inputTextarea id="desc" value="#{turnoBean.turno_descripcion}"
 							styleClass="form-control" style="width:100%; margin-bottom:15px;"
-							fieldSize="2" rows="2" disabled="#{turnoBean.edicion}"
+							fieldSize="2" rows="2"
 							required="true" requiredMessage="Campo descripción requerido"
 							maxlength="255">
 						</p:inputTextarea>
@@ -40,7 +40,7 @@
 					<b:column span="4">
 						<h:panelGroup>
 							<h:selectOneMenu id="trackseleccionar4" required="true"
-								disabled="#{turnoBean.edicion}" styleClass="form-control"
+								styleClass="form-control"
 								requiredMessage="Requerido Hora Inicio"
 								value="#{turnoBean.turno_hora_inicio}">
 								<f:selectItem itemLabel="Selecci&oacute;n Hora Inicio"
@@ -55,7 +55,7 @@
 					<b:column span="4">
 						<h:panelGroup>
 							<h:selectOneMenu id="trackseleccionar5" required="true"
-								disabled="#{turnoBean.edicion}" styleClass="form-control"
+								styleClass="form-control"
 								requiredMessage="Requerido Hora Fin"
 								value="#{turnoBean.turno_hora_fin}">
 								<f:selectItem itemLabel="Selecci&oacute;n Hora Fin"

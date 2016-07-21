@@ -5,23 +5,13 @@ import java.util.Date;
 public class Persona {
 	
 	private String perDNI;
-	private String perTipoDNI;
 	private String perNombres;
 	private String perApellidos;
+	private Date perFechaNacimiento;
+	private String perGenero;
 	private String perTelefono;
 	private String perCelular;
 	private String perCorreo;
-	private String perPais;
-	private Date perFechaNacimiento;
-	private String perGenero;
-	private String perDireccion;
-	private String perGerencia;
-	private String perDiscapacidadTipo;
-	private String perDiscapacidadGrado;
-	private String perDiscapacidadCarnet;
-	private String cargo;
-	private String jefeInmediato;
-	private String correoJefeInmediato;
 	
 	public Persona() {}
 	
@@ -29,50 +19,20 @@ public class Persona {
 		this.perDNI = perDNI;
 	}
 	
-	public Persona(String perDNI, String perTipoDNI, String perNombres,
+	public Persona(String perDNI, String perNombres,
 			String perApellidos, String perTelefono, String perCelular,
-			String perCorreo, String perPais, Date perFechaNacimiento,
-			String cargo, String jefeInmediato, String pergerencia,
-			String perDireccion, String perGenero,String correoJefeInmediato,
-			String perDiscapacidadTipo, String perDiscapacidadGrado,
-			String perDiscapacidadCarnet) {
+			String perCorreo, Date perFechaNacimiento,
+	        String perGenero) {
 		this.perDNI = perDNI;
-		this.perTipoDNI = perTipoDNI;
 		this.perNombres = perNombres;
 		this.perApellidos = perApellidos;
 		this.perTelefono = perTelefono;
 		this.perCelular = perCelular;
 		this.perCorreo = perCorreo;
-		this.perGerencia = pergerencia;
-		this.perPais = perPais;
 		this.perFechaNacimiento = perFechaNacimiento;
-		this.perDireccion = perDireccion;
 		this.perGenero = perGenero;
-		this.perDiscapacidadTipo = perDiscapacidadTipo;
-		this.perDiscapacidadGrado = perDiscapacidadGrado;
-		this.perDiscapacidadCarnet = perDiscapacidadCarnet;
-		this.correoJefeInmediato = correoJefeInmediato;
-		
-		this.cargo = cargo;
-		this.jefeInmediato = jefeInmediato;
 	}
 	
-	public String getCorreoJefeInmediato() {
-		return correoJefeInmediato;
-	}
-
-	public void setCorreoJefeInmediato(String correoJefeInmediato) {
-		this.correoJefeInmediato = correoJefeInmediato;
-	}
-
-	public String getPerGerencia() {
-		return perGerencia;
-	}
-
-	public void setPerGerencia(String perGerencia) {
-		this.perGerencia = perGerencia;
-	}
-
 	/**
 	 * @return the perDNI
 	 */
@@ -85,20 +45,6 @@ public class Persona {
 	 */
 	public void setPerDNI(String perDNI) {
 		this.perDNI = perDNI;
-	}
-
-	/**
-	 * @return the perTipoDNI
-	 */
-	public String getPerTipoDNI() {
-		return perTipoDNI;
-	}
-
-	/**
-	 * @param perTipoDNI the perTipoDNI to set
-	 */
-	public void setPerTipoDNI(String perTipoDNI) {
-		this.perTipoDNI = perTipoDNI;
 	}
 
 	/**
@@ -172,20 +118,6 @@ public class Persona {
 	}
 
 	/**
-	 * @return the perPais
-	 */
-	public String getPerPais() {
-		return perPais;
-	}
-
-	/**
-	 * @param perPais the perPais to set
-	 */
-	public void setPerPais(String perPais) {
-		this.perPais = perPais;
-	}
-
-	/**
 	 * @return the perFechaNacimiento
 	 */
 	public Date getPerFechaNacimiento() {
@@ -197,20 +129,6 @@ public class Persona {
 	 */
 	public void setPerFechaNacimiento(Date perFechaNacimiento) {
 		this.perFechaNacimiento = perFechaNacimiento;
-	}
-	
-	/**
-	 * @return the perDireccion
-	 */
-	public String getPerDireccion() {
-		return perDireccion;
-	}
-
-	/**
-	 * @param perDireccion the perDireccion to set
-	 */
-	public void setPerDireccion(String perDireccion) {
-		this.perDireccion = perDireccion;
 	}
 	
 	/**
@@ -226,77 +144,4 @@ public class Persona {
 	public void setPerGenero(String perGenero) {
 		this.perGenero = perGenero;
 	}
-
-	/**
-	 * @return the perDiscapacidadTipo
-	 */
-	public String getPerDiscapacidadTipo() {
-		return perDiscapacidadTipo;
-	}
-
-	/**
-	 * @param perDiscapacidadTipo the perDiscapacidadTipo to set
-	 */
-	public void setPerDiscapacidadTipo(String perDiscapacidadTipo) {
-		this.perDiscapacidadTipo = perDiscapacidadTipo;
-	}
-
-	/**
-	 * @return the perDiscapacidadGrado
-	 */
-	public String getPerDiscapacidadGrado() {
-		return perDiscapacidadGrado;
-	}
-
-	/**
-	 * @param perDiscapacidadGrado the perDiscapacidadGrado to set
-	 */
-	public void setPerDiscapacidadGrado(String perDiscapacidadGrado) {
-		this.perDiscapacidadGrado = perDiscapacidadGrado;
-	}
-
-	/**
-	 * @return the perDiscapacidadCarnet
-	 */
-	public String getPerDiscapacidadCarnet() {
-		return perDiscapacidadCarnet;
-	}
-
-	/**
-	 * @param perDiscapacidadCarnet the perDiscapacidadCarnet to set
-	 */
-	public void setPerDiscapacidadCarnet(String perDiscapacidadCarnet) {
-		this.perDiscapacidadCarnet = perDiscapacidadCarnet;
-	}
-	
-	/**
-	 * @return the cargo
-	 */
-	public String getCargo() {
-		return cargo;
-	}
-
-	/**
-	 * @param cargo the cargo to set
-	 */
-	public void setCargo(String cargo) {
-		this.cargo = cargo;
-	}
-
-	/**
-	 * @return the jefeInmediato
-	 */
-	public String getJefeInmediato() {
-		return jefeInmediato;
-	}
-
-	/**
-	 * @param jefeInmediato the jefeInmediato to set
-	 */
-	public void setJefeInmediato(String jefeInmediato) {
-		this.jefeInmediato = jefeInmediato;
-	}
-	
-	
-	
 }

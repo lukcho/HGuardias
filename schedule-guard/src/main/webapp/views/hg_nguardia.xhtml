@@ -22,17 +22,36 @@
 			<b:panel title="Registro de Guardia" look="primary">
 				<b:row>
 					<b:column span="2">
+						<h:outputLabel value="Buscar Persona: " for="busccedu" />
+					</b:column>
+					<b:column span="4">
+						<p:inputText id="busccedu" value="#{guardiaBean.dniBuscar}"
+							required="true" styleClass="form-control" maxlength="10"
+							disabled="#{guardiaBean.edicion}" 
+							requiredMessage="Campo cédula/pasaporte requerido">
+						</p:inputText>
+					</b:column>
+					<b:column span="5">
+						<p:commandButton value="Buscar" styleClass="btn btn-info"
+							style="padding:7px;"
+							actionListener="#{guardiaBean.buscarPersona()}"
+							update="frm messages">
+						</p:commandButton>
+					</b:column>
+				</b:row>
+				<b:row>
+					<b:column span="2">
 						<h:outputLabel value="Cédula:* " for="cedu" />
 					</b:column>
 					<b:column span="3">
 						<p:inputText id="cedu" value="#{guardiaBean.guardia_id}"
-							required="true" styleClass="form-control"
-							disabled="#{guardiaBean.mostrarguardia_id}"
+							required="true" styleClass="form-control" maxlength="10"
+							disabled="#{guardiaBean.edicion}"
 							requiredMessage="Campo cédula/pasaporte requerido">
 						</p:inputText>
 					</b:column>
 					<b:column span="2">
-						<h:outputLabel value="Nombre:* " for="nom" />
+						<h:outputLabel value="Nombres:* " for="nom" />
 					</b:column>
 					<b:column span="3">
 						<p:inputText id="nom" value="#{guardiaBean.guardia_nombre}"
@@ -44,7 +63,7 @@
 				<br />
 				<b:row>
 					<b:column span="2">
-						<h:outputLabel value="Apellido:* " for="ape" />
+						<h:outputLabel value="Apellidos:* " for="ape" />
 					</b:column>
 					<b:column span="3">
 						<p:inputText id="ape" value="#{guardiaBean.guardia_apellido}"
@@ -68,19 +87,20 @@
 						<h:outputLabel value="Fecha Nacimiento:* " for="fechanac" />
 					</b:column>
 					<b:column span="3">
-						<p:calendar required="true" disabled="#{guardiaBean.edicion}"
-							label="fechanac" style="width:100%; margin-bottom:15px;"
-							requiredMessage="Requerido Fecha nacimiento" id="fechai"
-							mode="popup" value="#{guardiaBean.guardia_fechanac}"
-							pattern="yyyy/MM/dd" mask="true">
+						<p:calendar id="fechanac" required="true"
+							disabled="#{guardiaBean.edicion}" yearRange="c-100:c"
+							navigator="true" label="fechanac"
+							style="width:100%; margin-bottom:15px;"
+							requiredMessage="Requerido Fecha nacimiento" mode="popup"
+							value="#{guardiaBean.guardia_fechanac}" pattern="yyyy/MM/dd"
+							mask="true">
 						</p:calendar>
 					</b:column>
 					<b:column span="2">
 						<h:outputLabel value="Sexo:* " for="sex" />
 					</b:column>
 					<b:column span="3">
-						<b:selectOneMenu id="sex" value="#{guardiaBean.guardia_sexo}"
-							rendered="#{guardiaBean.edicion}">
+						<b:selectOneMenu id="sex" value="#{guardiaBean.guardia_sexo}">
 							<f:selectItems value="#{guardiaBean.listEstadosSexo}" />
 						</b:selectOneMenu>
 					</b:column>
@@ -187,11 +207,12 @@
 						<h:outputLabel value="Caso Turno:* " for="turn" />
 					</b:column>
 					<b:column span="3" style="margin-bottom:10px">
-						<p:selectOneRadio id="turn"
-							value="#{guardiaBean.guardia_casoturno}" style="margin-top:10px">
-							<f:selectItem itemLabel="SI" itemValue="true" />
-							<f:selectItem itemLabel="NO" itemValue="false" />
-						</p:selectOneRadio>
+						<h:selectOneMenu id="turn" styleClass="form-control"
+							value="#{guardiaBean.guardia_casoturno}">
+							<f:selectItem itemLabel="Selección Turno" itemValue="" />
+							<f:selectItems value="#{guardiaBean.listaTurno}" />
+						</h:selectOneMenu>
+
 					</b:column>
 					<b:column span="2">
 						<h:outputLabel value="Caso estudio:* " for="estu" />
@@ -220,12 +241,12 @@
 					</b:column>
 					<b:column span="2">
 						<h:outputLabel value="Estado*" for="est"
-							rendered="#{postulantesBean.edicion}" />
+							rendered="#{guardiaBean.edicion}" />
 					</b:column>
 					<b:column span="3">
-						<b:selectOneMenu id="est" value="#{postulantesBean.pos_estado}"
-							rendered="#{postulantesBean.edicion}">
-							<f:selectItems value="#{postulantesBean.listEstados}" />
+						<b:selectOneMenu id="est" value="#{guardiaBean.guardia_estado}"
+							rendered="#{guardiaBean.edicion}">
+							<f:selectItems value="#{guardiaBean.listEstados}" />
 						</b:selectOneMenu>
 					</b:column>
 				</b:row>

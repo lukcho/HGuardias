@@ -16,6 +16,8 @@ public class ManagerGestion {
 	private ManagerDAO mDAO;
 	
 	private static HgGuardia hg_gua;
+	
+	private static HgTurno hg_turno;
 	String h = "";
 
 	public ManagerGestion() {
@@ -166,7 +168,7 @@ public class ManagerGestion {
 			String gua_apellido, Date gua_fechanac, String gue_ciudad, String gua_sexo, 
 			String gua_telefono,String gua_celular, String gua_correo, String gua_direccion,
 			boolean gua_cctv, boolean gua_motorizado, boolean gua_chofer, boolean gua_controlaccs,
-			String gua_casoturno,boolean gua_casoestudio,boolean gua_casonocturno) throws Exception {
+			Integer gua_casoturno,boolean gua_casoestudio,boolean gua_casonocturno) throws Exception {
 		
 		HgGuardia gua = new HgGuardia();
 		gua.setGuaCedula(gua_cedid);
@@ -204,7 +206,7 @@ public class ManagerGestion {
 			String gua_apellido, Date gua_fechanac, String gue_ciudad, String gua_sexo, 
 			String gua_telefono,String gua_celular, String gua_correo, String gua_direccion,
 			boolean gua_cctv, boolean gua_motorizado, boolean gua_chofer, boolean gua_controlaccs,
-			String gua_casoturno,boolean gua_casoestudio,boolean gua_casonocturno, String gua_estado) throws Exception {
+			Integer gua_casoturno,boolean gua_casoestudio,boolean gua_casonocturno, String gua_estado) throws Exception {
 		
 		HgGuardia gua = this.guardiaByID(gua_cedid);
 		// con.setCondCedula(con_cedid);
@@ -448,5 +450,22 @@ public class ManagerGestion {
 				e.printStackTrace();
 			}
 			return hg_gua;
+		}
+		
+		/**
+		 * metodo para asignar el turno
+		 * 
+		 * @param u
+		 *            guardia a analizar
+		 * @return true o false
+		 */
+		public HgTurno asignarTurno(Integer turno_id) {
+			try {
+				hg_turno = this.turnoByID(turno_id);
+			} catch (Exception e) {
+				// TODO Auto-generated prodch block
+				e.printStackTrace();
+			}
+			return hg_turno;
 		}
 }

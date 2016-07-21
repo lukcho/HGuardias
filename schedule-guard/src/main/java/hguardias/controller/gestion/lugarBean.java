@@ -33,7 +33,7 @@ public class lugarBean implements Serializable {
 	// Lugares
 	private Integer lug_id;
 	private String lug_nombre;
-	private Integer lug_nroguardias;
+	private String lug_nroguardias;
 	private String lug_ciudad;
 	private String lug_estado;
 	private boolean lug_CCTV;
@@ -132,11 +132,11 @@ public class lugarBean implements Serializable {
 		this.ediciontipo = ediciontipo;
 	}
 
-	public Integer getLug_nroguardias() {
+	public String getLug_nroguardias() {
 		return lug_nroguardias;
 	}
 	
-	public void setLug_nroguardias(Integer lug_nroguardias) {
+	public void setLug_nroguardias(String lug_nroguardias) {
 		this.lug_nroguardias = lug_nroguardias;
 	}
 
@@ -184,8 +184,11 @@ public class lugarBean implements Serializable {
 	 */
 	public String crearLugar() {
 		try {
+			Integer nroguradias;
+			nroguradias = Integer.parseInt(lug_nroguardias);
+			
 			if (edicion) {
-				managergest.editarLugar(lug_id, lug_nombre.trim(), lug_ciudad.trim(), lug_nroguardias, lug_CCTV, lug_controlaccs, lug_estado.trim());
+				managergest.editarLugar(lug_id, lug_nombre.trim(), lug_ciudad.trim(), nroguradias, lug_CCTV, lug_controlaccs, lug_estado.trim());
 				getListaLugares().clear();
 				getListaLugares().addAll(managergest.findAllLugares());
 				Mensaje.crearMensajeINFO("Actualizado - Modificado");
@@ -198,7 +201,7 @@ public class lugarBean implements Serializable {
 				lug_controlaccs=false;
 				
 			} else {
-				managergest.insertarLugar(lug_nombre.trim(), lug_ciudad.trim(), lug_nroguardias, lug_CCTV, lug_controlaccs, lug_estado.trim());
+				managergest.insertarLugar(lug_nombre.trim(), lug_ciudad.trim(), nroguradias, lug_CCTV, lug_controlaccs, lug_estado.trim());
 				Mensaje.crearMensajeINFO("Registrado - Creado");
 				getListaLugares().clear();
 				getListaLugares().addAll(managergest.findAllLugares());
@@ -246,7 +249,7 @@ public class lugarBean implements Serializable {
 			lug_id = lug.getLugId();
 			lug_nombre = lug.getLugNombre();
 			lug_ciudad = lug.getLugCiudad();
-			lug_nroguardias = lug.getLugNroGuardias();
+			lug_nroguardias = lug.getLugNroGuardias().toString();
 			lug_estado = lug.getLugEstado();
 			lug_CCTV=lug.getLugCctv();
 			lug_controlaccs=lug.getLugControlAccesos();
