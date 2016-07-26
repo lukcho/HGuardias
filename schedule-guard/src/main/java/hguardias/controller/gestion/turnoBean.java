@@ -3,7 +3,6 @@ package hguardias.controller.gestion;
 import java.io.Serializable;
 import java.sql.Time;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -225,22 +224,7 @@ public class turnoBean implements Serializable {
 	 * 
 	 */
 	public void abrirDialog() {
-		DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
-		try {
-			horainiciotiemp = new java.sql.Time(formatter
-					.parse(turno_hora_inicio).getTime());
-			horafintiemp = new java.sql.Time(formatter.parse(turno_hora_fin)
-					.getTime());
-			if (horafintiemp.getTime() < horainiciotiemp.getTime()) {
-				FacesContext context = FacesContext.getCurrentInstance();
-				context.addMessage(null, new FacesMessage(
-						"Error..Verifique su horario.", ""));
-			} else
 				RequestContext.getCurrentInstance().execute("PF('gu').show();");
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	/**

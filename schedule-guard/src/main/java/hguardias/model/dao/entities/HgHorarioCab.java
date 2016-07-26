@@ -18,8 +18,6 @@ public class HgHorarioCab implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="HG_HORARIO_CAB_HCABID_GENERATOR", sequenceName="SEQ_HG_HORARIO_CAB", allocationSize=1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="HG_HORARIO_CAB_HCABID_GENERATOR")
 	@Column(name="hcab_id")
 	private Integer hcabId;
 

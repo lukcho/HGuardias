@@ -2,39 +2,40 @@ package hguardias.controller.access;
 
 import org.json.simple.JSONObject;
 
-import hguardias.model.manager.ManagerCarga;
-import hguardias.model.dao.entities.HgParametro;
 import hguardias.model.dao.entities.Persona;
 import hguardias.model.generic.ConsumeREST;
 import hguardias.model.generic.Funciones;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 public class test {
 
 	public static void main(String[] args) {
 		try {
-			System.out.println(buscarPersonaWSReg("1003443296").getPerNombres());
+			 BufferedReader br = null;
+
+		        br = new BufferedReader(new InputStreamReader(System.in));
+		        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+
+		        System.out.println("Insert first date : ");
+		        Date dt1 = sdf.parse(br.readLine().trim());
+
+		        System.out.println("Insert second date : ");
+		        Date dt2 = sdf.parse(br.readLine().trim());
+
+		        long diff = dt2.getTime() - dt1.getTime();
+
+		        System.out.println("Days: " + diff / 1000L / 60L / 60L / 24L);
+
+		        if (br != null) {
+		            br.close();
+		        }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public static Persona buscarPersonaWSReg(String dni) throws Exception {
-		JSONObject respuesta = ConsumeREST.consumeGetRestEasyObject("http://yachay-ws.yachay.gob.ec/data/WSPersonaEntity/dni=" + dni);
-		if (respuesta.isEmpty())
-			return null;
-		else {
-			System.out.println("Respuesta FindPersonas ---> " + respuesta);
-			Persona p = new Persona();
-			p.setPerDNI(Funciones.evaluarDatoWS(respuesta.get("perDni")));
-			p.setPerNombres(Funciones.evaluarDatoWS(respuesta.get("perNombres")));
-			p.setPerApellidos(Funciones.evaluarDatoWS(respuesta
-					.get("perApellidos")));
-			p.setPerCorreo(Funciones.evaluarDatoWS(respuesta.get("perCorreo")));
-			p.setPerCelular(Funciones.evaluarDatoWS(respuesta.get("perCelular")));
-			p.setPerTelefono(Funciones.evaluarDatoWS(respuesta
-					.get("perTelefono")));
-			return p;
-		}
-	}
-
 }

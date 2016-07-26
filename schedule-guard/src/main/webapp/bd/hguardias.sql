@@ -37,22 +37,13 @@ CREATE SEQUENCE seq_hg_horario_det
 ALTER TABLE seq_hg_horario_det
   OWNER TO postgres;
 
-CREATE SEQUENCE seq_hg_horario_cab
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 1
-  CACHE 1;
-ALTER TABLE seq_hg_horario_cab
-  OWNER TO postgres;
-
 
 
 /*==============================================================*/
 /* Table: HG_HORARIO_CAB                                        */
 /*==============================================================*/
 create table HG_HORARIO_CAB (
-   HCAB_ID              INT4                 not null DEFAULT nextval('seq_hg_horario_cab'::regclass),
+   HCAB_ID              INT4                 not null,
    HCAB_NOMBRE          VARCHAR(255)         null,
    HCAB_USUARIO         VARCHAR(255)         null,
    HCAB_FECHA_REGISTRO  TIMESTAMP            null,

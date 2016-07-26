@@ -1,18 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>yachay.ep</groupId>
-    <artifactId>schedule-guard</artifactId>
-    <version>1.0</version>
-    <packaging>war</packaging>
-    <dependencies>
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-            <version>7.0</version>
-            <scope>provided</scope>
-        </dependency>
-    	<!-- PRIMEFACES -->
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>yachay.ep</groupId>
+	<artifactId>schedule-guard</artifactId>
+	<version>1.0</version>
+	<packaging>war</packaging>
+	<dependencies>
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>7.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- PRIMEFACES -->
 		<dependency>
 			<groupId>org.primefaces</groupId>
 			<artifactId>primefaces</artifactId>
@@ -27,6 +27,12 @@
 			<groupId>org.primefaces.themes</groupId>
 			<artifactId>bootstrap</artifactId>
 			<version>1.0.10</version>
+		</dependency>
+		<!-- DAYS -->
+		<dependency>
+			<groupId>com.github.seratch</groupId>
+			<artifactId>java-time-backport</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 		<!-- CONSUME RESTEASY -->
 		<dependency>
@@ -82,16 +88,22 @@
 			<artifactId>itext</artifactId>
 			<version>2.1.7</version>
 		</dependency>
-    </dependencies>
-    <build>
-        <finalName>schedule-guard</finalName>
-    </build>
-    <properties>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
-        <failOnMissingWebXml>false</failOnMissingWebXml>
-    </properties>
-    <repositories>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+		</dependency>
+
+	</dependencies>
+	<build>
+		<finalName>schedule-guard</finalName>
+	</build>
+	<properties>
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
+		<failOnMissingWebXml>false</failOnMissingWebXml>
+	</properties>
+	<repositories>
 		<repository>
 			<id>prime-repo</id>
 			<name>PrimeFaces Maven Repository</name>
@@ -99,4 +111,5 @@
 			<layout>default</layout>
 		</repository>
 	</repositories>
+
 </project>

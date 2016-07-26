@@ -313,6 +313,7 @@ public class GuardiaBean implements Serializable {
 				getListaguardias().addAll(managergest.findAllGuardias());
 				Mensaje.crearMensajeINFO("Actualizado - Modificado");
 				guardia_id = null;
+				dniBuscar=null;
 				guardia_estado = "A";
 				guardia_nombre = null;
 				guardia_apellido = null;
@@ -357,6 +358,7 @@ public class GuardiaBean implements Serializable {
 					guardia_nombre = null;
 					guardia_apellido = null;
 					guardia_fechanac = null;
+					dniBuscar=null;
 					guardia_ciudad = null;
 					guardia_sexo = null;
 					guardia_telefono = null;

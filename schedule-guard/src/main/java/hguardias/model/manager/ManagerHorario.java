@@ -4,7 +4,6 @@ import hguardias.model.dao.entities.*;
 
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -19,13 +18,11 @@ public class ManagerHorario {
 
 	@EJB
 	private ManagerGestion mGes;
-	
+
 	private static HgGuardia hg_gua;
 	private static HgLugare hg_lug;
 	private static HgTurno hg_turno;
 	private static HgHorarioCab hg_hcab;
-
-	private Timestamp fecha_creacion;
 
 	String h = "";
 
@@ -79,6 +76,19 @@ public class ManagerHorario {
 				+ gua_cid + "' ",
 				" o.hdetFechaInicio desc , o.hdetHoraInicio desc ");
 	}
+	
+	/**
+	 * listar todos las horariosdet ordenadas x cedula de guardia
+	 * 
+	 * @param gua_cid
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<HgHorarioDet> findAllHorariosDetXIdCab(Integer cab_id) {
+		return mDAO.findWhere(HgHorarioDet.class, " o.hgHorarioCab.hcabId = '"
+				+ cab_id + "' ",
+				" o.hdetFechaInicio desc , o.hdetHoraInicio desc ");
+	}
 
 	/**
 	 * buscar los horariosdet por ID
@@ -95,17 +105,16 @@ public class ManagerHorario {
 	 * 
 	 * @param fechai
 	 * @param fechaf
-
+	 * 
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
 	public List<HgHorarioDet> findAllHorarioDetXFecha(Date fechai, Date fechaf) {
-		return mDAO.findWhere(HgHorarioDet.class,
-				"o.hdetFechaInicio between '" + fechai + "' and  '"
-						+ fechaf + "'",
+		return mDAO.findWhere(HgHorarioDet.class, "o.hdetFechaInicio between '"
+				+ fechai + "' and  '" + fechaf + "'",
 				" o.hdetFechaInicio desc , o.hdetHoraInicio desc");
 	}
-	
+
 	/**
 	 * Agrega horariosdet y horariocab
 	 * 
@@ -119,29 +128,21 @@ public class ManagerHorario {
 	 * @param hor_cab
 	 * @throws Exception
 	 */
-	public void insertarHorarioDetCab(Date cab_fechaini, Date cab_fechafin,Time cab_horaini,Time cab_horafin, String det_nombre,String det_usuario) throws Exception {
-		
-		HgHorarioCab hor_cab = new HgHorarioCab();
-		cargafecha();
-		hor_cab.setHcabNombre(det_nombre);
-		hor_cab.setHcabUsuario(det_usuario);
-		hor_cab.setHcabFechaInicio(cab_fechaini);
-		hor_cab.setHcabFechaFin(cab_fechafin);
-		hor_cab.setHcabFechaRegistro(fecha_creacion);
+	public void insertarHorarioDet(Date det_fechaini, Date det_fechafin,
+			HgGuardia g, HgLugare l, HgTurno t, Time det_horaini,
+			Time det_horafin, HgHorarioCab hor_cab) throws Exception {
 
-		mDAO.insertar(hor_cab);
-		
 		HgHorarioDet hor_det = new HgHorarioDet();
-		hor_det.setHdetFechaInicio(cab_fechaini);
-		hor_det.setHdetFechaFin(cab_fechafin);
-		hor_det.setHdetHoraInicio(cab_horaini);
-		hor_det.setHdetHoraFin(cab_horafin);
+		hor_det.setHdetFechaInicio(det_fechaini);
+		hor_det.setHdetFechaFin(det_fechafin);
+		hor_det.setHdetHoraInicio(det_horaini);
+		hor_det.setHdetHoraFin(det_horafin);
 		hor_det.setHdetEstado("A");
-		hor_det.setHgGuardia(hg_gua);
-		hor_det.setHgLugare(hg_lug);
-		hor_det.setHgTurno(hg_turno);
+		hor_det.setHgGuardia(g);
+		hor_det.setHgLugare(l);
+		hor_det.setHgTurno(t);
 		hor_det.setHgHorarioCab(hor_cab);
-		hor_det.setHdetEstado("A");		
+		hor_det.setHdetEstado("A");
 
 		mDAO.insertar(hor_det);
 	}
@@ -180,9 +181,9 @@ public class ManagerHorario {
 		}
 		return resp;
 	}
-	
-	//Horariocabecera
-	
+
+	// Horariocabecera
+
 	/**
 	 * buscar todas los horarioscab
 	 * 
@@ -211,7 +212,7 @@ public class ManagerHorario {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<HgHorarioCab> findAllHorariosCabOrdenadosaaprorecha() {
-		return mDAO.findWhere(HgHorarioCab.class," 1=1 ",
+		return mDAO.findWhere(HgHorarioCab.class, " 1=1 ",
 				" o.hcabFechaRegistro desc, o.hcabFechaInicio desc ");
 	}
 
@@ -230,15 +231,17 @@ public class ManagerHorario {
 	 * 
 	 * @param fechai
 	 * @param fechaf
-
+	 * 
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
 	public List<HgHorarioCab> findAllHorarioCabXFecha(Date fechai, Date fechaf) {
-		return mDAO.findWhere(HgHorarioCab.class,
-				"o.hcabFechaInicio between '" + fechai + "' and  '"	+ fechaf + "'",	" o.hcabFechaInicio desc");
-	}	
-	
+		return mDAO
+				.findWhere(HgHorarioCab.class, "o.hcabFechaInicio between '"
+						+ fechai + "' and  '" + fechaf + "'",
+						" o.hcabFechaInicio desc");
+	}
+
 	/**
 	 * Agrega horariocab
 	 * 
@@ -247,17 +250,32 @@ public class ManagerHorario {
 	 * @param hor_cab
 	 * @throws Exception
 	 */
-	public void insertarHorarioCab(Date cab_fechaini, Date cab_fechafin, String det_nombre,String det_usuario) throws Exception {
-		
+	public void insertarHorarioCab(Integer cab_id, Date cab_fechaini,
+			Date cab_fechafin, String cab_nombre, String cab_usuario, Timestamp hor_cab_fechacreacion)
+			throws Exception {
+		System.out.println(cab_id+" "+cab_nombre+" "+cab_usuario+" "+cab_fechaini+" "+cab_fechafin+" "+hor_cab_fechacreacion);
 		HgHorarioCab hor_cab = new HgHorarioCab();
-		cargafecha();
-		hor_cab.setHcabNombre(det_nombre);
-		hor_cab.setHcabUsuario(det_usuario);
+		hor_cab.setHcabId(cab_id);
+		hor_cab.setHcabNombre(cab_nombre);
+		hor_cab.setHcabUsuario(cab_usuario);
 		hor_cab.setHcabFechaInicio(cab_fechaini);
 		hor_cab.setHcabFechaFin(cab_fechafin);
-		hor_cab.setHcabFechaRegistro(fecha_creacion);
+		hor_cab.setHcabFechaRegistro(hor_cab_fechacreacion);
 
 		mDAO.insertar(hor_cab);
+	}
+
+	public Integer ultimoOrdenCabecera() {
+		Integer orden = mDAO
+				.tomarValorIntJPQL("select max(o.hcabId) from HgHorarioCab o");
+		if (orden == null) {
+			orden = 1;
+			System.out.println(orden);
+		} else {
+			orden += 1;
+			System.out.println(orden);
+		}
+		return orden;
 	}
 
 	// asignaciones
@@ -312,7 +330,7 @@ public class ManagerHorario {
 		}
 		return hg_turno;
 	}
-	
+
 	/**
 	 * metodo para asignar el lugar
 	 * 
@@ -326,19 +344,7 @@ public class ManagerHorario {
 		} catch (Exception e) {
 			// TODO Auto-generated prodch block
 			e.printStackTrace();
-		}  
+		}
 		return hg_hcab;
-	}
-	
-	/**
-	 * Cargar datos fecha
-	 * 
-	 * @throws Exception
-	 */
-	public void cargafecha() {
-		Calendar calendar = Calendar.getInstance();
-		java.sql.Timestamp ourJavaTimestampObject = new java.sql.Timestamp(
-				calendar.getTime().getTime());
-		fecha_creacion = ourJavaTimestampObject;
 	}
 }
