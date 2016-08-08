@@ -108,6 +108,27 @@
 				<br />
 				<b:row>
 					<b:column span="2">
+						<h:outputLabel value="Estado Civil:* " for="estciv" />
+					</b:column>
+					<b:column span="3">
+						<p:inputText id="estciv" value="#{guardiaBean.guardia_estadoCivil}"
+							required="true" styleClass="form-control"
+							requiredMessage="Campo estado civil requerido">
+						</p:inputText>
+					</b:column>
+					<b:column span="2">
+						<h:outputLabel value="Grupo Sanguíneo:* " for="grupsang" />
+					</b:column>
+					<b:column span="3">
+						<p:inputText id="grupsang" value="#{guardiaBean.guardia_tipoSangre}"
+							required="true" styleClass="form-control"
+							requiredMessage="Campo grupo sanguíneo requerido">
+						</p:inputText>
+					</b:column>
+				</b:row>
+				<br />
+				<b:row>
+					<b:column span="2">
 						<h:outputLabel value="Ciudad:* " for="ciu" />
 					</b:column>
 					<b:column span="3">

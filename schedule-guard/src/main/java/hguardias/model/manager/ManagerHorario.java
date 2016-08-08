@@ -87,7 +87,7 @@ public class ManagerHorario {
 	public List<HgHorarioDet> findAllHorariosDetXIdCab(Integer cab_id) {
 		return mDAO.findWhere(HgHorarioDet.class, " o.hgHorarioCab.hcabId = '"
 				+ cab_id + "' ",
-				" o.hdetFechaInicio desc , o.hdetHoraInicio desc ");
+				" o.hdetFechaInicio asc , o.hdetHoraInicio asc");
 	}
 
 	/**

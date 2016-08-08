@@ -153,6 +153,56 @@ public class ManagerGestion {
 	public HgGuardia guardiaByID(String con_id) throws Exception {
 		return (HgGuardia) mDAO.findById(HgGuardia.class, con_id);
 	}
+	
+	/**
+	 * buscar guardiasxcctv
+	 * 
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<HgGuardia> guardiaByCctv() {
+		return mDAO.findWhere(HgGuardia.class, " o.guaCctv = true ", null);
+	}
+	
+	/**
+	 * buscar guardiasxenrolamiento
+	 * 
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<HgGuardia> guardiaByEnrolamiento() {
+		return mDAO.findWhere(HgGuardia.class, " o.guaControlAccesos = true ", null);
+	}
+	
+	/**
+	 * buscar guardiasxmotorizados
+	 * 
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<HgGuardia> guardiaByMorotizados() {
+		return mDAO.findWhere(HgGuardia.class, " o.guaMotorizado = true ", null);
+	}
+	
+	/**
+	 * buscar guardiasxmotorizados
+	 * 
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<HgGuardia> guardiaByChofer() {
+		return mDAO.findWhere(HgGuardia.class, " o.guaChofer = true ", null);
+	}
+	
+	/**
+	 * buscar guardiasxmotorizados
+	 * 
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<HgGuardia> guardiaByEspecial(Integer turno) {
+		return mDAO.findWhere(HgGuardia.class, " o.guaCasoTurno = "+turno+"", null);
+	}
 
 	/**
 	 * Agrega guardias
@@ -168,7 +218,7 @@ public class ManagerGestion {
 			String gua_apellido, Date gua_fechanac, String gue_ciudad, String gua_sexo, 
 			String gua_telefono,String gua_celular, String gua_correo, String gua_direccion,
 			boolean gua_cctv, boolean gua_motorizado, boolean gua_chofer, boolean gua_controlaccs,
-			Integer gua_casoturno,boolean gua_casoestudio,boolean gua_casonocturno) throws Exception {
+			Integer gua_casoturno,boolean gua_casoestudio,boolean gua_casonocturno, String gua_EstadoCivil, String gua_TipoSangre) throws Exception {
 		
 		HgGuardia gua = new HgGuardia();
 		gua.setGuaCedula(gua_cedid);
@@ -188,6 +238,8 @@ public class ManagerGestion {
 		gua.setGuaCasoTurno(gua_casoturno);
 		gua.setGuaCasoEstudio(gua_casoestudio);
 		gua.setGuaCasoNocturno(gua_casonocturno);
+		gua.setGuaEstadoCivil(gua_EstadoCivil);
+		gua.setGuaTipoSangre(gua_TipoSangre);
 		gua.setGuaEstado("A");
 		mDAO.insertar(gua);
 	}
@@ -206,7 +258,7 @@ public class ManagerGestion {
 			String gua_apellido, Date gua_fechanac, String gue_ciudad, String gua_sexo, 
 			String gua_telefono,String gua_celular, String gua_correo, String gua_direccion,
 			boolean gua_cctv, boolean gua_motorizado, boolean gua_chofer, boolean gua_controlaccs,
-			Integer gua_casoturno,boolean gua_casoestudio,boolean gua_casonocturno, String gua_estado) throws Exception {
+			Integer gua_casoturno,boolean gua_casoestudio,boolean gua_casonocturno,String gua_EstadoCivil, String gua_TipoSangre, String gua_estado) throws Exception {
 		
 		HgGuardia gua = this.guardiaByID(gua_cedid);
 		// con.setCondCedula(con_cedid);
@@ -226,6 +278,8 @@ public class ManagerGestion {
 		gua.setGuaCasoTurno(gua_casoturno);
 		gua.setGuaCasoEstudio(gua_casoestudio);
 		gua.setGuaCasoNocturno(gua_casonocturno);
+		gua.setGuaEstadoCivil(gua_EstadoCivil);
+		gua.setGuaTipoSangre(gua_TipoSangre);
 		gua.setGuaEstado(gua_estado);
 		mDAO.actualizar(gua);
 	}

@@ -12,6 +12,8 @@ public class Persona {
 	private String perTelefono;
 	private String perCelular;
 	private String perCorreo;
+	private String perGrupoSangineo;
+	private String perEstadoCivil;
 
 	public Persona() {
 	}
@@ -22,7 +24,7 @@ public class Persona {
 
 	public Persona(String perDNI, String perNombres, String perApellidos,
 			String perTelefono, String perCelular, String perCorreo,
-			Date perFechaNacimiento, String perGenero) {
+			Date perFechaNacimiento, String perGenero,String perGrupoSangineo, String perEstadoCivil) {
 		this.perDNI = perDNI;
 		this.perNombres = perNombres;
 		this.perApellidos = perApellidos;
@@ -31,6 +33,8 @@ public class Persona {
 		this.perCorreo = perCorreo;
 		this.perFechaNacimiento = perFechaNacimiento;
 		this.perGenero = perGenero;
+		this.perGrupoSangineo = perGrupoSangineo;
+		this.perEstadoCivil = perEstadoCivil;
 	}
 
 	/**
@@ -151,6 +155,22 @@ public class Persona {
 	 */
 	public void setPerGenero(String perGenero) {
 		this.perGenero = perGenero;
+	}
+	
+	public String getPerGrupoSangineo() {
+		return perGrupoSangineo;
+	}
+	
+	public void setPerGrupoSangineo(String perGrupoSangineo) {
+		this.perGrupoSangineo = perGrupoSangineo;
+	}
+	
+	public String getPerEstadoCivil() {
+		return perEstadoCivil;
+	}
+	
+	public void setPerEstadoCivil(String perEstadoCivil) {
+		this.perEstadoCivil = perEstadoCivil;
 	}
 
 	@Override

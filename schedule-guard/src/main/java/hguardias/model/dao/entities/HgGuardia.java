@@ -57,6 +57,9 @@ public class HgGuardia implements Serializable {
 
 	@Column(name="gua_estado", columnDefinition="bpchar", length=1)
 	private String guaEstado;
+	
+	@Column(name="gua_estado_civil", length=100)
+	private String guaEstadoCivil;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="gua_fechanac")
@@ -74,6 +77,9 @@ public class HgGuardia implements Serializable {
 	@Column(name="gua_telefono", length=100)
 	private String guaTelefono;
 
+	@Column(name="gua_tipo_sangre", length=100)
+	private String guaTipoSangre;
+	
 	//bi-directional many-to-one association to HgAusencia
 	@OneToMany(mappedBy="hgGuardia")
 	private List<HgAusencia> hgAusencias;
@@ -192,6 +198,14 @@ public class HgGuardia implements Serializable {
 	public Date getGuaFechanac() {
 		return this.guaFechanac;
 	}
+	
+	public String getGuaEstadoCivil() {
+		return guaEstadoCivil;
+	}
+	
+	public void setGuaEstadoCivil(String guaEstadoCivil) {
+		this.guaEstadoCivil = guaEstadoCivil;
+	}
 
 	public void setGuaFechanac(Date guaFechanac) {
 		this.guaFechanac = guaFechanac;
@@ -231,6 +245,14 @@ public class HgGuardia implements Serializable {
 
 	public List<HgAusencia> getHgAusencias() {
 		return this.hgAusencias;
+	}
+	
+	public String getGuaTipoSangre() {
+		return this.guaTipoSangre;
+	}
+	
+	public void setGuaTipoSangre(String guaTipoSangre) {
+		this.guaTipoSangre = guaTipoSangre;
 	}
 
 	public void setHgAusencias(List<HgAusencia> hgAusencias) {

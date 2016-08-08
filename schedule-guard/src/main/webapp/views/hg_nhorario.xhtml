@@ -4,8 +4,9 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:b="http://bootsfaces.net/ui">
-
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">	
+	
 <ui:composition template="template.xhtml">
 	<ui:define name="titulo">
             Horarios
@@ -19,6 +20,15 @@
 		<h:form id="frm">
 			<p:growl id="messages" showDetail="false" />
 			<b:panel title="Registro de Horarios" look="primary">
+				<b:row>
+					<b:column span="2">
+						<h:outputLabel value="Nro. de Horario:  " />
+					</b:column>
+					<b:column span="3">
+						<h:outputLabel value="#{horarioCDBean.cab_id}" />
+					</b:column>
+				</b:row>
+				<br />
 				<b:row>
 					<b:column span="2">
 						<h:outputLabel value="Solicitante:  " />
@@ -46,7 +56,8 @@
 					</b:column>
 					<b:column span="4">
 						<p:calendar required="true" mindate="#{horarioCDBean.date}"
-							yearRange="c:c+5" navigator="true" disabled="#{horarioCDBean.edicion}"
+							yearRange="c:c+5" navigator="true"
+							disabled="#{horarioCDBean.edicion}"
 							requiredMessage="Requerido Fecha Inicio" id="fechai"
 							value="#{horarioCDBean.horcab_fechainicio}" pattern="yyyy/MM/dd"
 							mask="true">
@@ -57,7 +68,8 @@
 					</b:column>
 					<b:column span="4">
 						<p:calendar required="true" mindate="#{horarioCDBean.date}"
-							yearRange="c:c+5" navigator="true" disabled="#{horarioCDBean.edicion}"
+							yearRange="c:c+5" navigator="true"
+							disabled="#{horarioCDBean.edicion}"
 							requiredMessage="Requerido Fecha Fin" id="fechaf"
 							value="#{horarioCDBean.horcab_fechafin}" pattern="yyyy/MM/dd"
 							mask="true">
@@ -79,67 +91,64 @@
 					</b:column>
 				</b:row>
 				<br />
-				<br />
-				<br />
-				<h:form id="frm1">
-					<p:growl id="messages" showDetail="false" />
-					<b:panel title="Detalle de Horarios" look="primary">
-						<p:dataTable id="tbb" value="#{horarioCDBean.listaHorarioDet}"
-							rendered="#{horarioCDBean.edicion}" var="hord"
-							rows="20" emptyMessage="Sin Datos" paginator="true" style="margin-bottom:20px"
+					<b:panel title="Detalle de Horarios" look="primary" rendered="#{horarioCDBean.edicion}">
+						<p:dataTable id="tbb" value="#{horarioCDBean.listaHorarioDet}"  liveScroll="true"    scrollable="true"
+							 var="hord" rows="20" reflow="true"
+							emptyMessage="Sin Datos" paginator="true"
 							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
-							<p:column filterBy="#{hord.hdetId}" sortBy="#{hord.hdetId}" filterMatchMode="contains"
-								headerText="ID" width="70">
+							<p:column filterBy="#{hord.hdetId}" sortBy="#{hord.hdetId}"
+								filterMatchMode="contains" headerText="ID" width="70">
 								<h:outputText value="#{hord.hdetId}"></h:outputText>
 							</p:column>
-							<p:column filterBy="#{hord.hgTurno.turDescripcion}" sortBy="#{hord.hgTurno.turDescripcion}" filterMatchMode="contains"
-								headerText="TURNO" width="70">
+							<p:column filterBy="#{hord.hgTurno.turDescripcion}"
+								sortBy="#{hord.hgTurno.turDescripcion}"
+								filterMatchMode="contains" headerText="TURNO" width="70">
 								<h:outputText value="#{hord.hgTurno.turDescripcion}"></h:outputText>
 							</p:column>
-							<p:column filterBy="#{hord.hgLugare.lugNombre}" sortBy="#{hord.hgLugare.lugNombre}" filterMatchMode="contains"
+							<p:column filterBy="#{hord.hgLugare.lugNombre}"
+								sortBy="#{hord.hgLugare.lugNombre}" filterMatchMode="contains"
 								headerText="LUGAR" width="70">
 								<h:outputText value="#{hord.hgLugare.lugNombre}"></h:outputText>
 							</p:column>
-							<p:column filterBy="#{hord.hgGuardia.guaNombre}" sortBy="#{hord.hgGuardia.guaNombre}"
-								filterMatchMode="contains" headerText="LUGAR" width="70">
+							<p:column filterBy="#{hord.hgGuardia.guaNombre}"
+								sortBy="#{hord.hgGuardia.guaNombre}" filterMatchMode="contains"
+								headerText="Nombre Guardia" width="70">
 								<h:outputText
 									value="#{hord.hgGuardia.guaNombre} #{hord.hgGuardia.guaApellido}"></h:outputText>
 							</p:column>
-							<p:column headerText="FECHA INICIO/FIN" width="100" sortBy="#{hord.hdetFechaInicio}">
-								<h:outputText 
+							<p:column headerText="FECHA INICIO/FIN" width="100"
+								sortBy="#{hord.hdetFechaInicio}">
+								<h:outputText
 									value="#{hord.hdetFechaInicio} - #{hord.hdetFechaFin}">
 									<f:convertDateTime pattern="yyyy/MM/dd" timeZone="GMT-5" />
 								</h:outputText>
 							</p:column>
-							<p:column headerText="HORA INICIO/FIN" width="100" sortBy="#{hord.hdetHoraInicio}">
+							<p:column headerText="HORA INICIO/FIN" width="100"
+								sortBy="#{hord.hdetHoraInicio}">
 								<h:outputText
 									value="#{hord.hdetHoraInicio} - #{hord.hdetHoraFin}">
 									<f:convertDateTime pattern="HH:mm" />
 								</h:outputText>
 							</p:column>
 						</p:dataTable>
-						 <h3>Exportar Datos</h3>
-				    <h:commandLink style="margin-right:5px">
-				        <h:graphicImage value="/resources/img/excel.png" width="35"/>
-				        <p:dataExporter type="xls" target="tbb" fileName="rpthorario" pageOnly="true"/>
-				    </h:commandLink>
-				 
-				    <h:commandLink style="margin-right:5px">
-				        <h:graphicImage value="/resources/img/pdf.png"  width="35"/>
-				        <p:dataExporter type="pdf" target="tbb" fileName="rpthorario" pageOnly="false" />
-				    </h:commandLink>
-				 
-				    <h:commandLink style="margin-right:5px">
-				        <h:graphicImage value="/resources/img/csv.png"  width="35"/>
-				        <p:dataExporter type="csv" target="tbb" fileName="rpthorario" pageOnly="true" />
-				    </h:commandLink>
-				 
-				    <h:commandLink style="margin-right:5px">
-				        <h:graphicImage value="/resources/img/xml.png"  width="35"/>
-				        <p:dataExporter type="xml" target="tbb" fileName="rpthorario" pageOnly="true" />
-				    </h:commandLink>
+						<h3>Exportar Datos</h3>
+						<h:commandButton style="width:40px;height:40px" ajax="false"
+						image="/resources/img/excel.png">
+						<p:dataExporter type="xls" target="tbb" fileName="rpthorarios"
+							pageOnly="false" />
+					</h:commandButton>&nbsp;&nbsp;&nbsp;
+					<h:commandButton style="width:40px;height:40px" ajax="false"
+						image="/resources/img/pdf.png">
+						<p:dataExporter type="pdf" target="tbb" fileName="rpthorarios"
+							pageOnly="false" />
+					</h:commandButton>&nbsp;&nbsp;&nbsp;
+					
+					<h:commandButton style="width:40px;height:40px" ajax="false"
+						image="/resources/img/csv.png">
+						<p:dataExporter type="csv" target="tbb" fileName="rpthorarios"
+							pageOnly="false" />
+					</h:commandButton>&nbsp;&nbsp;&nbsp;
 					</b:panel>
-				</h:form>
 			</b:panel>
 		</h:form>
 		<p:confirmDialog header="Confirmación"

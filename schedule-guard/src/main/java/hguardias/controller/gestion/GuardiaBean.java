@@ -49,6 +49,8 @@ public class GuardiaBean implements Serializable {
 	private String guardia_celular;
 	private String guardia_correo;
 	private String guardia_direccion;
+	private String guardia_estadoCivil;
+	private String guardia_tipoSangre;
 	private String guardia_estado;
 	private boolean guardia_CCTV;
 	private boolean guardia_motorizado;
@@ -272,6 +274,22 @@ public class GuardiaBean implements Serializable {
 	public void setGuardia(HgGuardia guardia) {
 		this.guardia = guardia;
 	}
+	
+	public String getGuardia_tipoSangre() {
+		return guardia_tipoSangre;
+	}
+	
+	public String getGuardia_estadoCivil() {
+		return guardia_estadoCivil;
+	}
+	
+	public void setGuardia_estadoCivil(String guardia_estadoCivil) {
+		this.guardia_estadoCivil = guardia_estadoCivil;
+	}
+	
+	public void setGuardia_tipoSangre(String guardia_tipoSangre) {
+		this.guardia_tipoSangre = guardia_tipoSangre;
+	}
 
 	public List<HgGuardia> getListaguardias() {
 		return listaguardias;
@@ -307,7 +325,7 @@ public class GuardiaBean implements Serializable {
 						guardia_correo.trim(), guardia_direccion.trim(),
 						guardia_CCTV, guardia_motorizado, guardia_chofer,
 						guardia_controlaccesos, guardia_casoturno,
-						guardia_casoestudio, guardia_casonocturno,
+						guardia_casoestudio, guardia_casonocturno,guardia_estadoCivil, guardia_tipoSangre,
 						guardia_estado.trim());
 				getListaguardias().clear();
 				getListaguardias().addAll(managergest.findAllGuardias());
@@ -323,6 +341,8 @@ public class GuardiaBean implements Serializable {
 				guardia_telefono = null;
 				guardia_celular = null;
 				guardia_correo = null;
+				guardia_estadoCivil=null;
+				guardia_tipoSangre=null;
 				guardia_direccion = null;
 				guardia_CCTV = false;
 				guardia_motorizado = false;
@@ -337,7 +357,7 @@ public class GuardiaBean implements Serializable {
 				if (this.ccorreo(guardia_correo)) {
 					Mensaje.crearMensajeWARN("Correo Repetido..!!! El correo ya esta siendo utilizado");
 				}
-				else if(this.ccedula(dniBuscar)) {
+				else if(this.ccedula(guardia_id)) {
 					Mensaje.crearMensajeWARN("Cédula Repetida..!!! La cédula ya esta siendo utilizada");
 				}
 				else{
@@ -349,7 +369,7 @@ public class GuardiaBean implements Serializable {
 							guardia_direccion.trim(), guardia_CCTV,
 							guardia_motorizado, guardia_chofer,
 							guardia_controlaccesos, guardia_casoturno,
-							guardia_casoestudio, guardia_casonocturno);
+							guardia_casoestudio, guardia_casonocturno,guardia_estadoCivil, guardia_tipoSangre);
 					Mensaje.crearMensajeINFO("Registrado - Creado");
 					getListaguardias().clear();
 					getListaguardias().addAll(managergest.findAllGuardias());
@@ -365,6 +385,8 @@ public class GuardiaBean implements Serializable {
 					guardia_celular = null;
 					guardia_correo = null;
 					guardia_direccion = null;
+					guardia_estadoCivil=null;
+					guardia_tipoSangre=null;
 					guardia_CCTV = false;
 					guardia_motorizado = false;
 					guardia_chofer = false;
@@ -429,7 +451,8 @@ public class GuardiaBean implements Serializable {
 			guardia_celular = guardia.getGuaCelular();
 			guardia_correo = guardia.getGuaCorreo();
 			guardia_direccion = guardia.getGuaDireccion();
-
+			guardia_estadoCivil=guardia.getGuaEstadoCivil();
+			guardia_tipoSangre=guardia.getGuaTipoSangre();
 			guardia_CCTV = guardia.getGuaCctv();
 			guardia_motorizado = guardia.getGuaMotorizado();
 			guardia_chofer = guardia.getGuaChofer();
@@ -568,6 +591,8 @@ public class GuardiaBean implements Serializable {
 		guardia_celular = null;
 		guardia_correo = null;
 		guardia_direccion = null;
+		guardia_estadoCivil=null;
+		guardia_tipoSangre=null;
 		guardia_CCTV = false;
 		guardia_motorizado = false;
 		guardia_chofer = false;
@@ -599,6 +624,8 @@ public class GuardiaBean implements Serializable {
 		guardia_celular = null;
 		guardia_correo = null;
 		guardia_direccion = null;
+		guardia_estadoCivil=null;
+		guardia_tipoSangre=null;
 		guardia_CCTV = false;
 		guardia_motorizado = false;
 		guardia_chofer = false;
@@ -710,6 +737,7 @@ public class GuardiaBean implements Serializable {
 	}
 
 	public void mostrarCamposPersona(Persona per) {
+		if(!per.equals(null)){
 		setGuardia_id(per.getPerDNI());
 		setGuardia_nombre(per.getPerNombres());
 		setGuardia_apellido(per.getPerApellidos());
@@ -718,6 +746,12 @@ public class GuardiaBean implements Serializable {
 		setGuardia_celular(per.getPerCelular());
 		setGuardia_sexo(per.getPerGenero());
 		setGuardia_fechanac(per.getPerFechaNacimiento());
+		setGuardia_estadoCivil(per.getPerEstadoCivil());
+		setGuardia_tipoSangre(per.getPerGrupoSangineo());
+		}
+		else{
+			Mensaje.crearMensajeWARN("No se encuentra dicha persona.");
+		}
 
 	}
 

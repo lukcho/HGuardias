@@ -4,6 +4,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
 import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
 
 import hguardias.model.dao.entities.Persona;
 import hguardias.model.dao.entities.HgParametro;
@@ -36,7 +37,14 @@ public class ManagerBuscar {
 			p.setPerGenero(Funciones.evaluarDatoWS(respuesta.get("perGenero")));
 			p.setPerTelefono(Funciones.evaluarDatoWS(respuesta.get("perTelefono")));
 			p.setPerCelular(Funciones.evaluarDatoWS(respuesta.get("perCelular")));
-			p.setPerCorreo(Funciones.evaluarDatoWS(respuesta.get("perCorreo")));			
+			p.setPerCorreo(Funciones.evaluarDatoWS(respuesta.get("perCorreo")));	
+			p.setPerEstadoCivil(Funciones.evaluarDatoWS(respuesta.get("perEstadoCivil")));
+			if(!((JSONArray)respuesta.get("genSalud")).isEmpty()){
+				
+			    p.setPerGrupoSangineo(Funciones.evaluarDatoWS(((JSONObject)((JSONArray) respuesta.get("genSalud")).get(0)).get("sldGrupoSanguineo")));
+			   }else{
+			    p.setPerGrupoSangineo("");
+			   }
 			return p;
 		}
 	}
