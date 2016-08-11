@@ -4,6 +4,7 @@ import hguardias.model.dao.entities.*;
 
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -181,7 +182,19 @@ public class ManagerHorario {
 		}
 		return resp;
 	}
-
+	
+	/**
+	 * Verifica si el guardia exite
+	 * 
+	 * @param u
+	 *            guardia a analizar
+	 * @return true o false
+	 */
+	@SuppressWarnings("unchecked")
+	public List<HgHorarioDet> existeGuardia(Date fechai, String cedula, Integer tur_id) {
+		return mDAO.findWhere(HgHorarioDet.class, " o.hgGuardia = '"+cedula+"' "+/*+"and o.hdetHoraInicio = '"+fechai+"'+ */ " and o.hgTurno = "+tur_id+" ", null);
+	}
+	
 	// Horariocabecera
 
 	/**
