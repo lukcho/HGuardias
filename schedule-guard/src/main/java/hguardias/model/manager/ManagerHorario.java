@@ -4,7 +4,6 @@ import hguardias.model.dao.entities.*;
 
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -192,7 +191,8 @@ public class ManagerHorario {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<HgHorarioDet> existeGuardia(Date fechai, String cedula, Integer tur_id) {
-		return mDAO.findWhere(HgHorarioDet.class, " o.hgGuardia = '"+cedula+"' "+/*+"and o.hdetHoraInicio = '"+fechai+"'+ */ " and o.hgTurno = "+tur_id+" ", null);
+		java.sql.Date sqlDate = new java.sql.Date(fechai.getTime());
+		return mDAO.findWhere(HgHorarioDet.class, " o.hgGuardia = '"+cedula+"' "+"and o.hdetFechaInicio = '"+sqlDate+"'  and (o.hgTurno.turId = 1 or o.hgTurno.turId = 2 or o.hgTurno.turId = 3 ) ", null);
 	}
 	
 	// Horariocabecera

@@ -343,17 +343,17 @@ public class horarioCDBean implements Serializable {
 					Integer motorizados = 1;
 					Integer contador = 1;
 					Integer cctv = 1;
+					int diurno = 2;
 //				System.out.println("--------------------->dias "+dias+" cuantos faltan:"+a);
 //				romper:
 				for (HgLugare l : lugar){//lugares
 					contador=1;
 //					System.out.println("--------------------->lugar: "+l.getLugNombre());
-					
-						for (HgGuardia g : guardiaescogidos) {// eliminar a los guardias que ya han sido escogidos en esa semana
-							
-							if (contador<= l.getLugNroGuardias()){//controlar el nro de guardias que hay en el lugar
-								
 								for(HgTurno t : turno){//turnos
+									guardiaescogidos= managergest.findAllGuardias();
+									romper:
+									for (HgGuardia g : guardiaescogidos) {// eliminar a los guardias que ya han sido escogidos en esa semana
+										if (contador<= l.getLugNroGuardias()){//controlar el nro de guardias que hay en el lugar
 									if(managerhorario.existeGuardia(fechainicial, g.getGuaCedula(), t.getTurId()).size()==0){
 //									System.out.println("--------------------->turno: "+t.getTurDescripcion());
 //									System.out.println("--------------------->nro. guardias cont: "+contador+" nro. guardias en lugar: "+l.getLugNroGuardias());
@@ -363,26 +363,34 @@ public class horarioCDBean implements Serializable {
 											// agregar caso si es estudio libres sabados y domingos
 											almacenarDetalles(g, l, t,fechainicial, fechainicial,cab_id);
 											contador++;
-											// break romper;
+											break romper;
 									}   else if (g.getGuaCasoNocturno() == true
 											&& !t.getTurId().equals(1)) {
 										// agregar caso si trabajan solo
 										// turnos vespertino o nocturno
 										almacenarDetalles(g, l, t,fechainicial, fechainicial,cab_id);
 										contador++;
-										// break romper;
+										break romper;
 									}	else if (g.getGuaCctv() == true && g.getGuaChofer() == true && l.getLugCctv() == true 
 											&& cctv <= 4 || (t.getTurId() == 1 || t.getTurId() == 2 || t.getTurId() == 3)) {
-										// agregar si es CCTV
-										almacenarDetalles(g, l, t, fechainicial, fechainicial,cab_id);
-										cctv++;
-										contador++;
-										// break romper;
+											// agregar si es CCTV
+											if(t.getTurId() == 1 && contador <= diurno){
+												almacenarDetalles(g, l, t, fechainicial, fechainicial,cab_id);
+												cctv++;
+												contador++;
+												break romper;
+											}
+											else if (t.getTurId() == 2 ||t.getTurId() == 3 ) {
+												almacenarDetalles(g, l, t, fechainicial, fechainicial,cab_id);
+												cctv++;
+												contador++;
+												break romper;
+											}
 									} else if (g.getGuaControlAccesos() == true && l.getLugControlAccesos() == true && l.getLugId()== 14) {
 										// agregar si es control de accesos y enrolamiento
 										almacenarDetalles(g, l, t,fechainicial, fechainicial,cab_id);
 										contador++;
-										// break romper;
+										break romper;
 									} else if (g.getGuaMotorizado() == true && motorizados <= 3 && l.getLugCctv() == false && g.getGuaCctv() ==false
 											&& l.getLugControlAccesos() == false && l.getLugNombre() != "Instituto" 
 											&& l.getLugNombre() != "Centro de emprendimiento" && l.getLugNombre() != "CCTV"
@@ -392,7 +400,7 @@ public class horarioCDBean implements Serializable {
 										almacenarDetalles(g, l, t,fechainicial, fechainicial,cab_id);
 										motorizados++;
 										contador++;
-										// break romper;
+										break romper;
 									} else if (l.getLugControlAccesos() == false && g.getGuaControlAccesos() == false
 											&& g.getGuaChofer() == false && g.getGuaCctv() == false 
 											&& l.getLugCctv() == false && g.getGuaCasoNocturno() == false
@@ -400,7 +408,7 @@ public class horarioCDBean implements Serializable {
 										// agregar si no tiene referencia
 										almacenarDetalles(g, l, t, fechainicial, fechainicial, cab_id);
 										contador++;
-										// break romper;
+										 break romper;
 									}
 								}
 									}
