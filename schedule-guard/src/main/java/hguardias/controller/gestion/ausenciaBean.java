@@ -19,6 +19,7 @@ import org.primefaces.context.RequestContext;
 
 import hguardias.controller.access.SesionBean;
 import hguardias.model.generic.Funciones;
+import hguardias.model.dao.entidades.Guardias;
 import hguardias.model.dao.entities.HgAusencia;
 import hguardias.model.dao.entities.HgGuardia;
 import hguardias.model.generic.Mensaje;
@@ -40,7 +41,7 @@ public class ausenciaBean implements Serializable {
 	private String aus_descripcion;
 
 	private String gua_id;
-	private HgGuardia guardia;
+	private Guardias guardia;
 	private String nombreguardia;
 	private String apellidoguardia;
 
@@ -70,8 +71,8 @@ public class ausenciaBean implements Serializable {
 		edicion = false;
 		ediciontipo = false;
 		mostrarlug_id = false;
-		nombreguardia="";
-		apellidoguardia="";
+		nombreguardia = "";
+		apellidoguardia = "";
 		listaAusencias = managergest.findAllAusencias();
 		usuario = ms.validarSesion("hg_ausencias.xhtml");
 	}
@@ -93,11 +94,11 @@ public class ausenciaBean implements Serializable {
 		this.date = date;
 	}
 
-	public HgGuardia getGuardia() {
+	public Guardias getGuardia() {
 		return guardia;
 	}
 
-	public void setGuardia(HgGuardia guardia) {
+	public void setGuardia(Guardias guardia) {
 		this.guardia = guardia;
 	}
 
@@ -168,19 +169,19 @@ public class ausenciaBean implements Serializable {
 	public void setEdiciontipo(boolean ediciontipo) {
 		this.ediciontipo = ediciontipo;
 	}
-	
+
 	public String getNombreguardia() {
 		return nombreguardia;
 	}
-	
+
 	public void setNombreguardia(String nombreguardia) {
 		this.nombreguardia = nombreguardia;
 	}
-	
+
 	public String getApellidoguardia() {
 		return apellidoguardia;
 	}
-	
+
 	public void setApellidoguardia(String apellidoguardia) {
 		this.apellidoguardia = apellidoguardia;
 	}
@@ -197,42 +198,44 @@ public class ausenciaBean implements Serializable {
 	 */
 	public String crearAusencia() {
 		try {
-			
+
 			java.util.Date fechai = aus_fechainicio;
 			SimpleDateFormat dateFormati = new SimpleDateFormat("yyyy-MM-dd");
-			final String stringDatei= dateFormati.format(fechai);
-			final java.sql.Date sqlfechai=  java.sql.Date.valueOf(stringDatei);
-			
+			final String stringDatei = dateFormati.format(fechai);
+			final java.sql.Date sqlfechai = java.sql.Date.valueOf(stringDatei);
+
 			java.util.Date fechaf = aus_fechafin;
 			SimpleDateFormat dateFormatf = new SimpleDateFormat("yyyy-MM-dd");
-			final String stringDatef= dateFormatf.format(fechaf);
-			final java.sql.Date sqlfechaf=  java.sql.Date.valueOf(stringDatef);
-			
+			final String stringDatef = dateFormatf.format(fechaf);
+			final java.sql.Date sqlfechaf = java.sql.Date.valueOf(stringDatef);
+
 			if (edicion) {
-				managergest.editarAusencia(aus_id, sqlfechai, sqlfechaf, aus_descripcion.trim());
+				managergest.editarAusencia(aus_id, sqlfechai, sqlfechaf,
+						aus_descripcion.trim());
 				getListaAusencias().clear();
 				getListaAusencias().addAll(managergest.findAllAusencias());
 				Mensaje.crearMensajeINFO("Actualizado - Modificado");
-				aus_id=null;
-				aus_fechainicio=null;
-				aus_fechafin=null;
-				aus_descripcion=null;
-				gua_id=null;
-				nombreguardia="";
-				apellidoguardia="";
-				
+				aus_id = null;
+				aus_fechainicio = null;
+				aus_fechafin = null;
+				aus_descripcion = null;
+				gua_id = null;
+				nombreguardia = "";
+				apellidoguardia = "";
+
 			} else {
-				managergest.insertarAusencia(sqlfechai, sqlfechaf, aus_descripcion.trim());
+				managergest.insertarAusencia(sqlfechai, sqlfechaf,
+						aus_descripcion.trim());
 				Mensaje.crearMensajeINFO("Registrado - Creado");
 				getListaAusencias().clear();
 				getListaAusencias().addAll(managergest.findAllAusencias());
-				aus_id=null;
-				aus_fechainicio=null;
-				aus_fechafin=null;
-				aus_descripcion=null;
-				gua_id=null;
-				nombreguardia="";
-				apellidoguardia="";
+				aus_id = null;
+				aus_fechainicio = null;
+				aus_fechafin = null;
+				aus_descripcion = null;
+				gua_id = null;
+				nombreguardia = "";
+				apellidoguardia = "";
 			}
 			return "hg_ausencias?faces-redirect=true";
 		} catch (Exception e) {
@@ -260,7 +263,7 @@ public class ausenciaBean implements Serializable {
 							"Fecha inicio debe ser menor que la Fecha Fin",
 							null));
 		} else
-		RequestContext.getCurrentInstance().execute("PF('gu').show();");
+			RequestContext.getCurrentInstance().execute("PF('gu').show();");
 	}
 
 	/**
@@ -343,11 +346,12 @@ public class ausenciaBean implements Serializable {
 		aus_fechafin = null;
 		aus_descripcion = null;
 		gua_id = null;
-		nombreguardia="";
-		apellidoguardia="";
+		nombreguardia = "";
+		apellidoguardia = "";
 		ediciontipo = false;
 		mostrarlug_id = false;
 		edicion = false;
+		System.out.println("------------------------------almacenar--------------------------");
 		return "hg_nausencia?faces-redirect=true";
 	}
 
@@ -363,8 +367,8 @@ public class ausenciaBean implements Serializable {
 		aus_fechafin = null;
 		aus_descripcion = null;
 		gua_id = null;
-		nombreguardia="";
-		apellidoguardia="";
+		nombreguardia = "";
+		apellidoguardia = "";
 		mostrarlug_id = false;
 		edicion = false;
 		getListaAusencias().clear();
@@ -389,8 +393,8 @@ public class ausenciaBean implements Serializable {
 		List<SelectItem> listadoSI = new ArrayList<SelectItem>();
 		for (HgGuardia t : managergest.findAllGuardias()) {
 			if (!t.getGuaEstado().equals("I")) {
-				listadoSI.add(new SelectItem(t.getGuaCedula(),t.getGuaCedula()+" - "+ t.getGuaNombre()
-						+ " " + t.getGuaApellido()));
+				listadoSI.add(new SelectItem(t.getGuaCedula(), t.getGuaCedula()
+						+ " - " + t.getGuaNombre() + " " + t.getGuaApellido()));
 			}
 		}
 		return listadoSI;
@@ -404,11 +408,11 @@ public class ausenciaBean implements Serializable {
 	public void mostrara() {
 		HgGuardia gua;
 		try {
-			nombreguardia="";
-			apellidoguardia="";
+			nombreguardia = "";
+			apellidoguardia = "";
 			gua = managergest.guardiaByID(gua_id);
 			// poner los datos del usuario
-			nombreguardia= gua.getGuaNombre();
+			nombreguardia = gua.getGuaNombre();
 			apellidoguardia = gua.getGuaApellido();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

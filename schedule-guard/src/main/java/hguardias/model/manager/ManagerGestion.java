@@ -141,7 +141,17 @@ public class ManagerGestion {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<HgGuardia> findAllGuardias() {
-		return mDAO.findAll(HgGuardia.class);
+		return mDAO.findAll(HgGuardia.class," o.guaCedula asc ");
+	}
+	
+	/**
+	 * listar todos los guardias
+	 * 
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<HgGuardia> findAllGuardiasDesc() {
+		return mDAO.findAll(HgGuardia.class, " o.guaCedula desc ");
 	}
 
 	/**

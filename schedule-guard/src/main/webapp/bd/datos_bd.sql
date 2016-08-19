@@ -4,9 +4,9 @@ insert into hg_parametros  values ('find_personas', 'Buscar persona','http://yac
 insert into hg_parametros  values ('id_ws_mail', 'ID para envio del correo','sof_solutions');
 insert into hg_parametros  values ('login_ws', 'Direccion de servicio para web login','http://10.1.0.115:8080/app-permisos/WSLogin/postPermisos');
 
+insert into hg_lugares  values (default, 'CCTV',4,'Urcuquí','A',true,false);
 insert into hg_lugares  values (default, 'San Eloy',3,'Urcuquí','A',false,false);
 insert into hg_lugares  values (default, 'Centro de emprendimiento',3,'Urcuquí','A',true,false);
-insert into hg_lugares  values (default, 'CCTV',4,'Urcuquí','A',true,false);
 insert into hg_lugares  values (default, 'Tanques de Agua',3,'Urcuquí','A',false,false);
 insert into hg_lugares  values (default, 'Instituto',3,'Urcuquí','A',false,false);
 insert into hg_lugares  values (default, 'Control 1',3,'Urcuquí','A',false,false);
