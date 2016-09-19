@@ -42,7 +42,7 @@ public class ManagerGestion {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<HgTurno> findAllTurnos() {
-		return mDAO.findAll(HgTurno.class);
+		return mDAO.findAll(HgTurno.class, "tur_id asc");
 	}
 
 	/**
@@ -162,6 +162,16 @@ public class ManagerGestion {
 	 */
 	public HgGuardia guardiaByID(String con_id) throws Exception {
 		return (HgGuardia) mDAO.findById(HgGuardia.class, con_id);
+	}
+	
+	/**
+	 * buscar guardias menos el guardia agregado
+	 * 
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<HgGuardia> AllGuardiasMenosAgregado(HgGuardia g) {
+		return mDAO.findWhere(HgGuardia.class, " o.guaCedula not like '"+g.getGuaCedula()+"' ", null);
 	}
 	
 	/**
@@ -339,7 +349,17 @@ public class ManagerGestion {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<HgLugare> findAllLugares() {
-		return mDAO.findAll(HgLugare.class);
+		return mDAO.findAll(HgLugare.class,"o.lugId asc");
+	}
+	
+	/**
+	 * listar todos los Lugares
+	 * 
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<HgLugare> findAllLugaresDesc() {
+		return mDAO.findAll(HgLugare.class," o.lugId desc");
 	}
 
 	/**

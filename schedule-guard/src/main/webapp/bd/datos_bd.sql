@@ -24,4 +24,5 @@ insert into hg_lugares  values (default, 'Centro de enrolamiento',3,'Urcuquí','A
 insert into hg_turno  values (default, 'Diurno','07:00:00','15:00:00','A');
 insert into hg_turno  values (default, 'Vespertino','15:00:00','23:00:00','A');
 insert into hg_turno  values (default, 'Nocturno','23:00:00','07:00:00','A');
+insert into hg_turno  values (default, 'Libre','00:00:00','00:00:00','A');
 

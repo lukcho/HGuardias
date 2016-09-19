@@ -77,6 +77,14 @@
 			<artifactId>mail</artifactId>
 			<version>1.4.7</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.uncommons.watchmaker/watchmaker-framework -->
+		<dependency>
+			<groupId>org.uncommons.watchmaker</groupId>
+			<artifactId>watchmaker-framework</artifactId>
+			<version>0.7.0</version>
+		</dependency>
+
+
 		<!-- DATA EXPORT -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>

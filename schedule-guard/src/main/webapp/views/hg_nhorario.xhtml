@@ -5,8 +5,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:b="http://bootsfaces.net/ui"
-	xmlns:pe="http://primefaces.org/ui/extensions">	
-	
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
 <ui:composition template="template.xhtml">
 	<ui:define name="titulo">
             Horarios
@@ -91,48 +91,49 @@
 					</b:column>
 				</b:row>
 				<br />
-					<b:panel title="Detalle de Horarios" look="primary" rendered="#{horarioCDBean.edicion}">
-						<p:dataTable id="tbb" value="#{horarioCDBean.listaHorarioDet}"  liveScroll="true"    scrollable="true"
-							 var="hord" rows="20" reflow="true"
-							emptyMessage="Sin Datos" paginator="true"
-							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
-							<p:column filterBy="#{hord.hdetId}" sortBy="#{hord.hdetId}"
-								filterMatchMode="contains" headerText="ID" width="70">
-								<h:outputText value="#{hord.hdetId}"></h:outputText>
-							</p:column>
-							<p:column filterBy="#{hord.hgTurno.turDescripcion}"
-								sortBy="#{hord.hgTurno.turDescripcion}"
-								filterMatchMode="contains" headerText="TURNO" width="70">
-								<h:outputText value="#{hord.hgTurno.turDescripcion}"></h:outputText>
-							</p:column>
-							<p:column filterBy="#{hord.hgLugare.lugNombre}"
-								sortBy="#{hord.hgLugare.lugNombre}" filterMatchMode="contains"
-								headerText="LUGAR" width="70">
-								<h:outputText value="#{hord.hgLugare.lugNombre}"></h:outputText>
-							</p:column>
-							<p:column filterBy="#{hord.hgGuardia.guaNombre}"
-								sortBy="#{hord.hgGuardia.guaNombre}" filterMatchMode="contains"
-								headerText="Nombre Guardia" width="70">
-								<h:outputText
-									value="#{hord.hgGuardia.guaNombre} #{hord.hgGuardia.guaApellido}"></h:outputText>
-							</p:column>
-							<p:column headerText="FECHA INICIO/FIN" width="100"
-								sortBy="#{hord.hdetFechaInicio}">
-								<h:outputText
-									value="#{hord.hdetFechaInicio} - #{hord.hdetFechaFin}">
-									<f:convertDateTime pattern="yyyy/MM/dd" timeZone="GMT-5" />
-								</h:outputText>
-							</p:column>
-							<p:column headerText="HORA INICIO/FIN" width="100"
-								sortBy="#{hord.hdetHoraInicio}">
-								<h:outputText
-									value="#{hord.hdetHoraInicio} - #{hord.hdetHoraFin}">
-									<f:convertDateTime pattern="HH:mm" />
-								</h:outputText>
-							</p:column>
-						</p:dataTable>
-						<h3>Exportar Datos</h3>
-						<h:commandButton style="width:40px;height:40px" ajax="false"
+				<b:panel title="Detalle de Horarios" look="primary"
+					rendered="#{horarioCDBean.edicion}">
+					<p:dataTable id="tbb" value="#{horarioCDBean.listaHorarioDet}"
+						liveScroll="true" scrollable="true" var="hord" rows="20"
+						reflow="true" emptyMessage="Sin Datos" paginator="true"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+						<p:column filterBy="#{hord.hdetId}" sortBy="#{hord.hdetId}"
+							filterMatchMode="contains" headerText="ID" width="70">
+							<h:outputText value="#{hord.hdetId}"></h:outputText>
+						</p:column>
+						<p:column filterBy="#{hord.hgTurno.turDescripcion}"
+							sortBy="#{hord.hgTurno.turDescripcion}"
+							filterMatchMode="contains" headerText="TURNO" width="70">
+							<h:outputText value="#{hord.hgTurno.turDescripcion}"></h:outputText>
+						</p:column>
+						<p:column filterBy="#{hord.hgLugare.lugNombre}"
+							sortBy="#{hord.hgLugare.lugNombre}" filterMatchMode="contains"
+							headerText="LUGAR" width="70">
+							<h:outputText value="#{hord.hgLugare.lugNombre}"></h:outputText>
+						</p:column>
+						<p:column filterBy="#{hord.hgGuardia.guaNombre}"
+							sortBy="#{hord.hgGuardia.guaNombre}" filterMatchMode="contains"
+							headerText="Nombre Guardia" width="70">
+							<h:outputText
+								value="#{hord.hgGuardia.guaNombre} #{hord.hgGuardia.guaApellido}"></h:outputText>
+						</p:column>
+						<p:column headerText="FECHA INICIO/FIN" width="100"
+							sortBy="#{hord.hdetFechaInicio}">
+							<h:outputText
+								value="#{hord.hdetFechaInicio} - #{hord.hdetFechaFin}">
+								<f:convertDateTime pattern="yyyy/MM/dd" timeZone="GMT-5" />
+							</h:outputText>
+						</p:column>
+						<p:column headerText="HORA INICIO/FIN" width="100"
+							sortBy="#{hord.hdetHoraInicio}">
+							<h:outputText
+								value="#{hord.hdetHoraInicio} - #{hord.hdetHoraFin}">
+								<f:convertDateTime pattern="HH:mm" />
+							</h:outputText>
+						</p:column>
+					</p:dataTable>
+					<h3>Exportar Datos</h3>
+					<h:commandButton style="width:40px;height:40px" ajax="false"
 						image="/resources/img/excel.png">
 						<p:dataExporter type="xls" target="tbb" fileName="rpthorarios"
 							pageOnly="false" />
@@ -156,13 +157,19 @@
 			showEffect="fade" hideEffect="explode" widgetVar="gu">
 			<h:form>
 				<p:commandButton value="Si" styleClass="ui-confirmdialog-yes"
-					icon="ui-icon-check" action="#{horarioCDBean.crearHorarioCab()}"
-					oncomplete="PF('gu').hide();" update="frm" />
+					icon="ui-icon-check" action="#{horarioCDBean.crearHorarioCab()}"  onclick="PF('dlgLoad').show();" oncomplete="PF('dlgLoad').hide();" update="frm" />
 				<p:commandButton value="No" type="button"
 					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
 					onclick="PF('gu').hide();" />
 			</h:form>
 		</p:confirmDialog>
+
+		<p:dialog widgetVar="dlgLoad" modal="true" draggable="false"
+			closable="false" resizable="false" showHeader="false">
+			<h:form>
+				<p:graphicImage value="/resources/img/loader.gif" />
+			</h:form>
+		</p:dialog>
 	</ui:define>
 </ui:composition>
 </html>
