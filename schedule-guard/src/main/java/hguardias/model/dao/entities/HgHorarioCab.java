@@ -1,7 +1,9 @@
 package hguardias.model.dao.entities;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;

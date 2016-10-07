@@ -4,9 +4,9 @@ package hguardias.model.manager;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -629,4 +629,15 @@ public class ManagerDAO {
                 valor = null;
             return valor;
     }
+   
+   @SuppressWarnings("rawtypes")
+	 public List  ejectNativeSQL3(String pClausulaSQL) {
+	  mostrarLog("ejectNativeSQL3", pClausulaSQL);
+	  Query q;
+	  List listado;
+	  q = em.createNativeQuery(pClausulaSQL);
+	  listado = q.getResultList(); 
+	  return listado;
+	 }
+
 }

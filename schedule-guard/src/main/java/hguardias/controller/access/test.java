@@ -31,20 +31,20 @@ public class test {
 			List<Lugares> liluga = new ArrayList<Lugares>();
 			List<Dias> liDias = new ArrayList<Dias>();
 
-			for (HgGuardia g : lisHgGuardia) {
-				Guardias guardias = new Guardias(g.getGuaCedula(),
-						g.getGuaApellido(), g.getGuaCasoEstudio(),
-						g.getGuaCasoNocturno(), g.getGuaCasoTurno(),
-						g.getGuaCctv(), g.getGuaCelular(), g.getGuaChofer(),
-						g.getGuaCiudad(), g.getGuaControlAccesos(),
-						g.getGuaCorreo(), g.getGuaDireccion(),
-						g.getGuaEstado(), g.getGuaEstadoCivil(),
-						g.getGuaFechanac(), g.getGuaMotorizado(),
-						g.getGuaNombre(), g.getGuaSexo(), g.getGuaTelefono(),
-						g.getGuaTipoSangre());
-				ligua.add(guardias);
-				
-			}
+//			for (HgGuardia g : lisHgGuardia) {
+//				Guardias guardias = new Guardias(g.getGuaCedula(),
+//						g.getGuaApellido(), g.getGuaCasoEstudio(),
+//						g.getGuaCasoNocturno(), g.getGuaCasoTurno(),
+//						g.getGuaCctv(), g.getGuaCelular(), g.getGuaChofer(),
+//						g.getGuaCiudad(), g.getGuaControlAccesos(),
+//						g.getGuaCorreo(), g.getGuaDireccion(),
+//						g.getGuaEstado(), g.getGuaEstadoCivil(),
+//						g.getGuaFechanac(), g.getGuaMotorizado(),
+//						g.getGuaNombre(), g.getGuaSexo(), g.getGuaTelefono(),
+//						g.getGuaTipoSangre());
+//				ligua.add(guardias);
+//				
+//			}
 			System.out.println("-------------->Tamaño de la lista guardias: "+ligua.size());
 
 			for (HgTurno t : lisHgTurno) {

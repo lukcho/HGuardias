@@ -25,35 +25,7 @@ public class Guardias{
 	private String guaTelefono;
 	private String guaTipoSangre;
 
-	public Guardias( String guaCedula,
-	 String guaApellido, Boolean guaCasoEstudio, Boolean guaCasoNocturno, Integer guaCasoTurno,
-	 Boolean guaCctv, String guaCelular, Boolean guaChofer,	String guaCiudad,
-	Boolean guaControlAccesos,	String guaCorreo,	String guaDireccion,
-	String guaEstado,	String guaEstadoCivil,	Date guaFechanac,	Boolean guaMotorizado,
-	String guaNombre,	String guaSexo,	String guaTelefono,	String guaTipoSangre) {
-		
-		
-		 this.guaCedula = guaCedula;
-		 this.guaApellido = guaApellido;
-		 this.guaCasoEstudio= guaCasoEstudio;
-		 this.guaCasoNocturno= guaCasoNocturno;
-		 this.guaCasoTurno= guaCasoTurno;
-		 this.guaCctv= guaCctv;
-		 this.guaCelular= guaCedula;
-		 this.guaChofer= guaChofer;
-		 this.guaCiudad= guaCiudad;
-		 this.guaControlAccesos= guaControlAccesos;
-		 this.guaCorreo= guaCorreo;
-		 this.guaDireccion= guaDireccion;
-		 this.guaEstado= guaEstado;
-		 this.guaEstadoCivil= guaEstadoCivil;
-		 this.guaFechanac= guaFechanac;
-		 this.guaMotorizado= guaMotorizado;
-		 this.guaNombre= guaNombre;
-		 this.guaSexo= guaSexo;
-		 this.guaTelefono= guaTelefono;
-		 this.guaTipoSangre= guaTipoSangre;
-		
+	public Guardias() {
 	}
 
 	public String getGuaCedula() {

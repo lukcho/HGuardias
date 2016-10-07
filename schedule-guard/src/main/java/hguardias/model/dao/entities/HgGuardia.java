@@ -85,7 +85,7 @@ public class HgGuardia implements Serializable {
 	private List<HgAusencia> hgAusencias;
 
 	//bi-directional many-to-one association to HgHorarioDet
-	@OneToMany(mappedBy="hgGuardia")
+	@OneToMany(mappedBy="hgGuardia",cascade=CascadeType.ALL)
 	private List<HgHorarioDet> hgHorarioDets;
 
 	public HgGuardia() {

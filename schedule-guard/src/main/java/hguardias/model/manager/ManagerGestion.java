@@ -1,8 +1,12 @@
 package hguardias.model.manager;
 
+import hguardias.general.connection.SingletonJDBCHG;
+import hguardias.model.dao.entidades.Guardias;
 import hguardias.model.dao.entities.*;
 
-import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.sql.Time;
 import java.util.List;
 
@@ -153,6 +157,8 @@ public class ManagerGestion {
 	public List<HgGuardia> findAllGuardiasDesc() {
 		return mDAO.findAll(HgGuardia.class, " o.guaCedula desc ");
 	}
+	
+	
 
 	/**
 	 * buscar guardias por ID
@@ -552,4 +558,34 @@ public class ManagerGestion {
 			}
 			return hg_turno;
 		}
+		
+		@SuppressWarnings("unchecked")
+		 public List<HgGuardia> findGuardiasDisponibles(Date fechainicial) {
+		  List<HgGuardia> l = new ArrayList<HgGuardia>();
+		  List<Object> lista = mDAO.ejectNativeSQL3(
+		    "select o.gua_cedula, o.gua_nombre, o.gua_apellido, o.gua_estado, o.gua_cctv, o.gua_motorizado, o.gua_chofer, o.gua_control_accesos, o.gua_caso_estudio, o.gua_caso_nocturno from hg_guardias o where o.gua_estado='A' and o.gua_cedula not in ( select p.gua_cedula from hg_horario_det p where p.hdet_fecha_inicio = '"+fechainicial+"')");
+		  l = ObjectToClass(lista);
+		  return l;
+		 }
+		
+		private List<HgGuardia> ObjectToClass(List<Object> lista) {
+			  List<HgGuardia> li = new ArrayList<HgGuardia>();
+			  Iterator it = lista.iterator();
+			  while (it.hasNext()) {
+				  HgGuardia s = new HgGuardia();
+			   Object[] obj = (Object[]) it.next();
+			   s.setGuaCedula(String.valueOf(obj[0]));
+			   s.setGuaNombre(String.valueOf(obj[1]));
+			   s.setGuaApellido(String.valueOf(obj[2]));
+			   s.setGuaEstado(String.valueOf(obj[3]));
+			   s.setGuaCctv(Boolean.valueOf(String.valueOf(obj[4])));
+			   s.setGuaMotorizado(Boolean.valueOf(String.valueOf(obj[5])));
+			   s.setGuaChofer(Boolean.valueOf(String.valueOf(obj[6])));
+			   s.setGuaControlAccesos(Boolean.valueOf(String.valueOf(obj[7])));
+			   s.setGuaCasoEstudio(Boolean.valueOf(String.valueOf(obj[8])));
+			   s.setGuaCasoNocturno(Boolean.valueOf(String.valueOf(obj[9])));
+			   li.add(s);
+			  }
+			  return li;
+			 }
 }
