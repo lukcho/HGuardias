@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -851,27 +852,26 @@ public class horarioCDBean implements Serializable {
 	public void metodasotonito(Integer cab_id) {
 		List<HgLugare> lugares = managergest.findAllLugares();
 		List<HgTurno> turnos = managergest.findAllTurnos();
+		List<HgGuardia> guardias = managergest.findAllGuardias();
 		try {
-			for (HgLugare lugar : lugares) {
+			for (HgGuardia guardia : guardias) {}
 				Date fechainicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(sqlfechai));
 				Date fechafinal = addDays(sqlfechaf);
 				Integer dias = diasXFi_Ff();
 				for (Integer numeroDia = 0; numeroDia <= dias; numeroDia++) {
-					if (!fechainicial.after(fechafinal)) {
-						Integer numeroGuardias = 1;
-						for (HgTurno turno : turnos) {// turnos
-							if (numeroGuardias <= lugar.getLugNroGuardias()) {
+					for (HgTurno turno : turnos) {
+						for (HgLugare lugar : lugares) {
+							for(Integer numeroGuardias=1; numeroGuardias<=lugar.getLugNroGuardias(); numeroGuardias++){
 								HgGuardia guardiaAlmacenar = new HgGuardia();
 								guardiaAlmacenar = obtenerGuardia(lugar,fechainicial, turno);
 								almacenarDetalles(guardiaAlmacenar, lugar,turno, fechainicial,fechainicial, cab_id);
-								numeroGuardias++;
-							}
+							}	
 						}
 					}
+					//libres a ls q no trabaojr
 					fechainicial = addDays(fechainicial);
 					fechainicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechainicial));
 				}
-			}
 		} catch (Exception e) {
 			Mensaje.crearMensajeWARN("Error en la creación");
 		}
@@ -881,20 +881,50 @@ public class horarioCDBean implements Serializable {
 				+ managerhorario.findAllHorariosDet().size());
 	}
 
+	public void metodasotonito_fecha_lugar_turno_guardia(Integer cab_id) {
+		List<HgLugare> lugares = managergest.findAllLugares();
+		List<HgTurno> turnos = managergest.findAllTurnos();
+		try {
+			Date fechainicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(sqlfechai));
+			Date fechafinal = addDays(sqlfechaf);
+			Integer dias = diasXFi_Ff();
+			for (Integer numeroDia = 0; numeroDia <= dias; numeroDia++) {
+				for (HgLugare lugar : lugares) {
+					for (HgTurno turno : turnos) {
+						for(Integer numeroGuardias=1; numeroGuardias<=lugar.getLugNroGuardias(); numeroGuardias++){
+							HgGuardia guardiaAlmacenar = new HgGuardia();
+							guardiaAlmacenar = obtenerGuardia(lugar,fechainicial, turno);
+							almacenarDetalles(guardiaAlmacenar, lugar,turno, fechainicial,fechainicial, cab_id);
+						}	
+					}
+				}
+				//libres a ls q no trabaojr
+				fechainicial = addDays(fechainicial);
+				fechainicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechainicial));
+			}
+		} catch (Exception e) {
+			Mensaje.crearMensajeWARN("Error en la creación");
+		}
+		Mensaje.crearMensajeINFO("Se crearon"
+				+ managerhorario.findAllHorariosDet().size() + " registros");
+		System.out.println("---------------> numero de registros almacenados: "
+				+ managerhorario.findAllHorariosDet().size());
+	}
+	
 	public void metodasotonito_respaldo(Integer cab_id) {
 		List<HgLugare> lugares = managergest.findAllLugares();
 		List<HgTurno> turnos = managergest.findAllTurnos();
 		try {
-			for (HgLugare lugar : lugares) {
-				Date fechainicial = sqlfechai;
-				Date fechafinal = addDays(sqlfechaf);
 				Integer dias = diasXFi_Ff();
 				for (Integer a = 0; a <= dias; a++) {
+					Date fechainicial = sqlfechai;
+					Date fechafinal = addDays(sqlfechaf);
 					fechainicial = java.sql.Date.valueOf(new SimpleDateFormat(
 							"yyyy-MM-dd").format(fechainicial));
 					if (!fechainicial.after(fechafinal)) {
 						Integer contador = 1;
 						for (HgTurno turno : turnos) {// turnos
+							for (HgLugare lugar : lugares) {
 							if (contador <= lugar.getLugNroGuardias()) {
 								boolean bandera = false;
 								HgGuardia guardiaAlmacenar = new HgGuardia();
@@ -955,18 +985,35 @@ public class horarioCDBean implements Serializable {
 				+ managerhorario.findAllHorariosDet().size());
 	}
 	
-	private HgGuardia obtenerGuardia(HgLugare lugar, Date fechainicial,HgTurno turno) {
-		List<HgGuardia> guardiasDisponibles = managergest.findGuardiasDisponibles(fechainicial);
+	private HgGuardia obtenerGuardia(HgLugare lugar, Date fecha,HgTurno turno) {
+		HgGuardia guardiaelegido = new HgGuardia();
+		List<HgGuardia> guardiasDisponibles = managergest.findGuardiasUltimosDosDiasLibres(fecha);
+//		List<HgGuardia> guardiasDisponibles1 = managergest.eliminarDosDiasLibres(fecha);
+		guardiaelegido = obtenerGuardiaCompatible(lugar, fecha, turno, guardiasDisponibles);
+		if ( guardiaelegido.getGuaCedula() ==null){
+			guardiasDisponibles = managergest.findGuardiasDisponibles(fecha);
+			guardiaelegido=obtenerGuardiaCompatible(lugar, fecha, turno, guardiasDisponibles);
+		}
+		return guardiaelegido;
+	}
+
+	
+	
+	
+	private HgGuardia obtenerGuardiaCompatible(HgLugare lugar, Date fechainicial, HgTurno turno, List<HgGuardia> guardiasDisponibles) {
 		HgGuardia guardiaelegido = new HgGuardia();
 		for (HgGuardia guardia : guardiasDisponibles) {
 			Boolean guardiaAplica=true;
 			Integer vecestrabajo = 0;
 			Integer diasTrabajados = 5;// número de días al que debe trabajar// el//// usuario
+			
+//			if(managerhorario.trabajoLugTurnDiaAnterior(guardia,turno,restDays(fechainicial))== 0){
+			if ((managerhorario.existeGuardia(cab_id, fechainicial, guardia.getGuaCedula()) != 1)) {
 			if (managerhorario.trabajoDiaAnterior(guardia,restDays(fechainicial)) == 1) {
 				vecestrabajo = managerhorario.findNumDiasxGuardia(guardia,restDays(fechainicial), rest5Days(restDays(fechainicial)));
 			}else if(managerhorario.trabajoDiaAnterior(guardia,restDays(restDays(fechainicial))) == 1){
 				vecestrabajo = managerhorario.findNumDiasxGuardia(guardia,restDays(restDays(fechainicial)),rest5Days(restDays(restDays(fechainicial))));
-			}			
+			}			//// se agrega en un lugar anterior despues de q se renicie la fecha y no cuenta los dias q trabajo atras si
 			if (vecestrabajo < diasTrabajados) {
 				if(managerhorario.existeGuardiaXturnoMNoc(cab_id,restDays(fechainicial),guardia.getGuaCedula()) == 1 && turno.getTurId()==1)
 					guardiaAplica=false;
@@ -988,6 +1035,7 @@ public class horarioCDBean implements Serializable {
 					break;
 				}
 			}
+		}
 		}
 		return guardiaelegido;
 	}
