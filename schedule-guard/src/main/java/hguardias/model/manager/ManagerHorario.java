@@ -99,7 +99,7 @@ public class ManagerHorario {
 				+ fechainicio + "' and o.hgTurno.turId not in (3)  "
 				// + "or (o.hdetFechaInicio = '"+ fechadesp +
 				// "' and o.hgTurno.turId = 3 )"
-				+ " and o.hgHorarioCab.hcabId ='" + cab_id + "' ",
+				+ " ",
 				" o.hdetFechaInicio ");
 	}
 
@@ -188,6 +188,32 @@ public class ManagerHorario {
 	 * 
 	 * @throws Exception
 	 */
+	public Integer findNumDiasxGuardiaPendiente(HgGuardiasPendiente g, Date fecha_inicial, Date fecha5dias) {
+		return mDAO.findWhere(HgHorarioDet.class," o.hgGuardia.guaCedula = '" + g.getGuaCedula()
+								+ "'  and o.hdetFechaInicio between '"+fecha5dias+"' and  '"+fecha_inicial+"'  ", null).size();
+	}
+	
+	/**
+	 * listar x guardia los horariosdet con la fecha contar los dias que trabaja
+	 * 
+	 * @param fechai
+	 * @param fechaf
+	 * 
+	 * @throws Exception
+	 */
+	public Integer trabajoDiaAnteriorPendiente(HgGuardiasPendiente g, Date fecha_inicial) {
+		return mDAO.findWhere(HgHorarioDet.class," o.hgGuardia.guaCedula = '" + g.getGuaCedula()
+								+ "'  and o.hdetFechaInicio = '"+fecha_inicial+"' ", null).size();
+	}
+	
+	/**
+	 * listar x guardia los horariosdet con la fecha contar los dias que trabaja
+	 * 
+	 * @param fechai
+	 * @param fechaf
+	 * 
+	 * @throws Exception
+	 */
 	public Integer trabajoLugTurnDiaAnterior(HgGuardia g,HgTurno t, Date fecha_inicial) {
 		return mDAO.findWhere(HgHorarioDet.class," o.hgGuardia.guaCedula = '"+ g.getGuaCedula()
 								+ "' and o.hdetFechaFin = '"+fecha_inicial+"' and o.hgTurno.turId = "+t.getTurId()+" ", null).size();
@@ -204,7 +230,7 @@ public class ManagerHorario {
 			Date fechaFinal, HgGuardia g, Integer cab_id) {
 		java.sql.Date fechainicio = new java.sql.Date(fechaInicial.getTime());
 		java.sql.Date fechaantes= new java.sql.Date(fechaFinal.getTime());
-		return mDAO.findWhere(HgHorarioDet.class, " o.hgHorarioCab.hcabId ='" +cab_id+ "' and o.hgGuardia.guaCedula = '"+g.getGuaCedula()+"' "
+		return mDAO.findWhere(HgHorarioDet.class, " o.hgGuardia.guaCedula = '"+g.getGuaCedula()+"' "
 				 + "and (o.hdetFechaInicio = '"+fechainicio+"' or o.hdetFechaInicio ='" +fechaantes +"' )  ",
 				" o.hdetFechaInicio ").size();
 	}
@@ -317,7 +343,7 @@ public class ManagerHorario {
 	@SuppressWarnings("unchecked")
 	public Integer existeGuardia(Integer cab_id, Date fechai, String cedula) {
 		java.sql.Date fechainicio = new java.sql.Date(fechai.getTime());
-		return mDAO.findWhere(HgHorarioDet.class, " o.hgHorarioCab.hcabId = "+ cab_id + " and o.hgGuardia.guaCedula = '" + cedula + "' "
+		return mDAO.findWhere(HgHorarioDet.class, " o.hgGuardia.guaCedula = '" + cedula + "' "
 				+ "and o.hdetFechaInicio = '" + fechainicio + "' ", null).size();
 	}
 
@@ -327,16 +353,14 @@ public class ManagerHorario {
 		java.sql.Date fechaante = new java.sql.Date(fechaant.getTime());
 		System.out.println(fechaante);
 		return mDAO.findWhere(HgHorarioDet.class, " o.hdetFechaInicio = '"
-				+ fechaante + "' " + "and o.hgHorarioCab = " + cab_id
-				+ " and o.hgGuardia.guaCedula = '" + cedula
+				+ fechaante + "' " + " and o.hgGuardia.guaCedula = '" + cedula
 				+ "' and o.hgTurno.turId= 4 ", null);
 	}
 
 	public Integer existeGuardiaXturnoMNoc(Integer cab_id,
 			Date fechaant, String cedula) {
 		return mDAO.findWhere(HgHorarioDet.class, " o.hdetFechaInicio = '"
-				+ fechaant + "' " + " and o.hgHorarioCab.hcabId = " + cab_id
-				+ " and o.hgGuardia.guaCedula = '" + cedula
+				+ fechaant + "' " + " and o.hgGuardia.guaCedula = '" + cedula
 				+ "' and o.hgTurno.turId= 3 ", null).size();
 	}
 
@@ -507,4 +531,98 @@ public class ManagerHorario {
 		}
 		return hg_hcab;
 	}
+	
+	//guardia pendiente libre
+	
+	/**
+	 * Agrega guardias
+	 * 
+	 * @param gua_cedid
+	 * @param con_nombre
+	 * @param con_apellido
+	 * @param con_telefono
+	 * @param con_correo
+	 * @throws Exception
+	 */
+	public void insertarGuardiaPendienteLibre(HgGuardia guardia) throws Exception {
+		HgGuardiasPendiente gua = new HgGuardiasPendiente();
+		gua.setGuaCedula(guardia.getGuaCedula());
+		gua.setGuaNombre(guardia.getGuaNombre());
+		gua.setGuaApellido(guardia.getGuaApellido());
+		gua.setGuaFechanac(guardia.getGuaFechanac());
+		gua.setGuaCiudad(guardia.getGuaCiudad());
+		gua.setGuaSexo(guardia.getGuaSexo());
+		gua.setGuaTelefono(guardia.getGuaTelefono());
+		gua.setGuaCelular(guardia.getGuaCelular());
+		gua.setGuaCorreo(guardia.getGuaCorreo());
+		gua.setGuaDireccion(guardia.getGuaDireccion());
+		gua.setGuaCctv(guardia.getGuaCctv());
+		gua.setGuaMotorizado(guardia.getGuaMotorizado());
+		gua.setGuaChofer(guardia.getGuaChofer());
+		gua.setGuaControlAccesos(guardia.getGuaControlAccesos());
+		gua.setGuaCasoTurno(guardia.getGuaCasoTurno());
+		gua.setGuaCasoEstudio(guardia.getGuaCasoEstudio());
+		gua.setGuaCasoNocturno(guardia.getGuaCasoNocturno());
+		gua.setGuaEstadoCivil(guardia.getGuaEstadoCivil());
+		gua.setGuaTipoSangre(guardia.getGuaTipoSangre());
+		gua.setGuaEstado(guardia.getGuaEstado());
+		mDAO.insertar(gua);
+	}
+	
+		/**
+		 * Elimina guardias
+		 * 
+		 * @param gua_cedid
+		 * @param con_nombre
+		 * @param con_apellido
+		 * @param con_telefono
+		 * @param con_correo
+		 * @throws Exception
+		 */
+		public void EliminarGuardiaPendienteLibre(HgGuardia guardia) throws Exception {
+			mDAO.eliminar(HgGuardiasPendiente.class, guardia.getGuaCedula());
+		}
+	
+		/**
+		 * listar todos los guardias
+		 * 
+		 * @throws Exception
+		 */
+		@SuppressWarnings("unchecked")
+		public List<HgGuardiasPendiente> findAllGuardiasPendientes() {
+			return mDAO.findAll(HgGuardiasPendiente.class," o.guaCedula asc ");
+		}
+		
+		/**
+		 * listar todos los guardias
+		 * 
+		 * @throws Exception
+		 */
+		@SuppressWarnings("unchecked")
+		public List<HgGuardia> findAllGuardiasDesc() {
+			return mDAO.findAll(HgGuardia.class, " o.guaCedula desc ");
+		}
+		
+		
+
+		/**
+		 * buscar guardias por ID
+		 * 
+		 * @param con_id
+		 * @throws Exception
+		 */
+		public HgGuardia guardiaByID(String con_id) throws Exception {
+			return (HgGuardia) mDAO.findById(HgGuardia.class, con_id);
+		}
+		
+
+		/**
+		 * buscar guardias por ID
+		 * 
+		 * @param con_id
+		 * @throws Exception
+		 */
+		public HgGuardiasPendiente guardiaPendienteByID(String con_id) throws Exception {
+			return (HgGuardiasPendiente) mDAO.findById(HgGuardiasPendiente.class, con_id);
+		}
 }

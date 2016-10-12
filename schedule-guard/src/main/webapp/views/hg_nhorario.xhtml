@@ -13,7 +13,8 @@
         </ui:define>
 	<ui:define name="contenido">
 		<h:form>
-
+			<p:remoteCommand name="onload"
+				actionListener="#{sesionBean.validaIndex()}" autoRun="true" />
 		</h:form>
 		<br />
 		<h:form id="frm">
@@ -54,8 +55,7 @@
 						<h:outputLabel value="Fecha Inicio*:" for="fechai" />
 					</b:column>
 					<b:column span="4">
-						<p:calendar required="true" mindate="#{horarioCDBean.date}"
-							yearRange="c:c+5" navigator="true"
+						<p:calendar required="true" yearRange="c:c+5" navigator="true"
 							disabled="#{horarioCDBean.edicion}"
 							requiredMessage="Requerido Fecha Inicio" id="fechai"
 							value="#{horarioCDBean.horcab_fechainicio}" pattern="yyyy/MM/dd"
@@ -66,8 +66,7 @@
 						<h:outputLabel value="Fecha Fin*:" for="fechaf" />
 					</b:column>
 					<b:column span="4">
-						<p:calendar required="true" mindate="#{horarioCDBean.date}"
-							yearRange="c:c+5" navigator="true"
+						<p:calendar required="true" yearRange="c:c+5" navigator="true"
 							disabled="#{horarioCDBean.edicion}"
 							requiredMessage="Requerido Fecha Fin" id="fechaf"
 							value="#{horarioCDBean.horcab_fechafin}" pattern="yyyy/MM/dd"
@@ -156,7 +155,10 @@
 			showEffect="fade" hideEffect="explode" widgetVar="gu">
 			<h:form>
 				<p:commandButton value="Si" styleClass="ui-confirmdialog-yes"
-					icon="ui-icon-check" action="#{horarioCDBean.crearHorarioCab()}"  onclick="PF('dlgLoad').show();" oncomplete="PF('dlgLoad').hide();" update="frm" />
+					icon="ui-icon-check" action="#{horarioCDBean.crearHorarioCab()}"
+					onclick="PF('dlgLoad').show();"
+					oncomplete="PF('dlgLoad').hide();PF('dlgInfo').show();"
+					update="frm dlgInformacion" />
 				<p:commandButton value="No" type="button"
 					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
 					onclick="PF('gu').hide();" />
@@ -167,6 +169,26 @@
 			closable="false" resizable="false" showHeader="false">
 			<h:form>
 				<p:graphicImage value="/resources/img/loader.gif" />
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="dlgInfo" modal="true" draggable="false"
+			closable="false" id="dlgInformacion" resizable="false" showHeader="false">
+			<h:form>
+				<h:outputLabel value="Información del horario generado" />
+				<br/>
+				<br/>
+				<h:outputLabel value="Registros creados: " />&nbsp;&nbsp;
+				<h:outputLabel value="#{horarioCDBean.numeroRegistrosCreadoss}" />
+				<br/>
+				<h:outputLabel value="Número de lugares sin guardias: " />&nbsp;&nbsp;
+				<h:outputLabel value="#{horarioCDBean.numeroLugaresVacios}" />
+				<br/>
+				<br/>
+				<p:commandButton value="Volver" styleClass="ui-confirmdialog-yes"
+					icon="ui-icon-triangle-1-w"  action="#{horarioCDBean.cerrarHorarioCab()}"
+					onclick="PF('dlgInfo').close();"
+					oncomplete="PF('dlgInfo').close();" update="frm" />
 			</h:form>
 		</p:dialog>
 	</ui:define>

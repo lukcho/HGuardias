@@ -1,5 +1,8 @@
 package hguardias.model.dao.entidades;
 
+import hguardias.model.dao.entities.HgLugare;
+import hguardias.model.dao.entities.HgTurno;
+
 import java.sql.Time;
 import java.util.Date;
 
@@ -22,17 +25,14 @@ public class HorarioDet {
 
 	private HorarioCab HorarioCab;
 	
-	private Lugares Lugares;
+	private HgLugare Lugares;
 
-	private Turnos Turnos;
+	private HgTurno Turnos;
 
-	public HorarioDet(Guardias Guardias, Turnos turnos, Lugares lugares,Dias dia, Semanas semana) {
-		  this.Guardias= Guardias;
-		  this.Turnos  = turnos;
-		  this.Lugares = lugares;
-		  this.dia = dia;
-		  this.semana = semana;
-		
+	public HorarioDet(HgTurno turno, HgLugare lugar,Date hdetFechaInicio) {
+		  this.Turnos  = turno;
+		  this.Lugares = lugar;
+		  this.hdetFechaInicio = hdetFechaInicio;
 	}
 
 	public Integer getHdetId() {
@@ -99,22 +99,6 @@ public class HorarioDet {
 		this.HorarioCab = HorarioCab;
 	}
 
-	public Lugares getLugares() {
-		return this.Lugares;
-	}
-
-	public void setLugares(Lugares Lugares) {
-		this.Lugares = Lugares;
-	}
-
-	public Turnos getTurnos() {
-		return this.Turnos;
-	}
-
-	public void setHgTurno(Turnos Turnos) {
-		this.Turnos = Turnos;
-	}
-	
 	public Dias getDia() {
 		return dia;
 	}
@@ -129,6 +113,21 @@ public class HorarioDet {
 	
 	public void setSemana(Semanas semana) {
 		this.semana = semana;
+	}
+	
+	public HgTurno getTurnos() {
+		return Turnos;
+	}
+	
+	public void setTurnos(HgTurno turnos) {
+		Turnos = turnos;
+	}
+	
+	public HgLugare getLugares() {
+		return Lugares;
+	}
+	public void setLugares(HgLugare lugares) {
+		Lugares = lugares;
 	}
 
 }

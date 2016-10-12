@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +26,7 @@ import hguardias.model.manager.ManagerCarga;
 import hguardias.controller.access.SesionBean;
 import hguardias.model.generic.Funciones;
 import hguardias.model.dao.entities.HgGuardia;
+import hguardias.model.dao.entities.HgGuardiasPendiente;
 import hguardias.model.dao.entities.HgHorarioCab;
 import hguardias.model.dao.entities.HgHorarioDet;
 import hguardias.model.dao.entities.HgLugare;
@@ -34,7 +34,6 @@ import hguardias.model.dao.entities.HgTurno;
 import hguardias.model.dao.entidades.DiasMG;
 import hguardias.model.dao.entidades.Guardias;
 import hguardias.model.dao.entidades.HorarioDet;
-//import hguardias.model.dao.entidades.HorarioDet;
 import hguardias.model.dao.entidades.Lugares;
 import hguardias.model.dao.entidades.Turnos;
 import hguardias.model.dao.entidades.Dias;
@@ -91,9 +90,12 @@ public class horarioCDBean implements Serializable {
 	private java.sql.Date sqlfechaf;
 
 	private List<HgHorarioCab> listaHorarioCab;
-
 	private List<HgHorarioDet> listaHorarioDet;
-
+	private List<HorarioDet> listaSinGuardias;
+	
+	private Integer numeroLugaresVacios;
+	private Integer numeroRegistrosCreados;
+	
 	@Inject
 	SesionBean ms;
 
@@ -102,9 +104,9 @@ public class horarioCDBean implements Serializable {
 
 	@PostConstruct
 	public void ini() {
-//		usuario = ms.validarSesion("hg_horarios.xhtml");
+		usuario = ms.validarSesion("hg_horarios.xhtml");
 		System.out.println(usuario);
-//		BuscarPersona();
+		BuscarPersona();
 		horcab_id = null;
 		horcab_fechainicio = null;
 		horcab_fechafin = null;
@@ -119,6 +121,9 @@ public class horarioCDBean implements Serializable {
 		usuariologeado = "";
 		listaHorarioCab = managerhorario.findAllHorariosCab();
 		listaHorarioDet = managerhorario.findAllHorariosDet();
+		listaSinGuardias = new ArrayList<HorarioDet>();
+		numeroLugaresVacios =0;
+		numeroRegistrosCreados=0;
 	}
 
 	public java.sql.Date getSqlfechai() {
@@ -261,6 +266,30 @@ public class horarioCDBean implements Serializable {
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
+	
+	public List<HorarioDet> getListaSinGuardias() {
+		return listaSinGuardias;
+	}
+	
+	public void setListaSinGuardias(List<HorarioDet> listaSinGuardias) {
+		this.listaSinGuardias = listaSinGuardias;
+	}
+	
+	public Integer getNumeroLugaresVacios() {
+		return numeroLugaresVacios;
+	}
+	
+	public void setNumeroLugaresVacios(Integer numeroLugaresVacios) {
+		this.numeroLugaresVacios = numeroLugaresVacios;
+	}
+	
+	public Integer getNumeroRegistrosCreadoss() {
+		return numeroRegistrosCreados;
+	}
+	
+	public void setNumeroRegistrosCreadoss(Integer numeroRegistrosCreadoss) {
+		this.numeroRegistrosCreados = numeroRegistrosCreadoss;
+	}
 
 	public String crearhorario() {
 		List<HgGuardia> lisHgGuardia = managergest.findAllGuardias();
@@ -348,8 +377,7 @@ public class horarioCDBean implements Serializable {
 	 * @param horcab_nombre
 	 * @throws Exception
 	 */
-	public String crearHorarioCab() {
-		String r = "";
+	public void crearHorarioCab() {
 		try {
 			fecha = new Date();
 			sqlfechai = java.sql.Date
@@ -359,28 +387,16 @@ public class horarioCDBean implements Serializable {
 					.valueOf(new SimpleDateFormat("yyyy-MM-dd")
 							.format(horcab_fechafin));
 			horcab_fecha_creacion = new Timestamp(fecha.getTime());
-			horcab_usuarioreg = "abc";// usuariologeado.trim();
-			cab_id=1;
+			horcab_usuarioreg = "abc";// 
+			horcab_usuarioreg  = usuariologeado.trim();
+//			cab_id=1;
 			managerhorario.insertarHorarioCab(cab_id, sqlfechai, sqlfechaf,
 					horcab_nombre.trim(), horcab_usuarioreg,
 					horcab_fecha_creacion);
 
 			if (!managergest.findAllGuardias().isEmpty()) {
-				metodasotonito(cab_id);
+				metodasotonito_fecha_lugar_turno_guardia(cab_id);
 				Mensaje.crearMensajeINFO("Se creó satisfactoriamente");
-				horcab_id = null;
-				horcab_fechainicio = null;
-				horcab_fechafin = null;
-				horcab_nombre = null;
-				horcab_usuarioreg = null;
-				horcab_fecha_creacion = null;
-				cab_id = null;
-				date = null;
-				getlistaHorarioCab().clear();
-				getlistaHorarioCab()
-						.addAll(managerhorario.findAllHorariosCab());
-
-				r = "hg_horarios?faces-redirect=true";
 			} else {
 				Mensaje.crearMensajeWARN("Error detalle vacio revisar guardias");
 			}
@@ -389,7 +405,26 @@ public class horarioCDBean implements Serializable {
 			Mensaje.crearMensajeWARN("Error al crear horario");
 			e.printStackTrace();
 		}
-		return r;
+	}
+	
+	/**
+	 * accion cerrar horario
+	 * 
+	 */
+	public String cerrarHorarioCab() {
+		numeroLugaresVacios=0;
+		numeroRegistrosCreados=0;
+		horcab_id = null;
+		horcab_fechainicio = null;
+		horcab_fechafin = null;
+		horcab_nombre = null;
+		horcab_usuarioreg = null;
+		horcab_fecha_creacion = null;
+		cab_id = null;
+		date = null;
+		getlistaHorarioCab().clear();
+		getlistaHorarioCab().addAll(managerhorario.findAllHorariosCab());
+		return "hg_horarios?faces-redirect=true";
 	}
 
 	@SuppressWarnings("deprecation")
@@ -849,7 +884,7 @@ public class horarioCDBean implements Serializable {
 				+ managerhorario.findAllHorariosDet().size());
 	}
 
-	public void metodasotonito(Integer cab_id) {
+	public void metodasolkc(Integer cab_id) {
 		List<HgLugare> lugares = managergest.findAllLugares();
 		List<HgTurno> turnos = managergest.findAllTurnos();
 		List<HgGuardia> guardias = managergest.findAllGuardias();
@@ -863,7 +898,7 @@ public class horarioCDBean implements Serializable {
 						for (HgLugare lugar : lugares) {
 							for(Integer numeroGuardias=1; numeroGuardias<=lugar.getLugNroGuardias(); numeroGuardias++){
 								HgGuardia guardiaAlmacenar = new HgGuardia();
-								guardiaAlmacenar = obtenerGuardia(lugar,fechainicial, turno);
+								guardiaAlmacenar = obtenerGuardia(lugar,fechainicial, turno,numeroDia);
 								almacenarDetalles(guardiaAlmacenar, lugar,turno, fechainicial,fechainicial, cab_id);
 							}	
 						}
@@ -886,17 +921,34 @@ public class horarioCDBean implements Serializable {
 		List<HgTurno> turnos = managergest.findAllTurnos();
 		try {
 			Date fechainicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(sqlfechai));
-			Date fechafinal = addDays(sqlfechaf);
 			Integer dias = diasXFi_Ff();
 			for (Integer numeroDia = 0; numeroDia <= dias; numeroDia++) {
 				for (HgLugare lugar : lugares) {
 					for (HgTurno turno : turnos) {
 						for(Integer numeroGuardias=1; numeroGuardias<=lugar.getLugNroGuardias(); numeroGuardias++){
 							HgGuardia guardiaAlmacenar = new HgGuardia();
-							guardiaAlmacenar = obtenerGuardia(lugar,fechainicial, turno);
-							almacenarDetalles(guardiaAlmacenar, lugar,turno, fechainicial,fechainicial, cab_id);
-						}	
+							boolean guardia = true;
+							guardiaAlmacenar = obtenerGuardia(lugar,fechainicial, turno,numeroDia);
+							if(guardiaAlmacenar.getGuaCedula() == null){
+								guardia = false;
+								HorarioDet hdet = new HorarioDet(turno, lugar, fechainicial);
+								listaSinGuardias.add(hdet);
+							}
+							if(guardia){
+								if(numeroDia!=26){
+									if(managerhorario.guardiaPendienteByID(guardiaAlmacenar.getGuaCedula())!=null){
+										almacenarDetalles(guardiaAlmacenar, lugar,turno, fechainicial,fechainicial, cab_id);
+										managerhorario.EliminarGuardiaPendienteLibre(guardiaAlmacenar);
+									}else{
+										almacenarDetalles(guardiaAlmacenar, lugar,turno, fechainicial,fechainicial, cab_id);
+									}
+								}else{
+									almacenarDetalles(guardiaAlmacenar, lugar,turno, fechainicial,fechainicial, cab_id);
+									managerhorario.insertarGuardiaPendienteLibre(guardiaAlmacenar);
+								}
+							}	
 					}
+				}
 				}
 				//libres a ls q no trabaojr
 				fechainicial = addDays(fechainicial);
@@ -905,10 +957,17 @@ public class horarioCDBean implements Serializable {
 		} catch (Exception e) {
 			Mensaje.crearMensajeWARN("Error en la creación");
 		}
-		Mensaje.crearMensajeINFO("Se crearon"
-				+ managerhorario.findAllHorariosDet().size() + " registros");
-		System.out.println("---------------> numero de registros almacenados: "
-				+ managerhorario.findAllHorariosDet().size());
+		
+		numeroRegistrosCreados= managerhorario.findAllHorariosDetXIdCab(cab_id).size();
+		numeroLugaresVacios = listaSinGuardias.size();
+		System.out.println("---------------> numero de registros almacenados: "+ numeroRegistrosCreados);
+		System.out.println("---------------> posiciones donde no se registraron: "+numeroLugaresVacios+" ");
+		for(Integer i =0; i<listaSinGuardias.size();i++){
+					System.out.println(listaSinGuardias.get(i).getLugares().getLugNombre().toString());
+					System.out.println(listaSinGuardias.get(i).getTurnos().getTurDescripcion());
+					System.out.println(listaSinGuardias.get(i).getHdetFechaInicio());
+					System.out.println("--------------------------------------");
+		}
 	}
 	
 	public void metodasotonito_respaldo(Integer cab_id) {
@@ -916,7 +975,7 @@ public class horarioCDBean implements Serializable {
 		List<HgTurno> turnos = managergest.findAllTurnos();
 		try {
 				Integer dias = diasXFi_Ff();
-				for (Integer a = 0; a <= dias; a++) {
+				for (Integer numeroDias = 0; numeroDias <= dias; numeroDias++) {
 					Date fechainicial = sqlfechai;
 					Date fechafinal = addDays(sqlfechaf);
 					fechainicial = java.sql.Date.valueOf(new SimpleDateFormat(
@@ -930,21 +989,21 @@ public class horarioCDBean implements Serializable {
 								HgGuardia guardiaAlmacenar = new HgGuardia();
 								if (turno.getTurId() == 3) {
 									while (bandera == false) {
-										guardiaAlmacenar = obtenerGuardia(lugar,fechainicial, turno);
+										guardiaAlmacenar = obtenerGuardia(lugar,fechainicial, turno,numeroDias);
 										almacenarDetalles(guardiaAlmacenar, lugar,turno, fechainicial,fechainicial, cab_id);
 										bandera = true;
 										contador++;
 									}
 								} else if (turno.getTurId() == 1) {
 									while (bandera == false) {
-										guardiaAlmacenar = obtenerGuardia(lugar, fechainicial, turno);
+										guardiaAlmacenar = obtenerGuardia(lugar, fechainicial, turno,numeroDias );
 											almacenarDetalles(guardiaAlmacenar,lugar, turno, fechainicial,fechainicial, cab_id);
 											bandera = true;
 											contador++;
 									}
 								} else {
 									while (bandera == false) {
-										guardiaAlmacenar = obtenerGuardia(lugar,fechainicial, turno);
+										guardiaAlmacenar = obtenerGuardia(lugar,fechainicial, turno,numeroDias);
 										almacenarDetalles(guardiaAlmacenar, lugar,turno, fechainicial, fechainicial,cab_id);
 										bandera = true;
 										contador++;
@@ -985,28 +1044,48 @@ public class horarioCDBean implements Serializable {
 				+ managerhorario.findAllHorariosDet().size());
 	}
 	
-	private HgGuardia obtenerGuardia(HgLugare lugar, Date fecha,HgTurno turno) {
+	private HgGuardia obtenerGuardia(HgLugare lugar, Date fecha,HgTurno turno,Integer numeroDias) {
 		HgGuardia guardiaelegido = new HgGuardia();
-		List<HgGuardia> guardiasDisponibles = managergest.findGuardiasUltimosDosDiasLibres(fecha);
-//		List<HgGuardia> guardiasDisponibles1 = managergest.eliminarDosDiasLibres(fecha);
-		guardiaelegido = obtenerGuardiaCompatible(lugar, fecha, turno, guardiasDisponibles);
-		if ( guardiaelegido.getGuaCedula() ==null){
+		HgGuardiasPendiente guardiaelegidoPendiente = new HgGuardiasPendiente();
+		List<HgGuardia> guardiasDisponibles = new ArrayList<HgGuardia>();
+		List<HgGuardiasPendiente> guardiasDisponiblesPendientes = new ArrayList<HgGuardiasPendiente>();
+		if ( numeroDias%3!=0){
 			guardiasDisponibles = managergest.findGuardiasDisponibles(fecha);
-			guardiaelegido=obtenerGuardiaCompatible(lugar, fecha, turno, guardiasDisponibles);
+			guardiaelegido = obtenerGuardiaCompatible(lugar, fecha, turno, guardiasDisponibles,numeroDias);
+			}
+			//tengo mis 45 libres 
+		if ( guardiaelegido.getGuaCedula() == null){
+			guardiasDisponibles = managergest.findGuardiasDisponiblesSinLibres(fecha);
+			guardiaelegido=obtenerGuardiaCompatible(lugar, fecha, turno, guardiasDisponibles,numeroDias);
 		}
+		if ( guardiaelegido.getGuaCedula() == null){
+			guardiasDisponibles = managergest.findGuardiasUltimosDosDiasLibres(fecha);
+			guardiaelegido = obtenerGuardiaCompatible(lugar, fecha, turno, guardiasDisponibles,numeroDias);
+		}
+		if ( guardiaelegido.getGuaCedula() == null){
+			guardiasDisponiblesPendientes = managerhorario.findAllGuardiasPendientes();
+			//setear
+			guardiaelegidoPendiente = obtenerGuardiaCompatiblePendiente(lugar, fecha, turno, guardiasDisponiblesPendientes,numeroDias);
+			guardiaelegido = setearHgGuardia(guardiaelegidoPendiente);
+			}
+			//tengo mis 45 libres
+//		if(numeroDias%2==0){
+//			guardiasDisponibles = managergest.findGuardiasUltimosDosDiasLibres(fecha);
+//		}
+//		guardiaelegido = obtenerGuardiaCompatible(lugar, fecha, turno, guardiasDisponibles);
+//		if ( guardiaelegido.getGuaCedula() ==null){
+//			guardiasDisponibles = managergest.findGuardiasDisponibles(fecha);
+//			guardiaelegido=obtenerGuardiaCompatible(lugar, fecha, turno, guardiasDisponibles);
+//		}
 		return guardiaelegido;
 	}
 
-	
-	
-	
-	private HgGuardia obtenerGuardiaCompatible(HgLugare lugar, Date fechainicial, HgTurno turno, List<HgGuardia> guardiasDisponibles) {
+	private HgGuardia obtenerGuardiaCompatible(HgLugare lugar, Date fechainicial, HgTurno turno, List<HgGuardia> guardiasDisponibles,Integer numeroDias) {
 		HgGuardia guardiaelegido = new HgGuardia();
 		for (HgGuardia guardia : guardiasDisponibles) {
 			Boolean guardiaAplica=true;
 			Integer vecestrabajo = 0;
 			Integer diasTrabajados = 5;// número de días al que debe trabajar// el//// usuario
-			
 //			if(managerhorario.trabajoLugTurnDiaAnterior(guardia,turno,restDays(fechainicial))== 0){
 			if ((managerhorario.existeGuardia(cab_id, fechainicial, guardia.getGuaCedula()) != 1)) {
 			if (managerhorario.trabajoDiaAnterior(guardia,restDays(fechainicial)) == 1) {
@@ -1017,19 +1096,23 @@ public class horarioCDBean implements Serializable {
 			if (vecestrabajo < diasTrabajados) {
 				if(managerhorario.existeGuardiaXturnoMNoc(cab_id,restDays(fechainicial),guardia.getGuaCedula()) == 1 && turno.getTurId()==1)
 					guardiaAplica=false;
-				if (lugar.getLugCctv() == true && guardia.getGuaCctv() != true) 
-					guardiaAplica=false;
-				if (lugar.getLugControlAccesos() == true && guardia.getGuaControlAccesos() != true) 
-					guardiaAplica=false;
-				if (guardia.getGuaCasoEstudio() == true && (fechainicial.getDay() == 0 || fechainicial.getDay() == 6)) 
-					guardiaAplica=false;
-				if (guardia.getGuaCasoNocturno() == true && turno.getTurId()==3) 
-					guardiaAplica=false;
-				if ( (lugar.getLugNombre() == "Instituto" || lugar.getLugNombre() == "Centro de emprendimiento"
-						|| lugar.getLugNombre() == "San Eloy" || lugar.getLugNombre() == "CCTV" 
-						|| lugar.getLugNombre() == "Tanques de Agua" || lugar.getLugNombre() == "Control 1")
-						&& guardia.getGuaMotorizado() == true )
-					guardiaAplica=false;
+//				if (lugar.getLugCctv() == true && guardia.getGuaCctv() != true) 
+//					guardiaAplica=false;
+//				if(lugar.getLugCctv() == true && sinCCTV(guardiasDisponibles)==false)
+//					guardiaAplica=true;
+//				if (lugar.getLugControlAccesos() == true && guardia.getGuaControlAccesos() != true) 
+//					guardiaAplica=false;
+//				if(lugar.getLugControlAccesos() == true && sinControlAccesos(guardiasDisponibles)==false)
+//					guardiaAplica=true;
+//				if (guardia.getGuaCasoEstudio() == true && (fechainicial.getDay() == 0 || fechainicial.getDay() == 6)) 
+//					guardiaAplica=false;
+//				if (guardia.getGuaCasoNocturno() == true && turno.getTurId()==3) 
+//					guardiaAplica=false;
+//				if ( (lugar.getLugNombre() == "Instituto" || lugar.getLugNombre() == "Centro de emprendimiento"
+//						|| lugar.getLugNombre() == "San Eloy" || lugar.getLugNombre() == "CCTV" 
+//						|| lugar.getLugNombre() == "Tanques de Agua" || lugar.getLugNombre() == "Control 1")
+//						&& guardia.getGuaMotorizado() == true )
+//					guardiaAplica=false;
 				if(guardiaAplica){
 					guardiaelegido = guardia;
 					break;
@@ -1038,6 +1121,92 @@ public class horarioCDBean implements Serializable {
 		}
 		}
 		return guardiaelegido;
+	}
+	
+	private HgGuardiasPendiente obtenerGuardiaCompatiblePendiente(HgLugare lugar, Date fechainicial, HgTurno turno, List<HgGuardiasPendiente> guardiasDisponiblesPendientes,Integer numeroDias) {
+		HgGuardiasPendiente guardiaelegido = new HgGuardiasPendiente();
+		for (HgGuardiasPendiente guardia : guardiasDisponiblesPendientes) {
+			Boolean guardiaAplica=true;
+			Integer vecestrabajo = 0;
+			Integer diasTrabajados = 6;// número de días al que debe trabajar// el//// usuario
+//			if(managerhorario.trabajoLugTurnDiaAnterior(guardia,turno,restDays(fechainicial))== 0){
+			if ((managerhorario.existeGuardia(cab_id, fechainicial, guardia.getGuaCedula()) != 1)) {
+			if (managerhorario.trabajoDiaAnteriorPendiente(guardia,restDays(fechainicial)) == 1) {
+				vecestrabajo = managerhorario.findNumDiasxGuardiaPendiente(guardia,restDays(fechainicial), rest5Days(restDays(fechainicial)));
+			}else if(managerhorario.trabajoDiaAnteriorPendiente(guardia,restDays(restDays(fechainicial))) == 1){
+				vecestrabajo = managerhorario.findNumDiasxGuardiaPendiente(guardia,restDays(restDays(fechainicial)),rest5Days(restDays(restDays(fechainicial))));
+			}			//// se agrega en un lugar anterior despues de q se renicie la fecha y no cuenta los dias q trabajo atras si
+			if (vecestrabajo < diasTrabajados) {
+				if(managerhorario.existeGuardiaXturnoMNoc(cab_id,restDays(fechainicial),guardia.getGuaCedula()) == 1 && turno.getTurId()==1)
+					guardiaAplica=false;
+//				if (lugar.getLugCctv() == true && guardia.getGuaCctv() != true) 
+//					guardiaAplica=false;
+//				if(lugar.getLugCctv() == true && sinCCTV(guardiasDisponibles)==false)
+//					guardiaAplica=true;
+//				if (lugar.getLugControlAccesos() == true && guardia.getGuaControlAccesos() != true) 
+//					guardiaAplica=false;
+//				if(lugar.getLugControlAccesos() == true && sinControlAccesos(guardiasDisponibles)==false)
+//					guardiaAplica=true;
+//				if (guardia.getGuaCasoEstudio() == true && (fechainicial.getDay() == 0 || fechainicial.getDay() == 6)) 
+//					guardiaAplica=false;
+//				if (guardia.getGuaCasoNocturno() == true && turno.getTurId()==3) 
+//					guardiaAplica=false;
+//				if ( (lugar.getLugNombre() == "Instituto" || lugar.getLugNombre() == "Centro de emprendimiento"
+//						|| lugar.getLugNombre() == "San Eloy" || lugar.getLugNombre() == "CCTV" 
+//						|| lugar.getLugNombre() == "Tanques de Agua" || lugar.getLugNombre() == "Control 1")
+//						&& guardia.getGuaMotorizado() == true )
+//					guardiaAplica=false;
+				if(guardiaAplica){
+					guardiaelegido = guardia;
+					break;
+				}
+			}
+		}
+		}
+		return guardiaelegido;
+	}
+	
+	private HgGuardia setearHgGuardia(HgGuardiasPendiente guardiapendiente){
+		HgGuardia guardia = new HgGuardia();
+		guardia.setGuaCedula(guardiapendiente.getGuaCedula());
+		guardia.setGuaNombre(guardiapendiente.getGuaNombre());
+		guardia.setGuaApellido(guardiapendiente.getGuaApellido());
+		guardia.setGuaFechanac(guardiapendiente.getGuaFechanac());
+		guardia.setGuaCiudad(guardiapendiente.getGuaCiudad());
+		guardia.setGuaSexo(guardiapendiente.getGuaSexo());
+		guardia.setGuaTelefono(guardiapendiente.getGuaTelefono());
+		guardia.setGuaCelular(guardiapendiente.getGuaCelular());
+		guardia.setGuaCorreo(guardiapendiente.getGuaCorreo());
+		guardia.setGuaDireccion(guardiapendiente.getGuaDireccion());
+		guardia.setGuaCctv(guardiapendiente.getGuaCctv());
+		guardia.setGuaMotorizado(guardiapendiente.getGuaMotorizado());
+		guardia.setGuaChofer(guardiapendiente.getGuaChofer());
+		guardia.setGuaControlAccesos(guardiapendiente.getGuaControlAccesos());
+		guardia.setGuaCasoTurno(guardiapendiente.getGuaCasoTurno());
+		guardia.setGuaCasoEstudio(guardiapendiente.getGuaCasoEstudio());
+		guardia.setGuaCasoNocturno(guardiapendiente.getGuaCasoNocturno());
+		guardia.setGuaEstadoCivil(guardiapendiente.getGuaEstadoCivil());
+		guardia.setGuaTipoSangre(guardiapendiente.getGuaEstadoCivil());
+		guardia.setGuaEstado(guardiapendiente.getGuaEstado());
+		return guardia;
+	}
+	
+	private boolean sinCCTV(List<HgGuardia> hgGuardia){
+		boolean resultado=true;
+		for(HgGuardia guardia : hgGuardia){
+			if(guardia.getGuaCctv()==false)
+				resultado = false;
+		}
+		return resultado;
+	}
+	
+	private boolean sinControlAccesos(List<HgGuardia> hgGuardia){
+		boolean resultado=true;
+		for(HgGuardia guardia : hgGuardia){
+			if(guardia.getGuaControlAccesos()==false)
+				resultado = false;
+		}
+		return resultado;
 	}
 
 	private HgGuardia obtenerGuardia_respaldo(HgLugare lugar, Date fechainicial,HgTurno turno) {
@@ -1218,323 +1387,323 @@ public class horarioCDBean implements Serializable {
 	}
 
 	public void metodaso1(Integer cab_id) {
-		List<HgGuardia> lisHgGuardia = managergest.findAllGuardias();
-		List<HgGuardia> lisHgGuardiaDesc = managergest.findAllGuardiasDesc();
-		List<HgTurno> lisHgTurno = managergest.findAllTurnos();
-		List<HgLugare> lisHgLugar = managergest.findAllLugares();
-		List<Guardias> liguaEscogidos = new ArrayList<Guardias>();
-
-		List<Guardias> ligua = new ArrayList<Guardias>();
-		List<Turnos> liturn = new ArrayList<Turnos>();
-		List<Lugares> liluga = new ArrayList<Lugares>();
-		List<Dias> liDias = new ArrayList<Dias>();
-		List<Semanas> liSemanas = new ArrayList<Semanas>();
-		List<HorarioDet> liHdet = new ArrayList<HorarioDet>();
-
-//		for (HgGuardia g : lisHgGuardia) {
-//			Guardias guardias = new Guardias(g.getGuaCedula(),
-//					g.getGuaApellido(), g.getGuaCasoEstudio(),
-//					g.getGuaCasoNocturno(), g.getGuaCasoTurno(),
-//					g.getGuaCctv(), g.getGuaCelular(), g.getGuaChofer(),
-//					g.getGuaCiudad(), g.getGuaControlAccesos(),
-//					g.getGuaCorreo(), g.getGuaDireccion(), g.getGuaEstado(),
-//					g.getGuaEstadoCivil(), g.getGuaFechanac(),
-//					g.getGuaMotorizado(), g.getGuaNombre(), g.getGuaSexo(),
-//					g.getGuaTelefono(), g.getGuaTipoSangre());
-//			ligua.add(guardias);
+//		List<HgGuardia> lisHgGuardia = managergest.findAllGuardias();
+//		List<HgGuardia> lisHgGuardiaDesc = managergest.findAllGuardiasDesc();
+//		List<HgTurno> lisHgTurno = managergest.findAllTurnos();
+//		List<HgLugare> lisHgLugar = managergest.findAllLugares();
+//		List<Guardias> liguaEscogidos = new ArrayList<Guardias>();
+//
+//		List<Guardias> ligua = new ArrayList<Guardias>();
+//		List<Turnos> liturn = new ArrayList<Turnos>();
+//		List<Lugares> liluga = new ArrayList<Lugares>();
+//		List<Dias> liDias = new ArrayList<Dias>();
+//		List<Semanas> liSemanas = new ArrayList<Semanas>();
+//		List<HorarioDet> liHdet = new ArrayList<HorarioDet>();
+//
+////		for (HgGuardia g : lisHgGuardia) {
+////			Guardias guardias = new Guardias(g.getGuaCedula(),
+////					g.getGuaApellido(), g.getGuaCasoEstudio(),
+////					g.getGuaCasoNocturno(), g.getGuaCasoTurno(),
+////					g.getGuaCctv(), g.getGuaCelular(), g.getGuaChofer(),
+////					g.getGuaCiudad(), g.getGuaControlAccesos(),
+////					g.getGuaCorreo(), g.getGuaDireccion(), g.getGuaEstado(),
+////					g.getGuaEstadoCivil(), g.getGuaFechanac(),
+////					g.getGuaMotorizado(), g.getGuaNombre(), g.getGuaSexo(),
+////					g.getGuaTelefono(), g.getGuaTipoSangre());
+////			ligua.add(guardias);
+////
+////		}
+//		System.out.println("-------------->Tamaño de la lista guardias: "
+//				+ ligua.size());
+//
+//		for (HgTurno t : lisHgTurno) {
+//			Turnos turnos = new Turnos(t.getTurId(), t.getTurDescripcion(),
+//					t.getTurEstado(), t.getTurHoraFin(), t.getTurHoraInicio(),
+//					ligua);
+//			liturn.add(turnos);
 //
 //		}
-		System.out.println("-------------->Tamaño de la lista guardias: "
-				+ ligua.size());
-
-		for (HgTurno t : lisHgTurno) {
-			Turnos turnos = new Turnos(t.getTurId(), t.getTurDescripcion(),
-					t.getTurEstado(), t.getTurHoraFin(), t.getTurHoraInicio(),
-					ligua);
-			liturn.add(turnos);
-
-		}
-		System.out.println("-------------->Tamaño de la lista turnos: "
-				+ liturn.size());
-
-		for (HgLugare l : lisHgLugar) {
-			Lugares lugares = new Lugares(l.getLugId(), l.getLugCctv(),
-					l.getLugCiudad(), l.getLugControlAccesos(),
-					l.getLugEstado(), l.getLugNombre(), l.getLugNroGuardias(),
-					liturn);
-			liluga.add(lugares);
-		}
-		System.out.println("-------------->Tamaño de la lista lugares: "
-				+ liluga.size());
-
-		int diaId = 0;
-		String diaNombre = "";
-		int semanaId = 0;
-		String semanaNombre = "";
-
-		Dias dia = new Dias(diaId, diaNombre, liluga);
-		dia.setDiaId(1);
-		dia.setDiaNombre("Lunes");
-		dia.setLugares(liluga);
-		liDias.add(dia);
-		diaId++;
-		Dias dia2 = new Dias(diaId, diaNombre, liluga);
-		dia2.setDiaId(2);
-		dia2.setDiaNombre("Martes");
-		dia2.setLugares(liluga);
-		liDias.add(dia2);
-		diaId++;
-		// Dias dia3 = new Dias(diaId, diaNombre, liluga);
-		// dia3.setDiaId(3);
-		// dia3.setDiaNombre("Miercoles");
-		// dia3.setLugares(liluga);
-		// liDias.add(dia3);
-		// diaId++;
-		// Dias dia4 = new Dias(diaId, diaNombre, liluga);
-		// dia4.setDiaId(4);
-		// dia4.setDiaNombre("Jueves");
-		// dia4.setLugares(liluga);
-		// liDias.add(dia4);
-		// diaId++;
-		// Dias dia5 = new Dias(diaId, diaNombre, liluga);
-		// dia5.setDiaId(5);
-		// dia5.setDiaNombre("Viernes");
-		// dia5.setLugares(liluga);
-		// liDias.add(dia5);
-		// diaId++;
-		// Dias dia6 = new Dias(diaId, diaNombre, liluga);
-		// dia6.setDiaId(6);
-		// dia6.setDiaNombre("Sabado");
-		// dia6.setLugares(liluga);
-		// liDias.add(dia6);
-		// diaId++;
-		// Dias dia7 = new Dias(diaId, diaNombre, liluga);
-		// dia7.setDiaId(7);
-		// dia7.setDiaNombre("Domingo");
-		// dia7.setLugares(liluga);
-		// liDias.add(dia7);
-
-		System.out.println("-------------->Tamaño de la lista dias: "
-				+ liDias.size());
-
-		Semanas semana = new Semanas(semanaId, semanaNombre, liDias);
-		semana.setSemanaId(1);
-		semana.setSemanaNombre("Primera");
-		semana.setDias(liDias);
-		liSemanas.add(semana);
-		semanaId++;
-		// Semanas semana1 = new Semanas(semanaId, semanaNombre, liDias);
-		// semana1.setSemanaId(2);
-		// semana1.setSemanaNombre("Segunda");
-		// semana1.setDias(liDias);
-		// liSemanas.add(semana1);
-		// semana.setSemanaId(3);
-		// semana.setSemanaNombre("Tercera");
-		// semana.setDias(liDias);
-		// semana.setSemanaId(4);
-		// semana.setSemanaNombre("Cuarta");
-		// semana.setDias(liDias);
-		// semana.setSemanaId(5);
-		// semana.setSemanaNombre("Quinta");
-		// semana.setDias(liDias);
-
-		System.out.println(semana.getSemanaNombre());
-		System.out.println("-------------->Tamaño de la lista semanas: "
-				+ liSemanas.size());
-		for (Semanas s : liSemanas) {
-			System.out.println(s.getSemanaNombre());
-			for (Dias d : liDias) {
-				System.out.println(d.getDiaNombre());
-				for (Lugares l : liluga) {
-					Integer contador = 1;
-					System.out.println(l.getLugNombre());
-					for (Turnos t : liturn) {
-						System.out.println(t.getTurDescripcion());
-						romper: for (Guardias g : ligua) {
-							if (revisarGuaXsem(g, t, l, d, s, ligua, liturn,
-									liluga, liDias, liSemanas, liHdet) == false) {
-								System.out.println("Contador: " + contador
-										+ "  Nro. Guardias por lugar: "
-										+ l.getLugNroGuardias());
-								if (contador <= l.getLugNroGuardias()) {
-									if (g.getGuaEstado().equals("A")) {
-										if (g.getGuaCasoEstudio() == true
-												&& l.getLugCctv() == false
-												&& g.getGuaCctv() == false
-												&& (s.getSemanaNombre() == "Sabado" || s
-														.getSemanaNombre() == "Domingo")) {
-											// agregar caso si es estudio libres
-											// sabados y domingos
-											System.out
-													.println("----------------> datos:  "
-															+ s.getSemanaNombre()
-															+ " "
-															+ d.getDiaNombre()
-															+ " "
-															+ l.getLugNombre()
-															+ " "
-															+ t.getTurDescripcion()
-															+ " "
-															+ g.getGuaNombre());
-											HorarioDet hdet = new HorarioDet(g,
-													t, l, d, s);
-											liHdet.add(hdet);
-											liguaEscogidos.add(g);
-											contador++;
-											break romper;
-										} else if (g.getGuaCasoNocturno() == true
-												&& l.getLugCctv() == false
-												&& g.getGuaCctv() == false
-												&& !t.getTurId().equals(1)) {
-											// agregar caso si trabajan solo
-											// turnos vespertino o nocturno
-											System.out
-													.println("----------------> datos:  "
-															+ s.getSemanaNombre()
-															+ " "
-															+ d.getDiaNombre()
-															+ " "
-															+ l.getLugNombre()
-															+ " "
-															+ t.getTurDescripcion()
-															+ " "
-															+ g.getGuaNombre());
-											HorarioDet hdet = new HorarioDet(g,
-													t, l, d, s);
-											liHdet.add(hdet);
-											liguaEscogidos.add(g);
-											contador++;
-											break romper;
-										} else if (g.getGuaCctv() == true
-												&& g.getGuaChofer() == true
-												&& l.getLugCctv() == true) {
-											// agregar si es CCTV
-											System.out
-													.println("----------------> datos:  "
-															+ s.getSemanaNombre()
-															+ " "
-															+ d.getDiaNombre()
-															+ " "
-															+ l.getLugNombre()
-															+ " "
-															+ t.getTurDescripcion()
-															+ " "
-															+ g.getGuaNombre());
-											HorarioDet hdet = new HorarioDet(g,
-													t, l, d, s);
-											liHdet.add(hdet);
-											liguaEscogidos.add(g);
-											contador++;
-											break romper;
-										} else if (g.getGuaControlAccesos() == true
-												&& l.getLugControlAccesos() == true
-												&& l.getLugId() == 14
-												&& l.getLugCctv() == false
-												&& g.getGuaCctv() == false) {
-											// agregar si es control de accesos
-											// y enrolamiento
-											System.out
-													.println("----------------> datos:  "
-															+ s.getSemanaNombre()
-															+ " "
-															+ d.getDiaNombre()
-															+ " "
-															+ l.getLugNombre()
-															+ " "
-															+ t.getTurDescripcion()
-															+ " "
-															+ g.getGuaNombre());
-											HorarioDet hdet = new HorarioDet(g,
-													t, l, d, s);
-											liHdet.add(hdet);
-											liguaEscogidos.add(g);
-											contador++;
-											break romper;
-										} else if (g.getGuaMotorizado() == true
-												&& l.getLugCctv() == false
-												&& g.getGuaCctv() == false
-												&& l.getLugControlAccesos() == false
-												&& l.getLugNombre() != "Instituto"
-												&& l.getLugNombre() != "Centro de emprendimiento"
-												&& l.getLugNombre() != "CCTV"
-												&& l.getLugNombre() != "San Eloy"
-												&& l.getLugNombre() != "Tanques de Agua"
-												&& l.getLugNombre() != "Control 1") {
-											// agregar si es motorizado y solo 3
-											// y en cualquier sitio
-											System.out
-													.println("----------------> datos:  "
-															+ s.getSemanaNombre()
-															+ " "
-															+ d.getDiaNombre()
-															+ " "
-															+ l.getLugNombre()
-															+ " "
-															+ t.getTurDescripcion()
-															+ " "
-															+ g.getGuaNombre());
-											HorarioDet hdet = new HorarioDet(g,
-													t, l, d, s);
-											liHdet.add(hdet);
-											liguaEscogidos.add(g);
-											contador++;
-											break romper;
-										} else if (
-										// l.getLugControlAccesos() == false
-										l.getLugCctv() == false
-												// && g.getGuaControlAccesos()
-												// == false
-												&& g.getGuaChofer() == false
-												&& g.getGuaCctv() == false
-												&& g.getGuaCasoNocturno() == false
-												&& g.getGuaMotorizado() == false
-												&& g.getGuaCasoEstudio() == false) {
-											// agregar si no tiene referencia
-											System.out
-													.println("----------------> datos:  "
-															+ s.getSemanaNombre()
-															+ " "
-															+ d.getDiaNombre()
-															+ " "
-															+ l.getLugNombre()
-															+ " "
-															+ t.getTurDescripcion()
-															+ " "
-															+ g.getGuaNombre());
-											HorarioDet hdet = new HorarioDet(g,
-													t, l, d, s);
-											liHdet.add(hdet);
-											liguaEscogidos.add(g);
-											contador++;
-											break romper;
-										}
-									}
-								}
-							}
-						}
-						t.setGuardias(liguaEscogidos);
-						System.out
-								.println("---------------->Nro de guardias almacenados "
-										+ t.getGuardias().size());
-					}
-				}
-				ligua.clear();
-//				for (HgGuardia g : lisHgGuardiaDesc) {
-//					Guardias guardias = new Guardias(g.getGuaCedula(),
-//							g.getGuaApellido(), g.getGuaCasoEstudio(),
-//							g.getGuaCasoNocturno(), g.getGuaCasoTurno(),
-//							g.getGuaCctv(), g.getGuaCelular(),
-//							g.getGuaChofer(), g.getGuaCiudad(),
-//							g.getGuaControlAccesos(), g.getGuaCorreo(),
-//							g.getGuaDireccion(), g.getGuaEstado(),
-//							g.getGuaEstadoCivil(), g.getGuaFechanac(),
-//							g.getGuaMotorizado(), g.getGuaNombre(),
-//							g.getGuaSexo(), g.getGuaTelefono(),
-//							g.getGuaTipoSangre());
-//					ligua.add(guardias);
+//		System.out.println("-------------->Tamaño de la lista turnos: "
+//				+ liturn.size());
+//
+//		for (HgLugare l : lisHgLugar) {
+//			Lugares lugares = new Lugares(l.getLugId(), l.getLugCctv(),
+//					l.getLugCiudad(), l.getLugControlAccesos(),
+//					l.getLugEstado(), l.getLugNombre(), l.getLugNroGuardias(),
+//					liturn);
+//			liluga.add(lugares);
+//		}
+//		System.out.println("-------------->Tamaño de la lista lugares: "
+//				+ liluga.size());
+//
+//		int diaId = 0;
+//		String diaNombre = "";
+//		int semanaId = 0;
+//		String semanaNombre = "";
+//
+//		Dias dia = new Dias(diaId, diaNombre, liluga);
+//		dia.setDiaId(1);
+//		dia.setDiaNombre("Lunes");
+//		dia.setLugares(liluga);
+//		liDias.add(dia);
+//		diaId++;
+//		Dias dia2 = new Dias(diaId, diaNombre, liluga);
+//		dia2.setDiaId(2);
+//		dia2.setDiaNombre("Martes");
+//		dia2.setLugares(liluga);
+//		liDias.add(dia2);
+//		diaId++;
+//		// Dias dia3 = new Dias(diaId, diaNombre, liluga);
+//		// dia3.setDiaId(3);
+//		// dia3.setDiaNombre("Miercoles");
+//		// dia3.setLugares(liluga);
+//		// liDias.add(dia3);
+//		// diaId++;
+//		// Dias dia4 = new Dias(diaId, diaNombre, liluga);
+//		// dia4.setDiaId(4);
+//		// dia4.setDiaNombre("Jueves");
+//		// dia4.setLugares(liluga);
+//		// liDias.add(dia4);
+//		// diaId++;
+//		// Dias dia5 = new Dias(diaId, diaNombre, liluga);
+//		// dia5.setDiaId(5);
+//		// dia5.setDiaNombre("Viernes");
+//		// dia5.setLugares(liluga);
+//		// liDias.add(dia5);
+//		// diaId++;
+//		// Dias dia6 = new Dias(diaId, diaNombre, liluga);
+//		// dia6.setDiaId(6);
+//		// dia6.setDiaNombre("Sabado");
+//		// dia6.setLugares(liluga);
+//		// liDias.add(dia6);
+//		// diaId++;
+//		// Dias dia7 = new Dias(diaId, diaNombre, liluga);
+//		// dia7.setDiaId(7);
+//		// dia7.setDiaNombre("Domingo");
+//		// dia7.setLugares(liluga);
+//		// liDias.add(dia7);
+//
+//		System.out.println("-------------->Tamaño de la lista dias: "
+//				+ liDias.size());
+//
+//		Semanas semana = new Semanas(semanaId, semanaNombre, liDias);
+//		semana.setSemanaId(1);
+//		semana.setSemanaNombre("Primera");
+//		semana.setDias(liDias);
+//		liSemanas.add(semana);
+//		semanaId++;
+//		// Semanas semana1 = new Semanas(semanaId, semanaNombre, liDias);
+//		// semana1.setSemanaId(2);
+//		// semana1.setSemanaNombre("Segunda");
+//		// semana1.setDias(liDias);
+//		// liSemanas.add(semana1);
+//		// semana.setSemanaId(3);
+//		// semana.setSemanaNombre("Tercera");
+//		// semana.setDias(liDias);
+//		// semana.setSemanaId(4);
+//		// semana.setSemanaNombre("Cuarta");
+//		// semana.setDias(liDias);
+//		// semana.setSemanaId(5);
+//		// semana.setSemanaNombre("Quinta");
+//		// semana.setDias(liDias);
+//
+//		System.out.println(semana.getSemanaNombre());
+//		System.out.println("-------------->Tamaño de la lista semanas: "
+//				+ liSemanas.size());
+//		for (Semanas s : liSemanas) {
+//			System.out.println(s.getSemanaNombre());
+//			for (Dias d : liDias) {
+//				System.out.println(d.getDiaNombre());
+//				for (Lugares l : liluga) {
+//					Integer contador = 1;
+//					System.out.println(l.getLugNombre());
+//					for (Turnos t : liturn) {
+//						System.out.println(t.getTurDescripcion());
+//						romper: for (Guardias g : ligua) {
+//							if (revisarGuaXsem(g, t, l, d, s, ligua, liturn,
+//									liluga, liDias, liSemanas, liHdet) == false) {
+//								System.out.println("Contador: " + contador
+//										+ "  Nro. Guardias por lugar: "
+//										+ l.getLugNroGuardias());
+//								if (contador <= l.getLugNroGuardias()) {
+//									if (g.getGuaEstado().equals("A")) {
+//										if (g.getGuaCasoEstudio() == true
+//												&& l.getLugCctv() == false
+//												&& g.getGuaCctv() == false
+//												&& (s.getSemanaNombre() == "Sabado" || s
+//														.getSemanaNombre() == "Domingo")) {
+//											// agregar caso si es estudio libres
+//											// sabados y domingos
+//											System.out
+//													.println("----------------> datos:  "
+//															+ s.getSemanaNombre()
+//															+ " "
+//															+ d.getDiaNombre()
+//															+ " "
+//															+ l.getLugNombre()
+//															+ " "
+//															+ t.getTurDescripcion()
+//															+ " "
+//															+ g.getGuaNombre());
+//											HorarioDet hdet = new HorarioDet(g,
+//													t, l, d, s);
+//											liHdet.add(hdet);
+//											liguaEscogidos.add(g);
+//											contador++;
+//											break romper;
+//										} else if (g.getGuaCasoNocturno() == true
+//												&& l.getLugCctv() == false
+//												&& g.getGuaCctv() == false
+//												&& !t.getTurId().equals(1)) {
+//											// agregar caso si trabajan solo
+//											// turnos vespertino o nocturno
+//											System.out
+//													.println("----------------> datos:  "
+//															+ s.getSemanaNombre()
+//															+ " "
+//															+ d.getDiaNombre()
+//															+ " "
+//															+ l.getLugNombre()
+//															+ " "
+//															+ t.getTurDescripcion()
+//															+ " "
+//															+ g.getGuaNombre());
+//											HorarioDet hdet = new HorarioDet(g,
+//													t, l, d, s);
+//											liHdet.add(hdet);
+//											liguaEscogidos.add(g);
+//											contador++;
+//											break romper;
+//										} else if (g.getGuaCctv() == true
+//												&& g.getGuaChofer() == true
+//												&& l.getLugCctv() == true) {
+//											// agregar si es CCTV
+//											System.out
+//													.println("----------------> datos:  "
+//															+ s.getSemanaNombre()
+//															+ " "
+//															+ d.getDiaNombre()
+//															+ " "
+//															+ l.getLugNombre()
+//															+ " "
+//															+ t.getTurDescripcion()
+//															+ " "
+//															+ g.getGuaNombre());
+//											HorarioDet hdet = new HorarioDet(g,
+//													t, l, d, s);
+//											liHdet.add(hdet);
+//											liguaEscogidos.add(g);
+//											contador++;
+//											break romper;
+//										} else if (g.getGuaControlAccesos() == true
+//												&& l.getLugControlAccesos() == true
+//												&& l.getLugId() == 14
+//												&& l.getLugCctv() == false
+//												&& g.getGuaCctv() == false) {
+//											// agregar si es control de accesos
+//											// y enrolamiento
+//											System.out
+//													.println("----------------> datos:  "
+//															+ s.getSemanaNombre()
+//															+ " "
+//															+ d.getDiaNombre()
+//															+ " "
+//															+ l.getLugNombre()
+//															+ " "
+//															+ t.getTurDescripcion()
+//															+ " "
+//															+ g.getGuaNombre());
+//											HorarioDet hdet = new HorarioDet(g,
+//													t, l, d, s);
+//											liHdet.add(hdet);
+//											liguaEscogidos.add(g);
+//											contador++;
+//											break romper;
+//										} else if (g.getGuaMotorizado() == true
+//												&& l.getLugCctv() == false
+//												&& g.getGuaCctv() == false
+//												&& l.getLugControlAccesos() == false
+//												&& l.getLugNombre() != "Instituto"
+//												&& l.getLugNombre() != "Centro de emprendimiento"
+//												&& l.getLugNombre() != "CCTV"
+//												&& l.getLugNombre() != "San Eloy"
+//												&& l.getLugNombre() != "Tanques de Agua"
+//												&& l.getLugNombre() != "Control 1") {
+//											// agregar si es motorizado y solo 3
+//											// y en cualquier sitio
+//											System.out
+//													.println("----------------> datos:  "
+//															+ s.getSemanaNombre()
+//															+ " "
+//															+ d.getDiaNombre()
+//															+ " "
+//															+ l.getLugNombre()
+//															+ " "
+//															+ t.getTurDescripcion()
+//															+ " "
+//															+ g.getGuaNombre());
+//											HorarioDet hdet = new HorarioDet(g,
+//													t, l, d, s);
+//											liHdet.add(hdet);
+//											liguaEscogidos.add(g);
+//											contador++;
+//											break romper;
+//										} else if (
+//										// l.getLugControlAccesos() == false
+//										l.getLugCctv() == false
+//												// && g.getGuaControlAccesos()
+//												// == false
+//												&& g.getGuaChofer() == false
+//												&& g.getGuaCctv() == false
+//												&& g.getGuaCasoNocturno() == false
+//												&& g.getGuaMotorizado() == false
+//												&& g.getGuaCasoEstudio() == false) {
+//											// agregar si no tiene referencia
+//											System.out
+//													.println("----------------> datos:  "
+//															+ s.getSemanaNombre()
+//															+ " "
+//															+ d.getDiaNombre()
+//															+ " "
+//															+ l.getLugNombre()
+//															+ " "
+//															+ t.getTurDescripcion()
+//															+ " "
+//															+ g.getGuaNombre());
+//											HorarioDet hdet = new HorarioDet(g,
+//													t, l, d, s);
+//											liHdet.add(hdet);
+//											liguaEscogidos.add(g);
+//											contador++;
+//											break romper;
+//										}
+//									}
+//								}
+//							}
+//						}
+//						t.setGuardias(liguaEscogidos);
+//						System.out
+//								.println("---------------->Nro de guardias almacenados "
+//										+ t.getGuardias().size());
+//					}
 //				}
-			}
-		}
+//				ligua.clear();
+////				for (HgGuardia g : lisHgGuardiaDesc) {
+////					Guardias guardias = new Guardias(g.getGuaCedula(),
+////							g.getGuaApellido(), g.getGuaCasoEstudio(),
+////							g.getGuaCasoNocturno(), g.getGuaCasoTurno(),
+////							g.getGuaCctv(), g.getGuaCelular(),
+////							g.getGuaChofer(), g.getGuaCiudad(),
+////							g.getGuaControlAccesos(), g.getGuaCorreo(),
+////							g.getGuaDireccion(), g.getGuaEstado(),
+////							g.getGuaEstadoCivil(), g.getGuaFechanac(),
+////							g.getGuaMotorizado(), g.getGuaNombre(),
+////							g.getGuaSexo(), g.getGuaTelefono(),
+////							g.getGuaTipoSangre());
+////					ligua.add(guardias);
+////				}
+//			}
+//		}
 	}
 
 	public boolean revisarGuaXsem(Guardias guard, Turnos tu, Lugares lu,

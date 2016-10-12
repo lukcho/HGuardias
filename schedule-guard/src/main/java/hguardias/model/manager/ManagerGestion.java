@@ -1,7 +1,5 @@
 package hguardias.model.manager;
 
-import hguardias.general.connection.SingletonJDBCHG;
-import hguardias.model.dao.entidades.Guardias;
 import hguardias.model.dao.entities.*;
 
 import java.util.ArrayList;
@@ -564,12 +562,51 @@ public class ManagerGestion {
 		 public List<HgGuardia> findGuardiasDisponibles(Date fechainicial) {
 		  List<HgGuardia> l = new ArrayList<HgGuardia>();
 		  List<Object> lista = mDAO.ejectNativeSQL3(
-		    "select o.gua_cedula, o.gua_nombre, o.gua_apellido, o.gua_estado, o.gua_cctv, o.gua_motorizado, o.gua_chofer, o.gua_control_accesos, o.gua_caso_estudio, o.gua_caso_nocturno from hg_guardias o where o.gua_estado='A' and o.gua_cedula not in ( select p.gua_cedula from hg_horario_det p where p.hdet_fecha_inicio = '"+fechainicial+"')");
-		  l = ObjectToClass(lista);
+		    "select o.gua_cedula, o.gua_nombre, o.gua_apellido, o.gua_estado, "
+		    + "o.gua_cctv, o.gua_motorizado, o.gua_chofer, o.gua_control_accesos, "
+		    + "o.gua_caso_estudio, o.gua_caso_nocturno from hg_guardias o where "
+		    + "o.gua_estado='A' and o.gua_cedula not in "
+		    + "( select p.gua_cedula from hg_horario_det p where p.hdet_fecha_inicio = '"+restDays(fechainicial)+"')");
+		  l = ObjectToClass1(lista);
 		  return l;
 		 }
 		
-		private List<HgGuardia> ObjectToClass(List<Object> lista) {
+		private List<HgGuardia> ObjectToClass1(List<Object> lista) {
+			  List<HgGuardia> li = new ArrayList<HgGuardia>();
+			  Iterator it = lista.iterator();
+			  while (it.hasNext()) {
+				  HgGuardia s = new HgGuardia();
+			   Object[] obj = (Object[]) it.next();
+			   s.setGuaCedula(String.valueOf(obj[0]));
+			   s.setGuaNombre(String.valueOf(obj[1]));
+			   s.setGuaApellido(String.valueOf(obj[2]));
+			   s.setGuaEstado(String.valueOf(obj[3]));
+			   s.setGuaCctv(Boolean.valueOf(String.valueOf(obj[4])));
+			   s.setGuaMotorizado(Boolean.valueOf(String.valueOf(obj[5])));
+			   s.setGuaChofer(Boolean.valueOf(String.valueOf(obj[6])));
+			   s.setGuaControlAccesos(Boolean.valueOf(String.valueOf(obj[7])));
+			   s.setGuaCasoEstudio(Boolean.valueOf(String.valueOf(obj[8])));
+			   s.setGuaCasoNocturno(Boolean.valueOf(String.valueOf(obj[9])));
+			   li.add(s);
+			  }
+			  return li;
+			 }
+		
+		
+		@SuppressWarnings("unchecked")
+		 public List<HgGuardia> findGuardiasDisponiblesotro(Date fechainicial) {
+		  List<HgGuardia> l = new ArrayList<HgGuardia>();
+		  List<Object> lista = mDAO.ejectNativeSQL3(
+		    "select o.gua_cedula, o.gua_nombre, o.gua_apellido, o.gua_estado, "
+		    + "o.gua_cctv, o.gua_motorizado, o.gua_chofer, o.gua_control_accesos, "
+		    + "o.gua_caso_estudio, o.gua_caso_nocturno from hg_guardias o where "
+		    + "o.gua_estado='A' and o.gua_cedula  in "
+		    + "( select p.gua_cedula from hg_horario_det p where p.hdet_fecha_inicio = '"+restDays(fechainicial)+"')");
+		  l = ObjectToClass3(lista);
+		  return l;
+		 }
+		
+		private List<HgGuardia> ObjectToClass3(List<Object> lista) {
 			  List<HgGuardia> li = new ArrayList<HgGuardia>();
 			  Iterator it = lista.iterator();
 			  while (it.hasNext()) {
@@ -599,8 +636,9 @@ public class ManagerGestion {
 		    		+ " o.gua_motorizado, o.gua_chofer, o.gua_control_accesos, o.gua_caso_estudio,"
 		    		+ "  o.gua_caso_nocturno from hg_guardias o"
 		    		+ " where o.gua_cedula not in (select p.gua_cedula "
-		    		+ "from hg_horario_det p where p.hdet_fecha_inicio between '"+restDays(restDays(fechainicial))+"' and '"+restDays(fechainicial)+"' "
-		    		+ "  group by p.gua_cedula )");
+		    		+ "from hg_horario_det p where (p.hdet_fecha_inicio between '"+restDays(restDays(fechainicial))+"'"
+		    		+ " and '"+restDays(fechainicial)+"'  and p.hdet_fecha_inicio = '"+restDays(fechainicial)+"' "
+		    		+ " ) group by p.gua_cedula )");
 		  l = ObjectToClassDosdias(lista);
 		  return l;
 		 }
@@ -620,6 +658,41 @@ public class ManagerGestion {
 
 		
 		private List<HgGuardia> ObjectToClassDosdias(List<Object> lista) {
+			  List<HgGuardia> li = new ArrayList<HgGuardia>();
+			  Iterator it = lista.iterator();
+			  while (it.hasNext()) {
+				  HgGuardia s = new HgGuardia();
+			   Object[] obj = (Object[]) it.next();
+			   s.setGuaCedula(String.valueOf(obj[0]));
+			   s.setGuaNombre(String.valueOf(obj[1]));
+			   s.setGuaApellido(String.valueOf(obj[2]));
+			   s.setGuaEstado(String.valueOf(obj[3]));
+			   s.setGuaCctv(Boolean.valueOf(String.valueOf(obj[4])));
+			   s.setGuaMotorizado(Boolean.valueOf(String.valueOf(obj[5])));
+			   s.setGuaChofer(Boolean.valueOf(String.valueOf(obj[6])));
+			   s.setGuaControlAccesos(Boolean.valueOf(String.valueOf(obj[7])));
+			   s.setGuaCasoEstudio(Boolean.valueOf(String.valueOf(obj[8])));
+			   s.setGuaCasoNocturno(Boolean.valueOf(String.valueOf(obj[9])));
+			   li.add(s);
+			  }
+			  return li;
+			 }
+		
+		
+		@SuppressWarnings("unchecked")
+		 public List<HgGuardia> findGuardiasDisponiblesSinLibres(Date fechainicial) {
+		  List<HgGuardia> l = new ArrayList<HgGuardia>();
+		  List<Object> lista = mDAO.ejectNativeSQL3(
+		    "select o.gua_cedula, o.gua_nombre, o.gua_apellido, o.gua_estado, "
+		    + "o.gua_cctv, o.gua_motorizado, o.gua_chofer, o.gua_control_accesos, "
+		    + "o.gua_caso_estudio, o.gua_caso_nocturno from hg_guardias o where "
+		    + "o.gua_estado='A' and o.gua_cedula in "
+		    + "( select p.gua_cedula from hg_horario_det p where p.hdet_fecha_inicio = '"+restDays(fechainicial)+"')");
+		  l = ObjectToClass2(lista);
+		  return l;
+		 }
+		
+		private List<HgGuardia> ObjectToClass2(List<Object> lista) {
 			  List<HgGuardia> li = new ArrayList<HgGuardia>();
 			  Iterator it = lista.iterator();
 			  while (it.hasNext()) {

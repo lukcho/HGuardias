@@ -109,6 +109,33 @@ create table HG_GUARDIAS (
 );
 
 /*==============================================================*/
+/* Table: HG_GUARDIAS_PENDIENTE                                 */
+/*==============================================================*/
+create table HG_GUARDIAS_PENDIENTE (
+   GUA_CEDULA           VARCHAR(100)         not null,
+   GUA_NOMBRE           VARCHAR(100)         null,
+   GUA_APELLIDO         VARCHAR(100)         null,
+   GUA_FECHANAC         DATE                 null,
+   GUA_CIUDAD           VARCHAR(100)         null,
+   GUA_SEXO             CHAR(1)              null,
+   GUA_TELEFONO         VARCHAR(10)          null,
+   GUA_CELULAR          VARCHAR(10)          null,
+   GUA_CORREO           VARCHAR(255)         null,
+   GUA_TIPO_SANGRE      VARCHAR(100)         null,
+   GUA_ESTADO_CIVIL     VARCHAR(100)         null,
+   GUA_DIRECCION        VARCHAR(255)         null,
+   GUA_ESTADO           CHAR(1)              null,
+   GUA_CCTV             BOOL                 null,
+   GUA_MOTORIZADO       BOOL                 null,
+   GUA_CHOFER           BOOL                 null,
+   GUA_CONTROL_ACCESOS  BOOL                 null,
+   GUA_CASO_TURNO       INT4                 null,
+   GUA_CASO_ESTUDIO     BOOL                 null,
+   GUA_CASO_NOCTURNO    BOOL                 null,
+   constraint PK_HG_GUARDIAS_PENDIENTE primary key (GUA_CEDULA)
+);
+
+/*==============================================================*/
 /* Table: HG_LUGARES                                            */
 /*==============================================================*/
 create table HG_LUGARES (
