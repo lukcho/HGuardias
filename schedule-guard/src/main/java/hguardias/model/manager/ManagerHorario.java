@@ -658,4 +658,17 @@ public class ManagerHorario {
 		public List<HgLugaresTurnosVacio> lugarTurnoVacio(Integer cab_id) {
 			return mDAO.findWhere(HgLugaresTurnosVacio.class, " o.hgHorarioCab.hcabId = '"+ cab_id + "' ",null);
 		}
+		
+		//ausensias
+		/**
+		 * Verifica si el guardia exite
+		 * 
+		 * @param u
+		 *            guardia a analizar
+		 * @return true o false
+		 */
+		public Integer existeAusencia(String cedula,Date fechai) {
+			return mDAO.findWhere(HgAusencia.class, " o.hgGuardia.guaCedula = '"+cedula+"' "
+					+ "and o.ausFechaInicio <= '"+fechai+"' and o.ausFechaFin >= '"+fechai+"' ", null).size();
+		}
 }

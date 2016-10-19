@@ -11,10 +11,8 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 
@@ -34,7 +32,6 @@ import hguardias.model.dao.entities.HgLugare;
 import hguardias.model.dao.entities.HgLugaresTurnosVacio;
 import hguardias.model.dao.entities.HgTurno;
 import hguardias.model.dao.entidades.HorarioDet;
-import hguardias.model.dao.entidades.Turnos;
 import hguardias.model.dao.entities.Persona;
 import hguardias.model.generic.Mensaje;
 import hguardias.model.manager.ManagerGestion;
@@ -451,6 +448,7 @@ public class horarioCDBean implements Serializable {
 			Boolean guardiaAplica=true;
 			Integer vecestrabajo = 0;
 			Integer diasTrabajados = 5;
+			if(managerhorario.existeAusencia(guardia.getGuaCedula(), fechainicial) == 0){
 //			if(managerhorario.trabajoLugTurnDiaAnterior(guardia,turno,restDays(fechainicial))== 0){
 			if ((managerhorario.existeGuardia(cab_id, fechainicial, guardia.getGuaCedula()) != 1)) {
 			if (managerhorario.trabajoDiaAnterior(guardia,restDays(fechainicial)) == 1) {
@@ -484,6 +482,7 @@ public class horarioCDBean implements Serializable {
 				}
 			}
 		}
+			}
 		}
 		return guardiaelegido;
 	}
