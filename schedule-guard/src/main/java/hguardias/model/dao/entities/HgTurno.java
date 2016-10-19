@@ -38,6 +38,10 @@ public class HgTurno implements Serializable {
 	@OneToMany(mappedBy="hgTurno")
 	private List<HgHorarioDet> hgHorarioDets;
 
+	//bi-directional many-to-one association to HgLugarTurno
+	@OneToMany(mappedBy="hgTurno")
+	private List<HgLugarTurno> hgLugarTurnos;
+
 	public HgTurno() {
 	}
 
@@ -101,6 +105,28 @@ public class HgTurno implements Serializable {
 		hgHorarioDet.setHgTurno(null);
 
 		return hgHorarioDet;
+	}
+
+	public List<HgLugarTurno> getHgLugarTurnos() {
+		return this.hgLugarTurnos;
+	}
+
+	public void setHgLugarTurnos(List<HgLugarTurno> hgLugarTurnos) {
+		this.hgLugarTurnos = hgLugarTurnos;
+	}
+
+	public HgLugarTurno addHgLugarTurno(HgLugarTurno hgLugarTurno) {
+		getHgLugarTurnos().add(hgLugarTurno);
+		hgLugarTurno.setHgTurno(this);
+
+		return hgLugarTurno;
+	}
+
+	public HgLugarTurno removeHgLugarTurno(HgLugarTurno hgLugarTurno) {
+		getHgLugarTurnos().remove(hgLugarTurno);
+		hgLugarTurno.setHgTurno(null);
+
+		return hgLugarTurno;
 	}
 
 }

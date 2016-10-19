@@ -84,6 +84,28 @@
 				<br />
 				<b:row>
 					<b:column span="2">
+						<h:outputLabel value="Días de trabajo:* " for="trabaja" />
+					</b:column>
+					<b:column span="10" id="trabaja" style="margin-bottom:10px">
+					<h:outputText value="Lunes: " />
+					<p:selectBooleanCheckbox value="#{lugarBean.lug_lunes}" />&nbsp;
+					<h:outputText value="Martes: " />
+					<p:selectBooleanCheckbox value="#{lugarBean.lug_martes}" />&nbsp;
+					<h:outputText value="Miércoles: " />
+					<p:selectBooleanCheckbox value="#{lugarBean.lug_miercoles}" />&nbsp;
+					<h:outputText value="Jueves: " />
+					<p:selectBooleanCheckbox value="#{lugarBean.lug_jueves}" />&nbsp;
+					<h:outputText value="Viernes: " />
+					<p:selectBooleanCheckbox value="#{lugarBean.lug_viernes}" />&nbsp;
+					<h:outputText value="Sábado: " />
+					<p:selectBooleanCheckbox value="#{lugarBean.lug_sabado}" />&nbsp;
+					<h:outputText value="Domingo: " />
+					<p:selectBooleanCheckbox value="#{lugarBean.lug_domingo}" />&nbsp;
+					</b:column>
+				</b:row>
+				<br />
+				<b:row>
+					<b:column span="2">
 						<h:outputLabel value="Estado*" for="est"
 							rendered="#{lugarBean.edicion}" />
 					</b:column>
@@ -94,22 +116,93 @@
 						</b:selectOneMenu>
 					</b:column>
 				</b:row>
+				<br/>
 				<b:row>
 					<b:column span="5">
-						<p:commandButton value="Guardar" styleClass="btn btn-info"
+						<p:commandButton value="Guardar" styleClass="btn btn-info" disabled="#{lugarBean.guardado}"
 							style="padding:7px;" actionListener="#{lugarBean.abrirDialog()}"
 							update="frm messages">
 						</p:commandButton>&nbsp;&nbsp;&nbsp;
-						<b:commandButton value="Volver"
-							action="#{lugarBean.volverLugar()}" update="frm" look="info"
-							process="@this">
-						</b:commandButton>&nbsp;&nbsp;&nbsp;
 					</b:column>
 				</b:row>
 				<br />
 				<br />
 			</b:panel>
 		</h:form>
+		<h:form id="frm1">
+			<b:panel title="Listado de Turnos" look="primary">
+				<b:row>
+					<b:column span="2">
+						<h:outputLabel value="Escoger turno* :" />
+					</b:column>
+					<b:column span="4">
+						<h:panelGroup>
+									<h:selectOneMenu id="trackseleccionar2" required="true"
+										styleClass="form-control"
+										requiredMessage="Requerido Turno"
+										value="#{lugarBean.lug_idTurno}">
+										<f:selectItem itemLabel="Selecci&oacute;n Turno" itemValue="-1" />
+										<f:selectItems value="#{lugarBean.listaTurno}" />
+										<f:ajax listener="#{lugarBean.asignarTurno()}" />
+									</h:selectOneMenu>
+								</h:panelGroup>
+					</b:column>
+				</b:row>
+				<br/>
+				<b:row>
+					<b:column span="2">
+						<h:outputLabel value="Número de Guardias* :" />
+					</b:column>
+					<b:column span="4">
+					<p:inputText id="nroguardias" value="#{lugarBean.numeroGuardias}"
+							required="true"
+							styleClass="form-control" style="width:100%; margin-bottom:15px;"
+							requiredMessage="Campo nro. guardias requerido" maxlength="10"
+							validatorMessage="Campo nro. guardias ingresar solo n&uacute;meros.">
+							<f:validateRegex pattern="[0-9]+" />
+						</p:inputText>
+						</b:column>
+				</b:row>
+				<b:row>
+				<b:column span="5">
+						<p:commandButton value="Agregar" styleClass="btn btn-info"
+							style="padding:7px;" actionListener="#{lugarBean.abrirDialog1()}"
+							update=":frm:messages">
+						</p:commandButton>&nbsp;&nbsp;&nbsp;
+					</b:column>
+				</b:row>
+				<p:dataTable id="tbb" value="#{lugarBean.listaLugarTurno}"
+					reflow="false" var="lugturn" rows="3" emptyMessage="Sin Datos"
+					paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+					<p:column headerText="OPCIONES" width="40">
+						<p:commandButton id="btnE" icon="ui-icon-close"
+							action="#{lugarBean.eliminarLugarTurno(lugturn)}" update="frm1 tbb">
+							<p:tooltip id="toolTipTrack1" for="btnE"
+								value="Bot&oacute;n para borrar el turno" trackMouse="true" />
+						</p:commandButton>
+					</p:column>
+					<p:column headerText="TURNO" width="40">
+						<h:outputText value="#{lugturn.hgTurno.turDescripcion}"></h:outputText>
+					</p:column>
+					<p:column headerText="HORA INICIO/FIN" width="60">
+						<h:outputText value="#{lugturn.hgTurno.turHoraInicio} - #{lugturn.hgTurno.turHoraFin}"></h:outputText>
+					</p:column>
+					<p:column headerText="NÚMERO DE GUARDIAS" width="60">
+						<h:outputText value="#{lugturn.lugTurNumeroGuardias}"></h:outputText>
+					</p:column>
+				</p:dataTable>
+				<b:row>
+					<b:column span="5">
+						<b:commandButton value="Volver"
+							action="#{lugarBean.volverLugar()}" update="frm" look="info"
+							process="@this">
+						</b:commandButton>&nbsp;&nbsp;&nbsp;
+					</b:column>
+				</b:row>
+			</b:panel>
+		</h:form>
+		
 		<p:confirmDialog header="Confirmación"
 			message="Está seguro de guardar la información?" closable="false"
 			showEffect="fade" hideEffect="explode" widgetVar="gu">
@@ -120,6 +213,30 @@
 				<p:commandButton value="No" type="button"
 					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
 					onclick="PF('gu').hide();" />
+			</h:form>
+		</p:confirmDialog>
+		<p:confirmDialog header="Confirmación"
+			message="Está seguro de borrar el turno" closable="false"
+			showEffect="fade" hideEffect="explode" widgetVar="ef">
+			<h:form>
+				<p:commandButton value="Si" styleClass="ui-confirmdialog-yes"
+					icon="ui-icon-check" action="#{lugarBean.eliminarTurnoLugar()}"
+					oncomplete="PF('ef').hide();" update="frm frm1:tbb" />
+				<p:commandButton value="No" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					onclick="PF('ef').hide();" />
+			</h:form>
+		</p:confirmDialog>
+		<p:confirmDialog header="Confirmación"
+			message="Está seguro de guardar la información?" closable="false"
+			showEffect="fade" hideEffect="explode" widgetVar="gu1">
+			<h:form>
+				<p:commandButton value="Si" styleClass="ui-confirmdialog-yes"
+					icon="ui-icon-check" action="#{lugarBean.crearLugarTurno()}"
+					oncomplete="PF('gu1').hide();" update="frm frm1:tbb" />
+				<p:commandButton value="No" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					onclick="PF('gu1').hide();" />
 			</h:form>
 		</p:confirmDialog>
 	</ui:define>

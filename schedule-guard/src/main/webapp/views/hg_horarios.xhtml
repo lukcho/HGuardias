@@ -38,7 +38,7 @@
 					reflow="true" var="horc" rows="10" emptyMessage="Sin Datos"
 					paginator="true"
 					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
-					<p:column headerText="OPCIONES" width="50">
+					<p:column headerText="OPCIONES" width="30">
 						<p:commandButton id="btnE" icon="ui-icon-pencil"
 							action="#{horarioCDBean.cargarHorarioCab(horc)}">
 							<p:tooltip id="toolTipTrack1" for="btnE"
@@ -46,23 +46,23 @@
 						</p:commandButton>
 					</p:column>
 					<p:column filterBy="#{horc.hcabId}" filterMatchMode="contains"
-						headerText="ID" width="70">
+						headerText="ID" width="50">
 						<h:outputText value="#{horc.hcabId}"></h:outputText>
 					</p:column>
 					<p:column filterBy="#{horc.hcabUsuario}" filterMatchMode="contains"
-						headerText="USUARIO" width="70">
+						headerText="USUARIO" width="110">
 						<h:outputText value="#{horc.hcabUsuario}"></h:outputText>
 					</p:column>
 					<p:column filterBy="#{horc.hcabNombre}" filterMatchMode="contains"
-						headerText="NOMBRE" width="70">
+						headerText="HORARIO" width="120">
 						<h:outputText value="#{horc.hcabNombre}"></h:outputText>
 					</p:column>
-					<p:column headerText="FECHA CREACIÓN" width="60">
+					<p:column headerText="FECHA CREACIÓN" width="50">
 						<h:outputText value="#{horc.hcabFechaRegistro}">
 							<f:convertDateTime pattern="yyyy/MM/dd HH:mm" timeZone="GMT-5" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="FECHA INICIO/FIN" width="100">
+					<p:column headerText="FECHA INICIO/FIN" width="60">
 						<h:outputText
 							value="#{horc.hcabFechaInicio} - #{horc.hcabFechaFin}">
 						</h:outputText>

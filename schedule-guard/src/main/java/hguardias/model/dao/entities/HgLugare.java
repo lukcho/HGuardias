@@ -30,8 +30,23 @@ public class HgLugare implements Serializable {
 	@Column(name="lug_control_accesos")
 	private Boolean lugControlAccesos;
 
+	@Column(name="lug_domingo")
+	private Boolean lugDomingo;
+
 	@Column(name="lug_estado", columnDefinition="bpchar", length=1)
 	private String lugEstado;
+
+	@Column(name="lug_jueves")
+	private Boolean lugJueves;
+
+	@Column(name="lug_lunes")
+	private Boolean lugLunes;
+
+	@Column(name="lug_martes")
+	private Boolean lugMartes;
+
+	@Column(name="lug_miercoles")
+	private Boolean lugMiercoles;
 
 	@Column(name="lug_nombre", length=50)
 	private String lugNombre;
@@ -39,9 +54,19 @@ public class HgLugare implements Serializable {
 	@Column(name="lug_nro_guardias")
 	private Integer lugNroGuardias;
 
+	@Column(name="lug_sabado")
+	private Boolean lugSabado;
+
+	@Column(name="lug_viernes")
+	private Boolean lugViernes;
+
 	//bi-directional many-to-one association to HgHorarioDet
 	@OneToMany(mappedBy="hgLugare")
 	private List<HgHorarioDet> hgHorarioDets;
+
+	//bi-directional many-to-one association to HgLugarTurno
+	@OneToMany(mappedBy="hgLugare")
+	private List<HgLugarTurno> hgLugarTurnos;
 
 	public HgLugare() {
 	}
@@ -78,12 +103,52 @@ public class HgLugare implements Serializable {
 		this.lugControlAccesos = lugControlAccesos;
 	}
 
+	public Boolean getLugDomingo() {
+		return this.lugDomingo;
+	}
+
+	public void setLugDomingo(Boolean lugDomingo) {
+		this.lugDomingo = lugDomingo;
+	}
+
 	public String getLugEstado() {
 		return this.lugEstado;
 	}
 
 	public void setLugEstado(String lugEstado) {
 		this.lugEstado = lugEstado;
+	}
+
+	public Boolean getLugJueves() {
+		return this.lugJueves;
+	}
+
+	public void setLugJueves(Boolean lugJueves) {
+		this.lugJueves = lugJueves;
+	}
+
+	public Boolean getLugLunes() {
+		return this.lugLunes;
+	}
+
+	public void setLugLunes(Boolean lugLunes) {
+		this.lugLunes = lugLunes;
+	}
+
+	public Boolean getLugMartes() {
+		return this.lugMartes;
+	}
+
+	public void setLugMartes(Boolean lugMartes) {
+		this.lugMartes = lugMartes;
+	}
+
+	public Boolean getLugMiercoles() {
+		return this.lugMiercoles;
+	}
+
+	public void setLugMiercoles(Boolean lugMiercoles) {
+		this.lugMiercoles = lugMiercoles;
 	}
 
 	public String getLugNombre() {
@@ -100,6 +165,22 @@ public class HgLugare implements Serializable {
 
 	public void setLugNroGuardias(Integer lugNroGuardias) {
 		this.lugNroGuardias = lugNroGuardias;
+	}
+
+	public Boolean getLugSabado() {
+		return this.lugSabado;
+	}
+
+	public void setLugSabado(Boolean lugSabado) {
+		this.lugSabado = lugSabado;
+	}
+
+	public Boolean getLugViernes() {
+		return this.lugViernes;
+	}
+
+	public void setLugViernes(Boolean lugViernes) {
+		this.lugViernes = lugViernes;
 	}
 
 	public List<HgHorarioDet> getHgHorarioDets() {
@@ -122,6 +203,28 @@ public class HgLugare implements Serializable {
 		hgHorarioDet.setHgLugare(null);
 
 		return hgHorarioDet;
+	}
+
+	public List<HgLugarTurno> getHgLugarTurnos() {
+		return this.hgLugarTurnos;
+	}
+
+	public void setHgLugarTurnos(List<HgLugarTurno> hgLugarTurnos) {
+		this.hgLugarTurnos = hgLugarTurnos;
+	}
+
+	public HgLugarTurno addHgLugarTurno(HgLugarTurno hgLugarTurno) {
+		getHgLugarTurnos().add(hgLugarTurno);
+		hgLugarTurno.setHgLugare(this);
+
+		return hgLugarTurno;
+	}
+
+	public HgLugarTurno removeHgLugarTurno(HgLugarTurno hgLugarTurno) {
+		getHgLugarTurnos().remove(hgLugarTurno);
+		hgLugarTurno.setHgLugare(null);
+
+		return hgLugarTurno;
 	}
 
 }

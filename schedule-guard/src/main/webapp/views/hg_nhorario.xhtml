@@ -86,6 +86,11 @@
 							action="#{horarioCDBean.volverHorarioCab()}" update="frm"
 							look="info" process="@this">
 						</b:commandButton>&nbsp;&nbsp;&nbsp;
+						<p:commandButton value="Información" styleClass="btn btn-info"
+							style="padding:7px;" rendered="#{horarioCDBean.edicion}"
+							actionListener="#{horarioCDBean.abrirDialog1()}"
+							update="frm messages">
+						</p:commandButton>&nbsp;&nbsp;&nbsp;
 					</b:column>
 				</b:row>
 				<br />
@@ -95,32 +100,28 @@
 						liveScroll="true" scrollable="true" var="hord" rows="20"
 						reflow="true" emptyMessage="Sin Datos" paginator="true"
 						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
-						<p:column filterBy="#{hord.hdetId}" sortBy="#{hord.hdetId}"
-							filterMatchMode="contains" headerText="ID" width="70">
-							<h:outputText value="#{hord.hdetId}"></h:outputText>
+						<p:column filterBy="#{hord.hgLugare.lugNombre}"
+							sortBy="#{hord.hgLugare.lugNombre}" filterMatchMode="contains"
+							headerText="LUGAR" width="60">
+							<h:outputText value="#{hord.hgLugare.lugNombre}"></h:outputText>
+						</p:column>
+						<p:column headerText="FECHA INICIO/FIN" width="70"
+							sortBy="#{hord.hdetFechaInicio}">
+							<h:outputText
+								value="#{hord.hdetFechaInicio} - #{hord.hdetFechaFin}">
+								<f:convertDateTime pattern="yyyy/MM/dd" timeZone="GMT-5" />
+							</h:outputText>
 						</p:column>
 						<p:column filterBy="#{hord.hgTurno.turDescripcion}"
 							sortBy="#{hord.hgTurno.turDescripcion}"
 							filterMatchMode="contains" headerText="TURNO" width="70">
 							<h:outputText value="#{hord.hgTurno.turDescripcion}"></h:outputText>
 						</p:column>
-						<p:column filterBy="#{hord.hgLugare.lugNombre}"
-							sortBy="#{hord.hgLugare.lugNombre}" filterMatchMode="contains"
-							headerText="LUGAR" width="70">
-							<h:outputText value="#{hord.hgLugare.lugNombre}"></h:outputText>
-						</p:column>
-						<p:column filterBy="#{hord.hgGuardia.guaNombre}"
+						<p:column filterBy="#{hord.hgGuardia.guaApellido}"
 							sortBy="#{hord.hgGuardia.guaNombre}" filterMatchMode="contains"
-							headerText="Nombre Guardia" width="70">
+							headerText="Nombre Guardia" width="150">
 							<h:outputText
 								value="#{hord.hgGuardia.guaNombre} #{hord.hgGuardia.guaApellido}"></h:outputText>
-						</p:column>
-						<p:column headerText="FECHA INICIO/FIN" width="100"
-							sortBy="#{hord.hdetFechaInicio}">
-							<h:outputText
-								value="#{hord.hdetFechaInicio} - #{hord.hdetFechaFin}">
-								<f:convertDateTime pattern="yyyy/MM/dd" timeZone="GMT-5" />
-							</h:outputText>
 						</p:column>
 						<p:column headerText="HORA INICIO/FIN" width="100"
 							sortBy="#{hord.hdetHoraInicio}">
@@ -172,24 +173,197 @@
 			</h:form>
 		</p:dialog>
 
-		<p:dialog widgetVar="dlgInfo" modal="true" draggable="false"
-			closable="false" id="dlgInformacion" resizable="false" showHeader="false">
+		<p:dialog positionType="center" responsive="true"
+			header="Información del horario generado" draggable="true"
+			closable="false" closeOnEscape="false" showEffect="fade"
+			hideEffect="explode" widgetVar="dlgInfo" modal="true" dynamic="true"
+			id="dlgInformacion" resizable="false">
 			<h:form>
-				<h:outputLabel value="Información del horario generado" />
-				<br/>
-				<br/>
-				<h:outputLabel value="Registros creados: " />&nbsp;&nbsp;
-				<h:outputLabel value="#{horarioCDBean.numeroRegistrosCreadoss}" />
-				<br/>
-				<h:outputLabel value="Número de lugares sin guardias: " />&nbsp;&nbsp;
-				<h:outputLabel value="#{horarioCDBean.numeroLugaresVacios}" />
-				<br/>
-				<br/>
-				<p:commandButton value="Volver" styleClass="ui-confirmdialog-yes"
-					icon="ui-icon-triangle-1-w"  action="#{horarioCDBean.cerrarHorarioCab()}"
-					onclick="PF('dlgInfo').close();"
-					oncomplete="PF('dlgInfo').close();" update="frm" />
+			<b:row>
+				<b:column span="3">
+					<h:outputLabel value="Número de horario: " />
+				</b:column>
+				<b:column span="2">
+					<h:outputLabel value="#{horarioCDBean.cab_id}" />
+				</b:column>
+				<b:column span="3">
+					<h:outputLabel value="Nombre del horario: " />
+				</b:column>
+				<b:column span="2">
+					<h:outputLabel value="#{horarioCDBean.horcab_nombre}" />
+				</b:column>
+			</b:row>
+			<b:row>
+				<b:column span="3">
+					<h:outputLabel value="Fecha inicio/fin: " />&nbsp;
+				</b:column>
+				<b:column span="4">
+					<h:outputLabel
+						value="#{horarioCDBean.horcab_fechainicio} al #{horarioCDBean.horcab_fechafin}" />
+				</b:column>
+			</b:row>
+			<b:row>
+				<b:column span="3">
+					<h:outputLabel value="Total registros: " />
+				</b:column>
+				<b:column span="2">
+					<h:outputLabel value="#{horarioCDBean.numeroRegistrosTotal}" />
+				</b:column>
+				<b:column span="3">
+					<h:outputLabel value="Registros creados: " />
+				</b:column>
+				<b:column span="2">
+					<h:outputLabel value="#{horarioCDBean.numeroRegistrosCreadoss}" />
+				</b:column>
+				<b:column span="3">
+					<h:outputLabel value="Lugares sin guardias: " />&nbsp;
+				</b:column>
+				<b:column span="2">
+					<h:outputLabel value="#{horarioCDBean.numeroLugaresVacios}" />
+				</b:column>
+			</b:row>
+			<b:row>
+				<b:column span="11">
+					<b:panel title="Turnos no asignados" look="primary">
+						<p:dataTable var="lista"
+							value="#{horarioCDBean.listaLugarTurnoVacio}" reflow="true"
+							scrollable="true" scrollHeight="150" id="tbb2">
+							<p:column headerText="LUGAR" width="130">
+								<h:outputText value="#{lista.hgLugare.lugNombre}" />
+							</p:column>
+							<p:column headerText="TURNO" width="90">
+								<h:outputText value="#{lista.hgTurno.turDescripcion}" />
+							</p:column>
+							<p:column headerText="FECHA" width="90">
+								<h:outputText value="#{lista.hglugturFechaInicio}" />
+							</p:column>
+						</p:dataTable>
+					</b:panel>
+					<h3>Exportar Datos</h3>
+					<h:commandButton style="width:40px;height:40px" ajax="false"
+						image="/resources/img/excel.png">
+						<p:dataExporter type="xls" target="tbb2" fileName="rpthorarios"
+							pageOnly="false" />
+					</h:commandButton>&nbsp;&nbsp;&nbsp;
+					<h:commandButton style="width:40px;height:40px" ajax="false"
+						image="/resources/img/pdf.png">
+						<p:dataExporter type="pdf" target="tbb2" fileName="rpthorarios"
+							pageOnly="false" />
+					</h:commandButton>&nbsp;&nbsp;&nbsp;
+					
+					<h:commandButton style="width:40px;height:40px" ajax="false"
+						image="/resources/img/csv.png">
+						<p:dataExporter type="csv" target="tbb2" fileName="rpthorarios"
+							pageOnly="false" />
+					</h:commandButton>&nbsp;&nbsp;&nbsp;
+				</b:column>
+				<br />
+				</b:row>
+				<b:row>
+					<b:column span="1">
+						<p:commandButton value="Volver" styleClass="ui-confirmdialog-yes"
+							icon="ui-icon-triangle-1-w" process="@this"
+							action="#{horarioCDBean.cerrarHorarioCab()}"
+							onclick="PF('dlgInfo').close();"
+							oncomplete="PF('dlgInfo').close();" update="frm" />
+					</b:column>
+				</b:row>
 			</h:form>
+		</p:dialog>
+
+		<p:dialog positionType="center" responsive="true" widgetVar="info"
+			header="Información del horario" modal="true" draggable="true"
+			dynamic="true" closable="true" closeOnEscape="true" id="info"
+			resizable="false" showEffect="fade" hideEffect="explode">
+			<h:form>
+			<b:row>
+				<b:column span="3">
+					<h:outputLabel value="Número de horario: " />
+				</b:column>
+				<b:column span="2">
+					<h:outputLabel value="#{horarioCDBean.cab_id}" />
+				</b:column>
+				<b:column span="3">
+					<h:outputLabel value="Nombre del horario: " />
+				</b:column>
+				<b:column span="2">
+					<h:outputLabel value="#{horarioCDBean.horcab_nombre}" />
+				</b:column>
+			</b:row>
+			<b:row>
+				<b:column span="3">
+					<h:outputLabel value="Fecha inicio/fin: " />&nbsp;
+				</b:column>
+				<b:column span="4">
+					<h:outputLabel
+						value="#{horarioCDBean.horcab_fechainicio} al #{horarioCDBean.horcab_fechafin}" />
+				</b:column>
+			</b:row>
+			<b:row>
+				<b:column span="3">
+					<h:outputLabel value="Total registros: " />
+				</b:column>
+				<b:column span="2">
+					<h:outputLabel value="#{horarioCDBean.numeroRegistrosTotal}" />
+				</b:column>
+				<b:column span="3">
+					<h:outputLabel value="Registros creados: " />
+				</b:column>
+				<b:column span="2">
+					<h:outputLabel value="#{horarioCDBean.numeroRegistrosCreadoss}" />
+				</b:column>
+				<b:column span="3">
+					<h:outputLabel value="Lugares sin guardias: " />&nbsp;
+				</b:column>
+				<b:column span="2">
+					<h:outputLabel value="#{horarioCDBean.numeroLugaresVacios}" />
+				</b:column>
+			</b:row>
+			<b:row>
+				<b:column span="11">
+					<b:panel title="Turnos no asignados" look="primary">
+						<p:dataTable var="lista"
+							value="#{horarioCDBean.listaLugarTurnoVacio}" reflow="true"
+							scrollable="true" scrollHeight="150" id="tbb1">
+							<p:column headerText="LUGAR" width="70">
+								<h:outputText value="#{lista.hgLugare.lugNombre}" />
+							</p:column>
+							<p:column headerText="TURNO" width="70">
+								<h:outputText value="#{lista.hgTurno.turDescripcion}" />
+							</p:column>
+							<p:column headerText="FECHA" width="70">
+								<h:outputText value="#{lista.hglugturFechaInicio}" />
+							</p:column>
+						</p:dataTable>
+					</b:panel>
+					<h3>Exportar Datos</h3>
+					<h:commandButton style="width:40px;height:40px" ajax="false"
+						image="/resources/img/excel.png">
+						<p:dataExporter type="xls" target="tbb1" fileName="rpthorarios"
+							pageOnly="false" />
+					</h:commandButton>&nbsp;&nbsp;&nbsp;
+					<h:commandButton style="width:40px;height:40px" ajax="false"
+						image="/resources/img/pdf.png">
+						<p:dataExporter type="pdf" target="tbb1" fileName="rpthorarios"
+							pageOnly="false" />
+					</h:commandButton>&nbsp;&nbsp;&nbsp;
+					
+					<h:commandButton style="width:40px;height:40px" ajax="false"
+						image="/resources/img/csv.png">
+						<p:dataExporter type="csv" target="tbb1" fileName="rpthorarios"
+							pageOnly="false" />
+					</h:commandButton>&nbsp;&nbsp;&nbsp;
+				</b:column>
+				</b:row>
+				<br />
+				<b:row>
+					<b:column span="1">
+						<p:commandButton value="Volver" styleClass="ui-confirmdialog-yes"
+							icon="ui-icon-triangle-1-w" onclick="PF('info').close();"
+							process="@this" oncomplete="PF('info').close();" update="frm" />
+					</b:column>
+				</b:row>
+				</h:form>
 		</p:dialog>
 	</ui:define>
 </ui:composition>

@@ -37,7 +37,23 @@ CREATE SEQUENCE seq_hg_horario_det
 ALTER TABLE seq_hg_horario_det
   OWNER TO postgres;
 
-
+CREATE SEQUENCE seq_hg_lug_tur_vacios
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE seq_hg_lug_tur_vacios
+  OWNER TO postgres;
+  
+CREATE SEQUENCE seq_hg_lug_tur
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE seq_hg_lug_tur
+  OWNER TO postgres;
 
 /*==============================================================*/
 /* Table: HG_HORARIO_CAB                                        */
@@ -49,6 +65,9 @@ create table HG_HORARIO_CAB (
    HCAB_FECHA_REGISTRO  TIMESTAMP            null,
    HCAB_FECHA_INICIO    DATE                 null,
    HCAB_FECHA_FIN       DATE                 null,
+   HCAB_NUMERO_REGISTROS_TOTAL INT4          null,
+   HCAB_NUMERO_REGISTROS_CREADOS INT4        null,
+   HCAB_NUMERO_LUGARES_VACIOS INT4           null,
    constraint PK_HG_HORARIO_CAB primary key (HCAB_ID)
 );
 
@@ -91,7 +110,7 @@ create table HG_GUARDIAS (
    GUA_FECHANAC         DATE                 null,
    GUA_CIUDAD           VARCHAR(100)         null,
    GUA_SEXO             CHAR(1)              null,
-    GUA_TIPO_SANGRE      VARCHAR(100)         null,
+   GUA_TIPO_SANGRE      VARCHAR(100)         null,
    GUA_TELEFONO         VARCHAR(10)          null,
    GUA_CELULAR          VARCHAR(10)          null,
    GUA_CORREO           VARCHAR(255)         null,
@@ -143,10 +162,40 @@ create table HG_LUGARES (
    LUG_NOMBRE           VARCHAR(50)          null,
    LUG_NRO_GUARDIAS     INT4                 null,
    LUG_CIUDAD           VARCHAR(50)          null,
-   LUG_ESTADO           CHAR(1)              null,
    LUG_CCTV             BOOL                 null,
    LUG_CONTROL_ACCESOS  BOOL                 null,
+   LUG_LUNES            BOOL                 null,
+   LUG_MARTES           BOOL                 null,
+   LUG_MIERCOLES        BOOL                 null,
+   LUG_JUEVES           BOOL                 null,
+   LUG_VIERNES          BOOL                 null,
+   LUG_SABADO           BOOL                 null,
+   LUG_DOMINGO          BOOL                 null,
+   LUG_ESTADO           CHAR(1)              null,
    constraint PK_HG_LUGARES primary key (LUG_ID)
+);
+
+/*==============================================================*/
+/* Table: HG_LUGARES_TURNOS_VACIOS                              */
+/*==============================================================*/
+create table HG_LUGARES_TURNOS_VACIOS (
+   HGLUGTUR_ID          INT4                 not null DEFAULT nextval('seq_hg_lug_tur_vacios'::regclass),
+   HCAB_ID              INT4                 null,
+   LUG_ID               INT4                 null,
+   TUR_ID               INT4                 null,
+   HGLUGTUR_FECHA_INICIO DATE                null,
+   constraint PK_HG_LUGARES_TURNOS_VACIOS primary key (HGLUGTUR_ID)
+);
+
+/*==============================================================*/
+/* Table: HG_LUGAR_TURNO                                        */
+/*==============================================================*/
+create table HG_LUGAR_TURNO (
+   LUG_TUR              INT4                 not null DEFAULT nextval('seq_hg_lug_tur'::regclass),
+   LUG_ID               INT4                 null,
+   TUR_ID               INT4                 null,
+   LUG_TUR_NUMERO_GUARDIAS INT4              null,
+   constraint PK_HG_LUGAR_TURNO primary key (LUG_TUR)
 );
 
 /*==============================================================*/
@@ -195,3 +244,32 @@ alter table HG_HORARIO_DET
    add constraint FK_HG_HORAR_REFERENCE_HG_HORAR foreign key (HCAB_ID)
       references HG_HORARIO_CAB (HCAB_ID)
       on delete restrict on update restrict;
+
+alter table HG_LUGARES_TURNOS_VACIOS
+   add constraint FK_HG_LUGAR_REFERENCE_HG_HORAR foreign key (HCAB_ID)
+      references HG_HORARIO_CAB (HCAB_ID)
+      on delete restrict on update restrict;
+
+alter table HG_LUGARES_TURNOS_VACIOS
+   add constraint FK_HG_LUGAR_REFERENCE_HG_TURNO foreign key (TUR_ID)
+      references HG_TURNO (TUR_ID)
+      on delete restrict on update restrict;
+
+alter table HG_LUGARES_TURNOS_VACIOS
+   add constraint FK_HG_LUGAR_REFERENCE_HG_LUGAR foreign key (LUG_ID)
+      references HG_LUGARES (LUG_ID)
+      on delete restrict on update restrict;
+
+alter table HG_LUGAR_TURNO
+   add constraint FK_HG_LUGAR_REFERENCE_HG_TURNO foreign key (TUR_ID)
+      references HG_TURNO (TUR_ID)
+      on delete restrict on update restrict;
+
+alter table HG_LUGAR_TURNO
+   add constraint FK_HG_LUGAR_REFERENCE_HG_LUGAR foreign key (LUG_ID)
+      references HG_LUGARES (LUG_ID)
+      on delete restrict on update restrict;
+      
+      
+      
+      

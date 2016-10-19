@@ -1,13 +1,10 @@
 package hguardias.model.manager;
 
-import hguardias.model.dao.entidades.Guardias;
 import hguardias.model.dao.entities.*;
 
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -126,7 +123,7 @@ public class ManagerHorario {
 	public List<HgHorarioDet> findAllHorariosDetXIdCab(Integer cab_id) {
 		return mDAO.findWhere(HgHorarioDet.class, " o.hgHorarioCab.hcabId = '"
 				+ cab_id + "' ",
-				" o.hdetFechaInicio asc , o.hdetHoraInicio asc");
+				" o.hgLugare.lugId , o.hdetFechaInicio, o.hgTurno.turId ");
 	}
 
 	/**
@@ -340,7 +337,6 @@ public class ManagerHorario {
 	 *            guardia a analizar
 	 * @return true o false
 	 */
-	@SuppressWarnings("unchecked")
 	public Integer existeGuardia(Integer cab_id, Date fechai, String cedula) {
 		java.sql.Date fechainicio = new java.sql.Date(fechai.getTime());
 		return mDAO.findWhere(HgHorarioDet.class, " o.hgGuardia.guaCedula = '" + cedula + "' "
@@ -448,6 +444,25 @@ public class ManagerHorario {
 
 		mDAO.insertar(hor_cab);
 	}
+	
+	/**
+	 * Cambiar datos de cabecera
+	 * 
+	 * @param turno_id
+	 * @param tur_descripcion
+	 * @param tur_hora_inicio
+	 * @param tur_hora_fin
+	 * @param estado
+	 * @throws Exception
+	 */
+	public void editarCabecera(Integer cab_id, Integer hcabnumeroregistrosTotal,Integer hcabNumeroRegistrosCreados, Integer hcabNumeroLugaresVacios )
+			throws Exception {
+		HgHorarioCab cabecera = this.horarioCabByID(cab_id);
+		cabecera.setHcabNumeroRegistrosTotal(hcabnumeroregistrosTotal);
+		cabecera.setHcabNumeroRegistrosCreados(hcabNumeroRegistrosCreados);
+		cabecera.setHcabNumeroLugaresVacios(hcabNumeroLugaresVacios);
+		mDAO.actualizar(cabecera);
+	}
 
 	public Integer ultimoOrdenCabecera() {
 		Integer orden = mDAO
@@ -475,7 +490,6 @@ public class ManagerHorario {
 		try {
 			hg_gua = mGes.guardiaByID(gua_id);
 		} catch (Exception e) {
-			// TODO Auto-generated prodch block
 			e.printStackTrace();
 		}
 		return hg_gua;
@@ -492,7 +506,6 @@ public class ManagerHorario {
 		try {
 			hg_lug = mGes.LugarByID(lug_id);
 		} catch (Exception e) {
-			// TODO Auto-generated prodch block
 			e.printStackTrace();
 		}
 		return hg_lug;
@@ -509,7 +522,6 @@ public class ManagerHorario {
 		try {
 			hg_turno = mGes.turnoByID(turno_id);
 		} catch (Exception e) {
-			// TODO Auto-generated prodch block
 			e.printStackTrace();
 		}
 		return hg_turno;
@@ -526,7 +538,6 @@ public class ManagerHorario {
 		try {
 			hg_hcab = this.horarioCabByID(horcab_id);
 		} catch (Exception e) {
-			// TODO Auto-generated prodch block
 			e.printStackTrace();
 		}
 		return hg_hcab;
@@ -624,5 +635,27 @@ public class ManagerHorario {
 		 */
 		public HgGuardiasPendiente guardiaPendienteByID(String con_id) throws Exception {
 			return (HgGuardiasPendiente) mDAO.findById(HgGuardiasPendiente.class, con_id);
+		}
+		
+	// lugarturno vacio
+		
+		public void insertarLugarTurnoVacio(Integer hor_cab, HgTurno t, HgLugare l , Date det_fechaini) throws Exception {
+			HgLugaresTurnosVacio lugturvacio = new HgLugaresTurnosVacio();
+			lugturvacio.setHgHorarioCab(this.horarioCabByID(hor_cab));
+			lugturvacio.setHgTurno(t);
+			lugturvacio.setHgLugare(l);
+			lugturvacio.setHglugturFechaInicio(det_fechaini);
+			mDAO.insertar(lugturvacio);
+		}
+		
+		/**
+		 * listar todos las horariosdet ordenadas x cedula de guardia
+		 * 
+		 * @param gua_cid
+		 * @throws Exception
+		 */
+		@SuppressWarnings("unchecked")
+		public List<HgLugaresTurnosVacio> lugarTurnoVacio(Integer cab_id) {
+			return mDAO.findWhere(HgLugaresTurnosVacio.class, " o.hgHorarioCab.hcabId = '"+ cab_id + "' ",null);
 		}
 }

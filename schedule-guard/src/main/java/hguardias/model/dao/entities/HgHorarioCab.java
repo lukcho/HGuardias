@@ -1,11 +1,9 @@
 package hguardias.model.dao.entities;
 
 import java.io.Serializable;
-
 import javax.persistence.*;
-
-import java.sql.Timestamp;
 import java.util.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 
@@ -37,12 +35,25 @@ public class HgHorarioCab implements Serializable {
 	@Column(name="hcab_nombre", length=255)
 	private String hcabNombre;
 
+	@Column(name="hcab_numero_lugares_vacios")
+	private Integer hcabNumeroLugaresVacios;
+
+	@Column(name="hcab_numero_registros_creados")
+	private Integer hcabNumeroRegistrosCreados;
+
+	@Column(name="hcab_numero_registros_total")
+	private Integer hcabNumeroRegistrosTotal;
+
 	@Column(name="hcab_usuario", length=255)
 	private String hcabUsuario;
 
 	//bi-directional many-to-one association to HgHorarioDet
 	@OneToMany(mappedBy="hgHorarioCab")
 	private List<HgHorarioDet> hgHorarioDets;
+
+	//bi-directional many-to-one association to HgLugaresTurnosVacio
+	@OneToMany(mappedBy="hgHorarioCab")
+	private List<HgLugaresTurnosVacio> hgLugaresTurnosVacios;
 
 	public HgHorarioCab() {
 	}
@@ -87,6 +98,30 @@ public class HgHorarioCab implements Serializable {
 		this.hcabNombre = hcabNombre;
 	}
 
+	public Integer getHcabNumeroLugaresVacios() {
+		return this.hcabNumeroLugaresVacios;
+	}
+
+	public void setHcabNumeroLugaresVacios(Integer hcabNumeroLugaresVacios) {
+		this.hcabNumeroLugaresVacios = hcabNumeroLugaresVacios;
+	}
+
+	public Integer getHcabNumeroRegistrosCreados() {
+		return this.hcabNumeroRegistrosCreados;
+	}
+
+	public void setHcabNumeroRegistrosCreados(Integer hcabNumeroRegistrosCreados) {
+		this.hcabNumeroRegistrosCreados = hcabNumeroRegistrosCreados;
+	}
+
+	public Integer getHcabNumeroRegistrosTotal() {
+		return this.hcabNumeroRegistrosTotal;
+	}
+
+	public void setHcabNumeroRegistrosTotal(Integer hcabNumeroRegistrosTotal) {
+		this.hcabNumeroRegistrosTotal = hcabNumeroRegistrosTotal;
+	}
+
 	public String getHcabUsuario() {
 		return this.hcabUsuario;
 	}
@@ -115,6 +150,28 @@ public class HgHorarioCab implements Serializable {
 		hgHorarioDet.setHgHorarioCab(null);
 
 		return hgHorarioDet;
+	}
+
+	public List<HgLugaresTurnosVacio> getHgLugaresTurnosVacios() {
+		return this.hgLugaresTurnosVacios;
+	}
+
+	public void setHgLugaresTurnosVacios(List<HgLugaresTurnosVacio> hgLugaresTurnosVacios) {
+		this.hgLugaresTurnosVacios = hgLugaresTurnosVacios;
+	}
+
+	public HgLugaresTurnosVacio addHgLugaresTurnosVacio(HgLugaresTurnosVacio hgLugaresTurnosVacio) {
+		getHgLugaresTurnosVacios().add(hgLugaresTurnosVacio);
+		hgLugaresTurnosVacio.setHgHorarioCab(this);
+
+		return hgLugaresTurnosVacio;
+	}
+
+	public HgLugaresTurnosVacio removeHgLugaresTurnosVacio(HgLugaresTurnosVacio hgLugaresTurnosVacio) {
+		getHgLugaresTurnosVacios().remove(hgLugaresTurnosVacio);
+		hgLugaresTurnosVacio.setHgHorarioCab(null);
+
+		return hgLugaresTurnosVacio;
 	}
 
 }
