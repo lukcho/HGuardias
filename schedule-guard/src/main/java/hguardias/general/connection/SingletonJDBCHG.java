@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
 
 /**
  * Luis Alberto Cisneros Gómez
@@ -14,9 +13,9 @@ import java.util.List;
  */
 public class SingletonJDBCHG {
 
-	private static String URL = "jdbc:postgresql://loalhost:5432/horarioGuardias";
-	private static String USER = "postgres";
-	private static String PASS = "root";
+	private static String URL = "jdbc:postgresql://10.1.0.158:5432/horarioGuardias";
+	private static String USER = "adm_horario_guardias";
+	private static String PASS = "{Jt26qGTf#T>";
 	private static String CONTROLER = "org.postgresql.Driver"; 
 
 	private static SingletonJDBCHG jdbc;

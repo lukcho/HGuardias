@@ -2,7 +2,6 @@ package hguardias.controller.gestion;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -18,7 +17,6 @@ import org.primefaces.context.RequestContext;
 
 import hguardias.controller.access.SesionBean;
 import hguardias.model.generic.Funciones;
-import hguardias.model.dao.entities.HgGuardia;
 import hguardias.model.dao.entities.HgLugarTurno;
 import hguardias.model.dao.entities.HgLugare;
 import hguardias.model.dao.entities.HgTurno;
@@ -49,20 +47,20 @@ public class lugarBean implements Serializable {
 	private boolean lug_viernes;
 	private boolean lug_sabado;
 	private boolean lug_domingo;
-	
+
 	private Integer lugturn_id;
 	private Integer lugturn_turno;
 	private Integer lugturn_lugar;
 	private Integer lugturn_nroGuardias;
-	
+
 	private HgLugare lug;
 	private HgLugarTurno lug_turno;
-	
+
 	private Integer lug_idTurno;
-	private String numeroGuardias; 
+	private String numeroGuardias;
 	private HgLugarTurno lugarTurnoElsita;
 	private List<HgLugarTurno> listaLugarTurno;
-	
+
 	// mmostrar
 	private boolean mostrarlug_id;
 	private boolean edicion;
@@ -84,15 +82,15 @@ public class lugarBean implements Serializable {
 		lug_id = null;
 		lug_nombre = "";
 		lug_ciudad = "";
-		lug_nroguardias=null;
-		lug_CCTV=false;
-		lug_controlaccs=false;
-		lug_lunes= false;
-		lug_martes= false;
-		lug_miercoles= false;
-		lug_jueves= false;
-		lug_viernes= false;
-		lug_sabado= false;
+		lug_nroguardias = null;
+		lug_CCTV = false;
+		lug_controlaccs = false;
+		lug_lunes = false;
+		lug_martes = false;
+		lug_miercoles = false;
+		lug_jueves = false;
+		lug_viernes = false;
+		lug_sabado = false;
 		lug_domingo = false;
 		lug_estado = "A";
 		edicion = false;
@@ -100,10 +98,10 @@ public class lugarBean implements Serializable {
 		mostrarlug_id = false;
 		numeroGuardias = "0";
 		guardado = false;
-		lugturn_id=0;
-		lugturn_turno=0;
-		lugturn_lugar=0;
-		lugturn_nroGuardias=0;
+		lugturn_id = 0;
+		lugturn_turno = 0;
+		lugturn_lugar = 0;
+		lugturn_nroGuardias = 0;
 		listaLugares = managergest.findAllLugares();
 		listaLugarTurno = new ArrayList<HgLugarTurno>();
 		usuario = ms.validarSesion("hg_lugares.xhtml");
@@ -172,7 +170,7 @@ public class lugarBean implements Serializable {
 	public String getLug_nroguardias() {
 		return lug_nroguardias;
 	}
-	
+
 	public void setLug_nroguardias(String lug_nroguardias) {
 		this.lug_nroguardias = lug_nroguardias;
 	}
@@ -208,6 +206,7 @@ public class lugarBean implements Serializable {
 	public void setListaLugares(List<HgLugare> listaLugares) {
 		this.listaLugares = listaLugares;
 	}
+
 	public boolean isLug_lunes() {
 		return lug_lunes;
 	}
@@ -263,79 +262,79 @@ public class lugarBean implements Serializable {
 	public void setLug_domingo(boolean lug_domingo) {
 		this.lug_domingo = lug_domingo;
 	}
-	
+
 	public Integer getLug_idTurno() {
 		return lug_idTurno;
 	}
-	
+
 	public void setLug_idTurno(Integer lug_idTurno) {
 		this.lug_idTurno = lug_idTurno;
 	}
-	
+
 	public String getNumeroGuardias() {
 		return numeroGuardias;
 	}
-	
+
 	public void setNumeroGuardias(String numeroGuardias) {
 		this.numeroGuardias = numeroGuardias;
 	}
-	
+
 	public HgLugarTurno getLugarTurnoElsita() {
 		return lugarTurnoElsita;
 	}
-	
+
 	public void setLugarTurnoElsita(HgLugarTurno lugarTurnoElsita) {
 		this.lugarTurnoElsita = lugarTurnoElsita;
 	}
-	
+
 	public List<HgLugarTurno> getListaLugarTurno() {
 		return listaLugarTurno;
 	}
-	
+
 	public void setListaLugarTurno(List<HgLugarTurno> listaLugarTurno) {
 		this.listaLugarTurno = listaLugarTurno;
 	}
-	
+
 	public boolean isGuardado() {
 		return guardado;
 	}
-	
+
 	public void setGuardado(boolean guardado) {
 		this.guardado = guardado;
 	}
-	
+
 	public Integer getLugturn_id() {
 		return lugturn_id;
 	}
-	
+
 	public void setLugturn_id(Integer lugturn_id) {
 		this.lugturn_id = lugturn_id;
 	}
-	
+
 	public Integer getLugturn_lugar() {
 		return lugturn_lugar;
 	}
-	
+
 	public void setLugturn_lugar(Integer lugturn_lugar) {
 		this.lugturn_lugar = lugturn_lugar;
 	}
-	
+
 	public Integer getLugturn_turno() {
 		return lugturn_turno;
 	}
-	
+
 	public void setLugturn_turno(Integer lugturn_turno) {
 		this.lugturn_turno = lugturn_turno;
 	}
-	
+
 	public Integer getLugturn_nroGuardias() {
 		return lugturn_nroGuardias;
 	}
-	
+
 	public void setLugturn_nroGuardias(Integer lugturn_nroGuardias) {
 		this.lugturn_nroGuardias = lugturn_nroGuardias;
 	}
-	
+
 	public HgLugarTurno getLug_turno() {
 		return lug_turno;
 	}
@@ -354,16 +353,23 @@ public class lugarBean implements Serializable {
 		try {
 			Integer numguardia = 1;
 			if (edicion) {
-				managergest.editarLugar(lug_id, lug_nombre.trim(), lug_ciudad.trim(), numguardia, lug_CCTV, lug_controlaccs,lug_lunes,lug_martes,lug_miercoles,lug_jueves,lug_viernes,lug_sabado,lug_domingo, lug_estado.trim());
+				managergest.editarLugar(lug_id, lug_nombre.trim(),
+						lug_ciudad.trim(), numguardia, lug_CCTV,
+						lug_controlaccs, lug_lunes, lug_martes, lug_miercoles,
+						lug_jueves, lug_viernes, lug_sabado, lug_domingo,
+						lug_estado.trim());
 				getListaLugares().clear();
 				getListaLugares().addAll(managergest.findAllLugares());
 				guardado = false;
 				Mensaje.crearMensajeINFO("Actualizado - Modificado");
 			} else {
-				managergest.insertarLugar(lug_nombre.trim(), lug_ciudad.trim(), numguardia, lug_CCTV, lug_controlaccs,lug_lunes,lug_martes,lug_miercoles,lug_jueves,lug_viernes,lug_sabado,lug_domingo, lug_estado.trim());
-				 for (HgLugare lug : managergest.findLugarByNombre(lug_nombre)){
-					 lug_id = lug.getLugId();
-				 }
+				managergest.insertarLugar(lug_nombre.trim(), lug_ciudad.trim(),
+						numguardia, lug_CCTV, lug_controlaccs, lug_lunes,
+						lug_martes, lug_miercoles, lug_jueves, lug_viernes,
+						lug_sabado, lug_domingo, lug_estado.trim());
+				for (HgLugare lug : managergest.findLugarByNombre(lug_nombre)) {
+					lug_id = lug.getLugId();
+				}
 				getListaLugares().clear();
 				getListaLugares().addAll(managergest.findAllLugares());
 				guardado = true;
@@ -376,7 +382,7 @@ public class lugarBean implements Serializable {
 			return "";
 		}
 	}
-	
+
 	/**
 	 * accion para cargar los datos en el formulario
 	 * 
@@ -391,7 +397,7 @@ public class lugarBean implements Serializable {
 			lugturn_id = lugarturno.getLugTur();
 			lugturn_turno = lugarturno.getHgTurno().getTurId();
 			lugturn_lugar = lugarturno.getHgLugare().getLugId();
-			lugturn_nroGuardias = lugarturno.getLugTurNumeroGuardias(); 
+			lugturn_nroGuardias = lugarturno.getLugTurNumeroGuardias();
 			asignarTurnoactu();
 			RequestContext.getCurrentInstance().execute("PF('dlg1').show();");
 		} catch (Exception e) {
@@ -410,9 +416,11 @@ public class lugarBean implements Serializable {
 	 */
 	public void actualizarTurno() {
 		try {
-			managergest.editarLugarTurno(lugturn_id,lugturn_turno,lugturn_lugar,lugturn_nroGuardias);
+			managergest.editarLugarTurno(lugturn_id, lugturn_turno,
+					lugturn_lugar, lugturn_nroGuardias);
 			getListaLugarTurno().clear();
-			getListaLugarTurno().addAll(managergest.LugarTurnoById1((lugturn_lugar)));
+			getListaLugarTurno().addAll(
+					managergest.LugarTurnoById1((lugturn_lugar)));
 			Mensaje.crearMensajeINFO("Actualizado - Modificado");
 			Mensaje.crearMensajeINFO("Creado correctamente el lugar");
 		} catch (Exception e) {
@@ -420,8 +428,7 @@ public class lugarBean implements Serializable {
 			Mensaje.crearMensajeWARN("Error al actualizar el turno");
 		}
 	}
-	
-	
+
 	/**
 	 * accion para abrir el dialogo
 	 * 
@@ -429,23 +436,24 @@ public class lugarBean implements Serializable {
 	public void abrirDialog() {
 		RequestContext.getCurrentInstance().execute("PF('gu').show();");
 	}
-	
+
 	/**
 	 * accion para abrir el dialogo
 	 * 
 	 */
 	public void abrirDialog1() {
-		if(lug_id!=null){
-			if(lug_idTurno!=-1 ){
-				if(!numeroGuardias.equals("") && !numeroGuardias.equals("0")){
-					RequestContext.getCurrentInstance().execute("PF('gu1').show();");
-				}else{
+		if (lug_id != null) {
+			if (lug_idTurno != -1) {
+				if (!numeroGuardias.equals("") && !numeroGuardias.equals("0")) {
+					RequestContext.getCurrentInstance().execute(
+							"PF('gu1').show();");
+				} else {
 					Mensaje.crearMensajeWARN("Debe agregar un valor a número de guardias");
 				}
-			}else{
+			} else {
 				Mensaje.crearMensajeWARN("Debe seleccionar un turno");
 			}
-		}else{
+		} else {
 			Mensaje.crearMensajeWARN("Debe crear primero el lugar");
 		}
 	}
@@ -466,14 +474,14 @@ public class lugarBean implements Serializable {
 			lug_ciudad = lug.getLugCiudad();
 			lug_nroguardias = lug.getLugNroGuardias().toString();
 			lug_estado = lug.getLugEstado();
-			lug_CCTV=lug.getLugCctv();
-			lug_controlaccs=lug.getLugControlAccesos();
-			lug_lunes= lug.getLugLunes();
-			lug_martes= lug.getLugMartes();
-			lug_miercoles= lug.getLugMiercoles();
-			lug_jueves= lug.getLugJueves();
-			lug_viernes= lug.getLugViernes();
-			lug_sabado= lug.getLugSabado();
+			lug_CCTV = lug.getLugCctv();
+			lug_controlaccs = lug.getLugControlAccesos();
+			lug_lunes = lug.getLugLunes();
+			lug_martes = lug.getLugMartes();
+			lug_miercoles = lug.getLugMiercoles();
+			lug_jueves = lug.getLugJueves();
+			lug_viernes = lug.getLugViernes();
+			lug_sabado = lug.getLugSabado();
 			lug_domingo = lug.getLugDomingo();
 			edicion = true;
 			ediciontipo = false;
@@ -501,7 +509,7 @@ public class lugarBean implements Serializable {
 			getListaLugares().clear();
 			getListaLugares().addAll(managergest.findAllLugares());
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 		return "";
 	}
@@ -515,13 +523,12 @@ public class lugarBean implements Serializable {
 	public void cambiarEstadoLugara(HgLugare cond) {
 		setLug(cond);
 		RequestContext.getCurrentInstance().execute("PF('ce').show();");
-		System.out.println("holi");
 	}
 
 	/**
 	 * metodo para conocer el lug_id si esta usado
 	 * 
-	 *  * @param lug_id
+	 * * @param lug_id
 	 */
 	public boolean averiguarLugarId(Integer lug_id) {
 		Integer t = 0;
@@ -529,13 +536,9 @@ public class lugarBean implements Serializable {
 		List<HgLugare> lug = managergest.findAllLugares();
 		for (HgLugare y : lug) {
 			if (y.getLugId().equals(lug_id)) {
-				System.out.println("si entra1");
 				t = 1;
 				r = true;
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR,
-								"El código del lugar existe.", null));
+				Mensaje.crearMensajeWARN("El código del lugar existe");
 			}
 		}
 		if (t == 0) {
@@ -565,25 +568,16 @@ public class lugarBean implements Serializable {
 	 * @return
 	 */
 	public String nuevoLugar() {
-		lug_id = null;
-		lug_nombre = null;
-		lug_ciudad = null;
-		lug_nroguardias=null;
-		lug_estado = "A";
-		lug_CCTV=false;
-		lug_controlaccs=false;
-		lug_lunes= false;
-		lug_martes= false;
-		lug_miercoles= false;
-		lug_jueves= false;
-		lug_viernes= false;
-		lug_sabado= false;
-		lug_domingo = false;
-		mostrarlug_id = false;
-		edicion = false;
-		guardado = false;
-		lug_idTurno = -1;
-		numeroGuardias="0";
+		lug_id = null;lug_nombre = null;
+		lug_ciudad = null;lug_nroguardias = null;
+		lug_estado = "A";lug_CCTV = false;
+		lug_controlaccs = false;lug_lunes = false;
+		lug_martes = false;lug_miercoles = false;
+		lug_jueves = false;lug_viernes = false;
+		lug_sabado = false;lug_domingo = false;
+		mostrarlug_id = false;edicion = false;
+		guardado = false;lug_idTurno = -1;
+		numeroGuardias = "0";
 		getListaLugarTurno().clear();
 		return "hg_nlugar?faces-redirect=true";
 	}
@@ -595,33 +589,23 @@ public class lugarBean implements Serializable {
 	 * @throws Exception
 	 */
 	public String volverLugar() throws Exception {
-		lug_id = null;
-		lug_nombre = null;
-		lug_ciudad = null;
-		lug_nroguardias=null;
-		lug_estado = "A";
-		lug_CCTV=false;
-		lug_controlaccs=false;
-		lug_lunes= false;
-		lug_martes= false;
-		lug_miercoles= false;
-		lug_jueves= false;
-		lug_viernes= false;
-		lug_sabado= false;
-		lug_domingo = false;
-		mostrarlug_id = false;
-		edicion = false;
-		guardado = false;
-		lug_idTurno = -1;
-		numeroGuardias="0";
+		lug_id = null;lug_nombre = null;
+		lug_ciudad = null;lug_nroguardias = null;
+		lug_estado = "A";lug_CCTV = false;
+		lug_controlaccs = false;lug_lunes = false;
+		lug_martes = false;lug_miercoles = false;
+		lug_jueves = false;lug_viernes = false;
+		lug_sabado = false;lug_domingo = false;
+		mostrarlug_id = false;edicion = false;
+		guardado = false;lug_idTurno = -1;
+		numeroGuardias = "0";
 		getListaLugares().clear();
 		getListaLugarTurno().clear();
 		getListaLugares().addAll(managergest.findAllLugares());
 		return "hg_lugares?faces-redirect=true";
 	}
-	
-	//turnolugar
-	
+
+	// turnolugar
 	/**
 	 * guardar una imagen fotoproducto
 	 * 
@@ -630,22 +614,22 @@ public class lugarBean implements Serializable {
 	 */
 	public void crearLugarTurno() {
 		try {
-			if(managergest.lugar_TurnoByID(lug_id) == 0){
-			managergest.insertarTurnoLugar(numeroGuardias);
-			lug_idTurno = -1;
-			numeroGuardias="0";
-			getListaLugarTurno().clear();
-			getListaLugarTurno().addAll(managergest.LugarTurnoById1(lug_id));
-			Mensaje.crearMensajeINFO("Turno creado");
-			}else{
+			if (managergest.lugar_TurnoByID(lug_id) == 0) {
+				managergest.insertarTurnoLugar(numeroGuardias);
+				lug_idTurno = -1;
+				numeroGuardias = "0";
+				getListaLugarTurno().clear();
+				getListaLugarTurno()
+						.addAll(managergest.LugarTurnoById1(lug_id));
+				Mensaje.crearMensajeINFO("Turno creado");
+			} else {
 				Mensaje.crearMensajeWARN("Yá se encuentra el turno creado");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	/**
 	 * metodo para mostrar los lugaresTurno
 	 * 
@@ -654,13 +638,16 @@ public class lugarBean implements Serializable {
 		List<SelectItem> listadoSI = new ArrayList<SelectItem>();
 		for (HgTurno t : managergest.findAllTurnos()) {
 			if (!t.getTurEstado().equals("I")) {
-				listadoSI.add(new SelectItem(t.getTurId(), t.getTurDescripcion()
-						+ " " + t.getTurHoraInicio()+" - "+t.getTurHoraFin()+""));
+				listadoSI.add(new SelectItem(t.getTurId(), t
+						.getTurDescripcion()
+						+ " "
+						+ t.getTurHoraInicio()
+						+ " - " + t.getTurHoraFin() + ""));
 			}
 		}
 		return listadoSI;
 	}
-	
+
 	/**
 	 * metodo para asignar el lugarorigen a solicitud
 	 * 
@@ -670,7 +657,7 @@ public class lugarBean implements Serializable {
 		managergest.asignarTurno(lug_idTurno);
 		return "";
 	}
-	
+
 	/**
 	 * metodo para asignar el lugarorigen a solicitud
 	 * 
@@ -680,7 +667,7 @@ public class lugarBean implements Serializable {
 		managergest.asignarTurno(lugturn_turno);
 		return "";
 	}
-	
+
 	/**
 	 * eliminar lugturno abriendo el dialogo
 	 * 
@@ -690,9 +677,8 @@ public class lugarBean implements Serializable {
 	public void eliminarLugarTurno(HgLugarTurno item) {
 		setLugarTurnoElsita(item);
 		RequestContext.getCurrentInstance().execute("PF('ef').show();");
-		System.out.println("holi");
 	}
-	
+
 	/**
 	 * eliminar un fotoproducto
 	 * 

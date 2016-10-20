@@ -8,10 +8,8 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 
@@ -186,7 +184,7 @@ public class ausenciaBean implements Serializable {
 		this.apellidoguardia = apellidoguardia;
 	}
 
-	// ausenciaes
+	// ausencias
 	/**
 	 * accion para invocar el manager y crear ausencia o editar el ausencia
 	 * 
@@ -239,14 +237,8 @@ public class ausenciaBean implements Serializable {
 			}
 			return "hg_ausencias?faces-redirect=true";
 		} catch (Exception e) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Error al crear ausencia", null));
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e
-							.getMessage(), null));
+			Mensaje.crearMensajeWARN("Error al crear ausencia");
+			e.printStackTrace();
 			return "";
 		}
 	}
@@ -256,13 +248,9 @@ public class ausenciaBean implements Serializable {
 	 * 
 	 */
 	public void abrirDialog() {
-		if (aus_fechainicio.after(aus_fechafin)) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_WARN,
-							"Fecha inicio debe ser menor que la Fecha Fin",
-							null));
-		} else
+		if (aus_fechainicio.after(aus_fechafin))
+			Mensaje.crearMensajeWARN("Fecha inicio debe ser menor que la Fecha Fin");
+		else
 			RequestContext.getCurrentInstance().execute("PF('gu').show();");
 	}
 
@@ -288,7 +276,6 @@ public class ausenciaBean implements Serializable {
 			ediciontipo = false;
 			return "hg_nausencia?faces-redirect=true";
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 		}
 		return "";
@@ -305,13 +292,9 @@ public class ausenciaBean implements Serializable {
 		List<HgAusencia> lug = managergest.findAllAusencias();
 		for (HgAusencia y : lug) {
 			if (y.getAusId().equals(aus_id)) {
-				System.out.println("si entra1");
 				t = 1;
 				r = true;
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR,
-								"El código del ausencia existe.", null));
+				Mensaje.crearMensajeWARN("El código del ausencia existe");
 			}
 		}
 		if (t == 0) {
@@ -341,17 +324,11 @@ public class ausenciaBean implements Serializable {
 	 * @return
 	 */
 	public String nuevoAusencia() {
-		aus_id = null;
-		aus_fechainicio = null;
-		aus_fechafin = null;
-		aus_descripcion = null;
-		gua_id = null;
-		nombreguardia = "";
-		apellidoguardia = "";
-		ediciontipo = false;
-		mostrarlug_id = false;
-		edicion = false;
-		System.out.println("------------------------------almacenar--------------------------");
+		aus_id = null;aus_fechainicio = null;
+		aus_fechafin = null;aus_descripcion = null;
+		gua_id = null;nombreguardia = "";
+		apellidoguardia = "";ediciontipo = false;
+		mostrarlug_id = false;edicion = false;
 		return "hg_nausencia?faces-redirect=true";
 	}
 
@@ -362,14 +339,10 @@ public class ausenciaBean implements Serializable {
 	 * @throws Exception
 	 */
 	public String volverAusencia() throws Exception {
-		aus_id = null;
-		aus_fechainicio = null;
-		aus_fechafin = null;
-		aus_descripcion = null;
-		gua_id = null;
-		nombreguardia = "";
-		apellidoguardia = "";
-		mostrarlug_id = false;
+		aus_id = null;aus_fechainicio = null;
+		aus_fechafin = null;aus_descripcion = null;
+		gua_id = null;nombreguardia = "";
+		apellidoguardia = "";mostrarlug_id = false;
 		edicion = false;
 		getListaAusencias().clear();
 		getListaAusencias().addAll(managergest.findAllAusencias());
@@ -411,11 +384,9 @@ public class ausenciaBean implements Serializable {
 			nombreguardia = "";
 			apellidoguardia = "";
 			gua = managergest.guardiaByID(gua_id);
-			// poner los datos del usuario
 			nombreguardia = gua.getGuaNombre();
 			apellidoguardia = gua.getGuaApellido();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

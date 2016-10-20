@@ -75,7 +75,6 @@ public class ManagerHorario {
 	public List<HgHorarioDet> existeGuardiaFechaAct(Date fechai, Date fechaant,
 			String cedula) {
 		java.sql.Date fechainicio = new java.sql.Date(fechai.getTime());
-		java.sql.Date fechaante = new java.sql.Date(fechaant.getTime());
 		return mDAO.findWhere(HgHorarioDet.class, " o.hgGuardia.guaCedula = '"
 				+ cedula + "' " + "and o.hdetFechaInicio = '" + fechainicio
 				+ "' ", null);
@@ -91,7 +90,6 @@ public class ManagerHorario {
 	public List<HgHorarioDet> findAllGuardiasxFecha(Date fechaIn,
 			Date fechasigui, Integer cab_id) {
 		java.sql.Date fechainicio = new java.sql.Date(fechaIn.getTime());
-		java.sql.Date fechadesp = new java.sql.Date(fechasigui.getTime());
 		return mDAO.findWhere(HgHorarioDet.class, " o.hdetFechaInicio = '"
 				+ fechainicio + "' and o.hgTurno.turId not in (3)  "
 				// + "or (o.hdetFechaInicio = '"+ fechadesp +

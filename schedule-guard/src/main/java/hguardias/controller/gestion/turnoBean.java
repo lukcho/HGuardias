@@ -74,11 +74,11 @@ public class turnoBean implements Serializable {
 		listaTurnos = managergest.findAllTurnos();
 		usuario = ms.validarSesion("hg_turnos.xhtml");
 	}
-	
+
 	public HgTurno getTurno() {
 		return turno;
 	}
-	
+
 	public void setTurno(HgTurno turno) {
 		this.turno = turno;
 	}
@@ -172,51 +172,43 @@ public class turnoBean implements Serializable {
 	public String crearTurno() {
 		try {
 			DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
-			horainiciotiemp = new java.sql.Time(formatter
-					.parse(turno_hora_inicio).getTime());
+			horainiciotiemp = new java.sql.Time(formatter.parse(
+					turno_hora_inicio).getTime());
 			horafintiemp = new java.sql.Time(formatter.parse(turno_hora_fin)
 					.getTime());
-			
 			if (edicion) {
-				managergest.editarTurno(turno_id, turno_descripcion.trim(), horainiciotiemp, horafintiemp, turno_estado.trim());
-				getListaTurnos().clear();
-				getListaTurnos().addAll(managergest.findAllTurnos());
+				managergest.editarTurno(turno_id, turno_descripcion.trim(),
+						horainiciotiemp, horafintiemp, turno_estado.trim());
 				Mensaje.crearMensajeINFO("Actualizado - Modificado");
-				turno_id = null;
-				turno_descripcion = null;
-				turno_estado = "A";
-				turno_hora_inicio = null;
-				turno_hora_fin = null;
-				horainiciotiemp = null;
-				horafintiemp = null;
-				edicion = true;
-				
+				limpiarCampos();
 			} else {
-				managergest.insertarTurno(turno_descripcion.trim(), horainiciotiemp, horafintiemp);
+				managergest.insertarTurno(turno_descripcion.trim(),
+						horainiciotiemp, horafintiemp);
 				Mensaje.crearMensajeINFO("Registrado - Creado");
-				getListaTurnos().clear();
-				getListaTurnos().addAll(managergest.findAllTurnos());
-				turno_id = null;
-				turno_descripcion = null;
-				turno_estado = "A";
-				turno_hora_inicio = null;
-				turno_hora_fin = null;
-				horainiciotiemp = null;
-				horafintiemp = null;
-				edicion = true;
+				limpiarCampos();
 			}
+			getListaTurnos().clear();
+			getListaTurnos().addAll(managergest.findAllTurnos());
 			return "hg_turnos?faces-redirect=true";
 		} catch (Exception e) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Error al crear turno", null));
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e
-							.getMessage(), null));
+			Mensaje.crearMensajeWARN("Error al crear turno");
+			e.printStackTrace();
 			return "";
 		}
+	}
+
+	/**
+	 * Limpiar campos
+	 */
+	public void limpiarCampos() {
+		turno_id = null;
+		turno_descripcion = null;
+		turno_estado = "A";
+		turno_hora_inicio = null;
+		turno_hora_fin = null;
+		horainiciotiemp = null;
+		horafintiemp = null;
+		edicion = true;
 	}
 
 	/**
@@ -224,7 +216,7 @@ public class turnoBean implements Serializable {
 	 * 
 	 */
 	public void abrirDialog() {
-				RequestContext.getCurrentInstance().execute("PF('gu').show();");
+		RequestContext.getCurrentInstance().execute("PF('gu').show();");
 	}
 
 	/**
@@ -247,7 +239,6 @@ public class turnoBean implements Serializable {
 			ediciontipo = false;
 			return "hg_nturno?faces-redirect=true";
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 		}
 		return "";
@@ -266,7 +257,7 @@ public class turnoBean implements Serializable {
 			getListaTurnos().clear();
 			getListaTurnos().addAll(managergest.findAllTurnos());
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 		return "";
 	}
@@ -280,7 +271,6 @@ public class turnoBean implements Serializable {
 	public void cambiarEstadoTurnoa(HgTurno cond) {
 		setTurno(cond);
 		RequestContext.getCurrentInstance().execute("PF('ce').show();");
-		System.out.println("holi");
 	}
 
 	/**
@@ -294,13 +284,9 @@ public class turnoBean implements Serializable {
 		List<HgTurno> lug = managergest.findAllTurnos();
 		for (HgTurno y : lug) {
 			if (y.getTurId().equals(turno_id)) {
-				System.out.println("si entra1");
 				t = 1;
 				r = true;
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR,
-								"El código del lugar existe.", null));
+				Mensaje.crearMensajeWARN("El código del lugar existe");
 			}
 		}
 		if (t == 0) {
@@ -362,7 +348,7 @@ public class turnoBean implements Serializable {
 		getListaTurnos().addAll(managergest.findAllTurnos());
 		return "hg_turnos?faces-redirect=true";
 	}
-	
+
 	/**
 	 * Lista de horas
 	 * 
