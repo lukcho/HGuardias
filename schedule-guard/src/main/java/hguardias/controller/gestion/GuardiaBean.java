@@ -68,6 +68,7 @@ public class GuardiaBean implements Serializable {
 	// mmostrar
 	private boolean mostrarguardia_id;
 	private boolean edicion;
+	private boolean edicionbuscar;
 	private boolean ediciontipo;
 
 	private List<HgGuardia> listaguardias;
@@ -298,6 +299,14 @@ public class GuardiaBean implements Serializable {
 	public void setListaguardias(List<HgGuardia> listaguardias) {
 		this.listaguardias = listaguardias;
 	}
+	
+	public boolean isEdicionbuscar() {
+		return edicionbuscar;
+	}
+	
+	public void setEdicionbuscar(boolean edicionbuscar) {
+		this.edicionbuscar = edicionbuscar;
+	}
 
 	// guardias
 	/**
@@ -400,14 +409,8 @@ public class GuardiaBean implements Serializable {
 			}
 			return r;
 		} catch (Exception e) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Error al crear guardia", null));
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e
-							.getMessage(), null));
+			Mensaje.crearMensajeERROR("Error al crear guardia");
+			e.printStackTrace();
 			return "";
 		}
 	}
@@ -421,10 +424,7 @@ public class GuardiaBean implements Serializable {
 			System.out.println(guardia_id);
 			RequestContext.getCurrentInstance().execute("PF('gu').show();");
 		} else {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Cédula Incorrecta", null));
+			Mensaje.crearMensajeWARN("Cédula Incorrecta");
 		}
 	}
 
@@ -462,9 +462,9 @@ public class GuardiaBean implements Serializable {
 			guardia_casonocturno = guardia.getGuaCasoNocturno();
 			edicion = true;
 			ediciontipo = false;
+			edicionbuscar = false;
 			return "hg_nguardia?faces-redirect=true";
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 		}
 		return "";
@@ -477,11 +477,7 @@ public class GuardiaBean implements Serializable {
 	 */
 	public String cambiarEstadoGuardia() {
 		try {
-			FacesContext context = FacesContext.getCurrentInstance();
-			context.addMessage(
-					null,
-					new FacesMessage("INFORMACIÓN", managergest
-							.cambioEstadoGuardia(getGuardia().getGuaCedula())));
+			Mensaje.crearMensajeINFO(managergest.cambioEstadoGuardia(getGuardia().getGuaCedula()));
 			getListaguardias().clear();
 			getListaguardias().addAll(managergest.findAllGuardias());
 		} catch (Exception e) {
@@ -516,10 +512,7 @@ public class GuardiaBean implements Serializable {
 				System.out.println("si entra1");
 				t = 1;
 				r = true;
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR,
-								"El código del lugar existe.", null));
+				Mensaje.crearMensajeWARN("El código del lugar existe");
 			}
 		}
 		if (t == 0) {
@@ -602,6 +595,7 @@ public class GuardiaBean implements Serializable {
 		guardia_casonocturno = false;
 		mostrarguardia_id = false;
 		edicion = false;
+		edicionbuscar = true;
 		return "hg_nguardia?faces-redirect=true";
 	}
 
@@ -635,6 +629,7 @@ public class GuardiaBean implements Serializable {
 		guardia_casonocturno = false;
 		mostrarguardia_id = false;
 		edicion = false;
+		edicionbuscar = true;
 		getListaguardias().clear();
 		getListaguardias().addAll(managergest.findAllGuardias());
 		return "hg_guardias?faces-redirect=true";
@@ -730,7 +725,6 @@ public class GuardiaBean implements Serializable {
 					Mensaje.crearMensajeWARN("La cédula es incorrecta.");
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			Mensaje.crearMensajeINFO("Error: " + e.getMessage());
 			e.printStackTrace();
 		}

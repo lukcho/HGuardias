@@ -399,15 +399,15 @@ public class ManagerGestion {
 	 * @param lug_controlaccs
 	 * @throws Exception
 	 */
-	public void insertarLugar(String lug_nombre, String lug_ciudad,
-			Integer lug_nroguardias, boolean lug_CCTV, boolean lug_controlaccs,
+	public void insertarLugar(String lug_nombre, String lug_ciudad,Integer numeroguardia,
+			boolean lug_CCTV, boolean lug_controlaccs,
 			boolean lunes, boolean martes, boolean miercoles, boolean jueves,
 			boolean viernes, boolean sabado, boolean domingo, String lug_estado)
 			throws Exception {
 		HgLugare lug = new HgLugare();
 		lug.setLugNombre(lug_nombre);
 		lug.setLugCiudad(lug_ciudad);
-		lug.setLugNroGuardias(lug_nroguardias);
+		lug.setLugNroGuardias(numeroguardia);
 		lug.setLugCctv(lug_CCTV);
 		lug.setLugControlAccesos(lug_controlaccs);
 		lug.setLugLunes(lunes);
@@ -434,14 +434,14 @@ public class ManagerGestion {
 	 * @throws Exception
 	 */
 	public void editarLugar(Integer lug_id, String lug_nombre,
-			String lug_ciudad, Integer lug_nroguardias, boolean lug_CCTV,
+			String lug_ciudad,Integer numeroguardia, boolean lug_CCTV,
 			boolean lug_controlaccs, boolean lunes, boolean martes,
 			boolean miercoles, boolean jueves, boolean viernes, boolean sabado,
 			boolean domingo, String lug_estado) throws Exception {
 		HgLugare lug = this.LugarByID(lug_id);
 		lug.setLugNombre(lug_nombre);
 		lug.setLugCiudad(lug_ciudad);
-		lug.setLugNroGuardias(lug_nroguardias);
+		lug.setLugNroGuardias(numeroguardia);
 		lug.setLugCctv(lug_CCTV);
 		lug.setLugControlAccesos(lug_controlaccs);
 		lug.setLugLunes(lunes);
@@ -916,6 +916,18 @@ public class ManagerGestion {
 	}
 	
 	/**
+	 * listar x guardia los horariosdet con la fecha contar los dias que trabaja
+	 * 
+	 * @param fechai
+	 * @param fechaf
+	 * 
+	 * @throws Exception
+	 */
+	public HgLugarTurno lugar_TurnoByIDid(Integer lugturn_id) throws Exception {
+		return (HgLugarTurno)  mDAO.findById(HgLugarTurno.class," o.lugTur = " + lugturn_id +" ");
+	}
+	
+	/**
 	 * listar todos los turnos
 	 * 
 	 * @throws Exception
@@ -923,6 +935,28 @@ public class ManagerGestion {
 	@SuppressWarnings("unchecked")
 	public List<HgLugaresTurnosVacio> allLugarTurnoByID(Integer cabId) {
 		return mDAO.findWhere(HgLugaresTurnosVacio.class," o.hgHorarioCab.hcabId = "+cabId+" ",null);
+	}
+	
+	/**
+	 * Cambiar datos de lugar
+	 * 
+	 * @param lug_id
+	 * @param lug_nombre
+	 * @param lug_ciudad
+	 * @param lug_estado
+	 * @param lug_nroguardias
+	 * @param lug_CCTV
+	 * @param lug_controlaccs
+	 * @throws Exception
+	 */
+	public void editarLugarTurno(Integer lugturn_id,Integer lugturn_turno,Integer lugturn_lugar,Integer lugturn_nroGuardias) throws Exception {
+		HgLugarTurno lugarturno = this.lugar_TurnoByIDid(lugturn_id);
+		asignarTurno(lugturn_turno);
+		asignarLugar(lugturn_lugar);
+		lugarturno.setHgTurno(hg_turno);
+		lugarturno.setHgLugare(hg_lugar);
+		lugarturno.setLugTurNumeroGuardias(lugturn_nroGuardias);
+		mDAO.actualizar(lugarturno);
 	}
 	
 }

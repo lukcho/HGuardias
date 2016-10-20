@@ -21,17 +21,17 @@
 				<h:form>
 				<b:row>
 					<b:column span="2">
-						<h:outputLabel value="Buscar Persona: " for="busccedu" />
+						<h:outputLabel value="Buscar Persona: " for="busccedu" rendered="#{guardiaBean.edicionbuscar}" />
 					</b:column>
 					<b:column span="4">
-						<b:inputText id="busccedu" value="#{guardiaBean.dniBuscar}"
+						<b:inputText id="busccedu" value="#{guardiaBean.dniBuscar}" rendered="#{guardiaBean.edicionbuscar}"
 							required="true" styleClass="form-control" maxlength="10"
 							disabled="#{guardiaBean.edicion}" 
 							requiredMessage="Campo cédula/pasaporte requerido">
 						</b:inputText>
 					</b:column>
 					<b:column span="5">
-						<p:commandButton value="Buscar" styleClass="btn btn-info" disabled="#{guardiaBean.edicion}"
+						<p:commandButton value="Buscar" styleClass="btn btn-info" disabled="#{guardiaBean.edicion}" rendered="#{guardiaBean.edicionbuscar}"
 							style="padding:7px;" actionListener="#{guardiaBean.cargarPersona()}" update=":frm :frm:messages"/>
 					</b:column>
 				</b:row>

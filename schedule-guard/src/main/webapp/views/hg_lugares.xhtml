@@ -34,7 +34,7 @@
 					reflow="true" var="lug" rows="10" emptyMessage="Sin Datos"
 					paginator="true"
 					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
-					<p:column headerText="OPCIONES" width="50">
+					<p:column headerText="OPCIONES" width="40">
 						<p:commandButton id="btnE" icon="ui-icon-pencil"
 							action="#{lugarBean.cargarLugar(lug)}">
 							<p:tooltip id="toolTipTrack1" for="btnE"
@@ -49,10 +49,6 @@
 					<p:column filterBy="#{lug.lugCiudad}" filterMatchMode="contains"
 						headerText="SECTOR" width="40">
 						<h:outputText value="#{lug.lugCiudad}"></h:outputText>
-					</p:column>
-					<p:column filterBy="#{lug.lugNroGuardias}"
-						filterMatchMode="contains" headerText="NRO. GUARDIAS" width="40">
-						<h:outputText value="#{lug.lugNroGuardias}"></h:outputText>
 					</p:column>
 					<p:column headerText="CCTV" width="30" sortBy="#{lug.lugCctv}">
 						<p:selectBooleanCheckbox disabled="true" value="#{lug.lugCctv}">
