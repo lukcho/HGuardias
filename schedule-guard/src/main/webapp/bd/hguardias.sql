@@ -118,8 +118,10 @@ create table HG_GUARDIAS (
    GUA_ESTADO_CIVIL     VARCHAR(100)         null,
    GUA_ESTADO           CHAR(1)              null,
    GUA_CCTV             BOOL                 null,
-   GUA_MOTORIZADO       BOOL                 null,
+   GUA_MOTORIZADO       BOOL                 null,   
    GUA_CHOFER           BOOL                 null,
+   GUA_TIPO_LICENCIA_CHOFER VARCHAR(2)       null,
+   GUA_TIPO_LICENCIA_MOTORIZADO VARCHAR(2)   null,
    GUA_CONTROL_ACCESOS  BOOL                 null,
    GUA_CASO_TURNO       INT4	             null,
    GUA_CASO_ESTUDIO     BOOL                 null,
@@ -147,6 +149,8 @@ create table HG_GUARDIAS_PENDIENTE (
    GUA_CCTV             BOOL                 null,
    GUA_MOTORIZADO       BOOL                 null,
    GUA_CHOFER           BOOL                 null,
+   GUA_TIPO_LICENCIA_MOTORIZADO VARCHAR(2)   null,
+   GUA_TIPO_LICENCIA_CHOFER VARCHAR(2)       null,
    GUA_CONTROL_ACCESOS  BOOL                 null,
    GUA_CASO_TURNO       INT4                 null,
    GUA_CASO_ESTUDIO     BOOL                 null,
@@ -172,6 +176,7 @@ create table HG_LUGARES (
    LUG_SABADO           BOOL                 null,
    LUG_DOMINGO          BOOL                 null,
    LUG_ESTADO           CHAR(1)              null,
+   LUG_PRIORIDAD        INT4                 null,
    constraint PK_HG_LUGARES primary key (LUG_ID)
 );
 

@@ -44,7 +44,20 @@ public class Funciones {
 	public static String valorEstadoFemenino = "F";
 	public static String estadoMasculino = "Masculino";
 	public static String valorEstadoMasculino = "M";
-	
+
+	//Atributos de Genero
+	public static String valorEstadoA = "A";
+	public static String valorEstadoA1= "A1";
+	public static String valorEstadoB= "B";
+	public static String valorEstadoC = "C";
+	public static String valorEstadoC1 = "C1";
+	public static String valorEstadoD = "D";
+	public static String valorEstadoD1 = "D1";
+	public static String valorEstadoE = "E";
+	public static String valorEstadoE1 = "E1";
+	public static String valorEstadoF = "F";
+	public static String valorEstadoG = "G";
+
 	public static Integer mayoriaDeEdad = 18;
 		
 //	public static String hostWS1 = "http://10.1.0.115:8080/app-permisos/";

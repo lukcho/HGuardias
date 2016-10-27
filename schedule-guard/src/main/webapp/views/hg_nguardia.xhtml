@@ -17,27 +17,32 @@
 				actionListener="#{sesionBean.validaIndex()}" autoRun="true" />
 		</h:form>
 		<br />
-			<b:panel title="Registro de Guardia" look="primary">
-				<h:form>
+		<b:panel title="Registro de Guardia" look="primary">
+			<h:form>
 				<b:row>
 					<b:column span="2">
-						<h:outputLabel value="Buscar Persona: " for="busccedu" rendered="#{guardiaBean.edicionbuscar}" />
+						<h:outputLabel value="Buscar Persona: " for="busccedu"
+							rendered="#{guardiaBean.edicionbuscar}" />
 					</b:column>
 					<b:column span="4">
-						<b:inputText id="busccedu" value="#{guardiaBean.dniBuscar}" rendered="#{guardiaBean.edicionbuscar}"
-							required="true" styleClass="form-control" maxlength="10"
-							disabled="#{guardiaBean.edicion}" 
+						<b:inputText id="busccedu" value="#{guardiaBean.dniBuscar}"
+							rendered="#{guardiaBean.edicionbuscar}" required="true"
+							styleClass="form-control" maxlength="10"
+							disabled="#{guardiaBean.edicion}"
 							requiredMessage="Campo cédula/pasaporte requerido">
 						</b:inputText>
 					</b:column>
 					<b:column span="5">
-						<p:commandButton value="Buscar" styleClass="btn btn-info" disabled="#{guardiaBean.edicion}" rendered="#{guardiaBean.edicionbuscar}"
-							style="padding:7px;" actionListener="#{guardiaBean.cargarPersona()}" update=":frm :frm:messages"/>
+						<p:commandButton value="Buscar" styleClass="btn btn-info"
+							disabled="#{guardiaBean.edicion}"
+							rendered="#{guardiaBean.edicionbuscar}" style="padding:7px;"
+							actionListener="#{guardiaBean.cargarPersona()}"
+							update=":frm :frm:messages" />
 					</b:column>
 				</b:row>
-				</h:form>
-				<br/>
-				<h:form id="frm">
+			</h:form>
+			<br />
+			<h:form id="frm">
 				<p:growl id="messages" showDetail="false" />
 				<b:row>
 					<b:column span="2">
@@ -111,8 +116,9 @@
 						<h:outputLabel value="Estado Civil:* " for="estciv" />
 					</b:column>
 					<b:column span="3">
-						<p:inputText id="estciv" value="#{guardiaBean.guardia_estadoCivil}"
-							required="true" styleClass="form-control"
+						<p:inputText id="estciv"
+							value="#{guardiaBean.guardia_estadoCivil}" required="true"
+							styleClass="form-control"
 							requiredMessage="Campo estado civil requerido">
 						</p:inputText>
 					</b:column>
@@ -120,8 +126,9 @@
 						<h:outputLabel value="Grupo Sanguíneo:* " for="grupsang" />
 					</b:column>
 					<b:column span="3">
-						<p:inputText id="grupsang" value="#{guardiaBean.guardia_tipoSangre}"
-							required="true" styleClass="form-control"
+						<p:inputText id="grupsang"
+							value="#{guardiaBean.guardia_tipoSangre}" required="true"
+							styleClass="form-control"
 							requiredMessage="Campo grupo sanguíneo requerido">
 						</p:inputText>
 					</b:column>
@@ -215,11 +222,27 @@
 						<h:outputLabel value="Es Chofer:* " for="chof" />
 					</b:column>
 					<b:column span="3" style="margin-bottom:10px">
-						<p:selectOneRadio id="chof" value="#{guardiaBean.guardia_chofer}"
+						<p:selectOneRadio id="chof" value="#{guardiaBean.guardia_chofer}" 
 							style="margin-top:10px">
 							<f:selectItem itemLabel="SI" itemValue="true" />
 							<f:selectItem itemLabel="NO" itemValue="false" />
+							<p:ajax listener="#{guardiaBean.mostrarLicencia()}"  event="change" 
+											 update="licchof" />
 						</p:selectOneRadio>
+					</b:column>
+				</b:row>
+				<br />
+				<b:row>
+					<b:column span="5"></b:column>
+					<b:column span="2">
+						<h:outputLabel value="Licencia tipo:* " for="licchof" />
+					</b:column>
+					<b:column span="3">
+						<b:selectOneMenu id="licchof" disabled="#{guardiaBean.guardia_chofer_si}" 
+						value="#{guardiaBean.guardia_licencia_chofer}">
+							<f:selectItem itemLabel="Seleccione licencia" itemValue=""/>
+							<f:selectItems value="#{guardiaBean.listLicencias}" />
+						</b:selectOneMenu>
 					</b:column>
 				</b:row>
 				<br />
@@ -236,8 +259,8 @@
 
 					</b:column>
 					<b:column span="2">
-						<h:outputLabel value="Caso estudio:* " for="estu"  id="casoestudio" >
-						<p:tooltip id="toolTipTrack5" for="casoestudio"
+						<h:outputLabel value="Caso estudio:* " for="estu" id="casoestudio">
+							<p:tooltip id="toolTipTrack5" for="casoestudio"
 								value="Personas que se encuentren cursando estudios."
 								trackMouse="true" />
 						</h:outputLabel>
@@ -289,9 +312,9 @@
 						</b:commandButton>
 					</b:column>
 				</b:row>
-				</h:form>
-			</b:panel>
-		
+			</h:form>
+		</b:panel>
+
 		<p:confirmDialog header="Confirmación"
 			message="Está seguro de registrar la información?" closable="false"
 			showEffect="fade" hideEffect="explode" widgetVar="gu">

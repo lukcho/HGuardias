@@ -14,6 +14,8 @@ import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 
 import hguardias.controller.access.SesionBean;
 import hguardias.model.generic.Funciones;
@@ -47,7 +49,7 @@ public class lugarBean implements Serializable {
 	private boolean lug_viernes;
 	private boolean lug_sabado;
 	private boolean lug_domingo;
-
+	
 	private Integer lugturn_id;
 	private Integer lugturn_turno;
 	private Integer lugturn_lugar;
@@ -69,7 +71,13 @@ public class lugarBean implements Serializable {
 
 	private List<HgLugare> listaLugares;
 
+	// prioridades
+	private List<HgLugare> lugaresPriorizar;
+
+	private Integer prioridad;
+
 	private String usuario;
+	private HgLugare lugar;
 
 	@Inject
 	SesionBean ms;
@@ -102,6 +110,8 @@ public class lugarBean implements Serializable {
 		lugturn_turno = 0;
 		lugturn_lugar = 0;
 		lugturn_nroGuardias = 0;
+		prioridad = 0;
+		lugaresPriorizar = new ArrayList<HgLugare>();
 		listaLugares = managergest.findAllLugares();
 		listaLugarTurno = new ArrayList<HgLugarTurno>();
 		usuario = ms.validarSesion("hg_lugares.xhtml");
@@ -339,6 +349,26 @@ public class lugarBean implements Serializable {
 		return lug_turno;
 	}
 
+	public HgLugare getLugar() {
+		return lugar;
+	}
+
+	public List<HgLugare> getLugaresPriorizar() {
+		return lugaresPriorizar;
+	}
+
+	public void setLugaresPriorizar(List<HgLugare> lugaresPriorizar) {
+		this.lugaresPriorizar = lugaresPriorizar;
+	}
+	
+	public Integer getPrioridad() {
+		return prioridad;
+	}
+	
+	public void setPrioridad(Integer prioridad) {
+		this.prioridad = prioridad;
+	}
+
 	// Lugares
 	/**
 	 * accion para invocar el manager y crear lugar o editar el lugar
@@ -363,10 +393,11 @@ public class lugarBean implements Serializable {
 				guardado = false;
 				Mensaje.crearMensajeINFO("Actualizado - Modificado");
 			} else {
+				prioridad = managergest.ultimoOrdenLugar();
 				managergest.insertarLugar(lug_nombre.trim(), lug_ciudad.trim(),
 						numguardia, lug_CCTV, lug_controlaccs, lug_lunes,
 						lug_martes, lug_miercoles, lug_jueves, lug_viernes,
-						lug_sabado, lug_domingo, lug_estado.trim());
+						lug_sabado, lug_domingo, lug_estado.trim(), prioridad);
 				for (HgLugare lug : managergest.findLugarByNombre(lug_nombre)) {
 					lug_id = lug.getLugId();
 				}
@@ -441,6 +472,27 @@ public class lugarBean implements Serializable {
 	 * accion para abrir el dialogo
 	 * 
 	 */
+	public void abrirDialogPrioridad() {
+		lugaresPriorizar = managergest.findAllLugares();
+		RequestContext.getCurrentInstance().execute(
+				"PF('dlgprioridad').show();");
+	}
+
+	/**
+	 * accion para abrir el dialogo
+	 * 
+	 */
+	public void cerrarDialogPrioridad() {
+		listaLugares = managergest.findAllLugares();
+		lugaresPriorizar.clear();
+		RequestContext.getCurrentInstance().execute(
+				"PF('dlgprioridad').hide();");
+	}
+
+	/**
+	 * accion para abrir el dialogo
+	 * 
+	 */
 	public void abrirDialog1() {
 		if (lug_id != null) {
 			if (lug_idTurno != -1) {
@@ -483,6 +535,7 @@ public class lugarBean implements Serializable {
 			lug_viernes = lug.getLugViernes();
 			lug_sabado = lug.getLugSabado();
 			lug_domingo = lug.getLugDomingo();
+			prioridad = lug.getLugPrioridad();
 			edicion = true;
 			ediciontipo = false;
 			guardado = false;
@@ -490,7 +543,6 @@ public class lugarBean implements Serializable {
 			getListaLugarTurno().addAll(managergest.LugarTurnoById1(lug_id));
 			return "hg_nlugar?faces-redirect=true";
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 		}
 		return "";
@@ -568,15 +620,25 @@ public class lugarBean implements Serializable {
 	 * @return
 	 */
 	public String nuevoLugar() {
-		lug_id = null;lug_nombre = null;
-		lug_ciudad = null;lug_nroguardias = null;
-		lug_estado = "A";lug_CCTV = false;
-		lug_controlaccs = false;lug_lunes = false;
-		lug_martes = false;lug_miercoles = false;
-		lug_jueves = false;lug_viernes = false;
-		lug_sabado = false;lug_domingo = false;
-		mostrarlug_id = false;edicion = false;
-		guardado = false;lug_idTurno = -1;
+		lug_id = null;
+		lug_nombre = null;
+		lug_ciudad = null;
+		lug_nroguardias = null;
+		lug_estado = "A";
+		lug_CCTV = false;
+		lug_controlaccs = false;
+		lug_lunes = false;
+		lug_martes = false;
+		lug_miercoles = false;
+		lug_jueves = false;
+		lug_viernes = false;
+		lug_sabado = false;
+		lug_domingo = false;
+		mostrarlug_id = false;
+		edicion = false;
+		guardado = false;
+		prioridad=null;
+		lug_idTurno = -1;
 		numeroGuardias = "0";
 		getListaLugarTurno().clear();
 		return "hg_nlugar?faces-redirect=true";
@@ -589,15 +651,25 @@ public class lugarBean implements Serializable {
 	 * @throws Exception
 	 */
 	public String volverLugar() throws Exception {
-		lug_id = null;lug_nombre = null;
-		lug_ciudad = null;lug_nroguardias = null;
-		lug_estado = "A";lug_CCTV = false;
-		lug_controlaccs = false;lug_lunes = false;
-		lug_martes = false;lug_miercoles = false;
-		lug_jueves = false;lug_viernes = false;
-		lug_sabado = false;lug_domingo = false;
-		mostrarlug_id = false;edicion = false;
-		guardado = false;lug_idTurno = -1;
+		lug_id = null;
+		lug_nombre = null;
+		lug_ciudad = null;
+		lug_nroguardias = null;
+		lug_estado = "A";
+		lug_CCTV = false;
+		lug_controlaccs = false;
+		lug_lunes = false;
+		lug_martes = false;
+		lug_miercoles = false;
+		lug_jueves = false;
+		lug_viernes = false;
+		lug_sabado = false;
+		lug_domingo = false;
+		mostrarlug_id = false;
+		edicion = false;
+		guardado = false;
+		prioridad=null;
+		lug_idTurno = -1;
 		numeroGuardias = "0";
 		getListaLugares().clear();
 		getListaLugarTurno().clear();
@@ -694,5 +766,41 @@ public class lugarBean implements Serializable {
 			e.printStackTrace();
 		}
 		return "";
+	}
+	
+	public void guardarPrioridad() throws Exception {
+		List<HgLugare> listaLugar = managergest.findAllLugares();
+		List<HgLugare> numlugarprio = new ArrayList<HgLugare>();
+		for(Integer a=0 ; a< listaLugar.size() ; a++) {
+			numlugarprio.add(managergest.LugarByID(Integer.parseInt(lugaresPriorizar.get(a)+"")));
+		}
+		for (Integer i = 0; i < numlugarprio.size(); i++) {
+				System.out.println(numlugarprio.get(i));
+				numlugarprio.get(i).setLugPrioridad(i+1);
+				managergest.actualizarPrioridad(numlugarprio.get(i));
+		}
+		Mensaje.crearMensajeINFO("Actualización de lugares");
+		listaLugares = managergest.findAllLugares();
+		RequestContext.getCurrentInstance().execute("PF('dlgprioridad').hide();");
+	}
+
+
+	public void onSelect(SelectEvent event) {
+		FacesContext context = FacesContext.getCurrentInstance();
+		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+				"Lugar selecionado", event.getObject().toString()));
+	}
+
+	public void onUnselect(UnselectEvent event) {
+		FacesContext context = FacesContext.getCurrentInstance();
+		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+				"Lugar no seleccionado", event.getObject().toString()));
+	}
+
+	public void onReorder() {
+		FacesContext context = FacesContext.getCurrentInstance();
+		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+				"Lista reordenada", null));
+		
 	}
 }

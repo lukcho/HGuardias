@@ -24,11 +24,16 @@
 					<b:commandButton value="Volver" iconAwesome="angle-left"
 						action="index?faces-redirect=true" />
 				</b:column>
+				<b:column span="1">
+					<p:commandButton value="Prioridad Lugares"
+						iconAwesome="fa fa-align-justify" styleClass="btn btn-info"
+						style="padding:7px;" action="#{lugarBean.abrirDialogPrioridad()}" />
+				</b:column>
 			</b:row>
 		</h:form>
 		<br />
 		<h:form id="frm">
-			<p:growl id="messages" showDetail="true" />
+			<p:growl id="messages" showDetail="false" />
 			<b:panel title="Listado de Lugares" look="primary">
 				<p:dataTable id="tbb" value="#{lugarBean.listaLugares}"
 					reflow="true" var="lug" rows="10" emptyMessage="Sin Datos"
@@ -60,6 +65,10 @@
 							value="#{lug.lugControlAccesos}">
 						</p:selectBooleanCheckbox>
 					</p:column>
+					<p:column filterMatchMode="contains" headerText="PRIORIDAD"
+						width="40">
+						<h:outputText value="#{lug.lugPrioridad}"></h:outputText>
+					</p:column>
 					<p:column filterBy="#{lug.lugEstado}" filterMatchMode="contains"
 						headerText="ESTADO" width="40">
 						<h:outputText value="#{lug.lugEstado}"></h:outputText>
@@ -67,6 +76,41 @@
 				</p:dataTable>
 			</b:panel>
 		</h:form>
+		<p:dialog responsive="true" header="Prioridad de lugares" width="360"
+			height="300" draggable="true" closable="false" closeOnEscape="false"
+			showEffect="fade" hideEffect="explode" widgetVar="dlgprioridad"
+			modal="true" dynamic="true" id="prioridad" resizable="false">
+			<h:form>
+				<b:row>
+					<b:column span="3">
+						<p:orderList id="orderlist" controlsLocation="left"
+							value="#{lugarBean.lugaresPriorizar}" var="lug"
+							moveUpLabel="Subir" moveDownLabel="Bajar"
+							moveBottomLabel="Mover al fondo" moveTopLabel="Mover al inicio"
+							itemValue="#{lug.lugId}" >
+							<p:column>
+								<h:outputText value="#{lug.lugNombre}" />
+							</p:column>
+							<p:ajax event="select" listener="#{lugarBean.onSelect}"
+								update=":frm:messages" />
+							<p:ajax event="unselect" listener="#{lugarBean.onUnselect}"
+								update=":frm:messages" />
+							<p:ajax event="reorder" listener="#{lugarBean.onReorder}"
+								update=":frm:messages" />
+						</p:orderList>
+					</b:column>
+				</b:row>
+				<b:row>
+					<b:column span="2">
+						<p:commandButton id="prioridades" value="Guardar"
+							action="#{lugarBean.guardarPrioridad()}" update="frm" />&nbsp;&nbsp;
+						<p:commandButton value="Volver" onclick="PF('prioridad').hide()"
+							action="#{lugarBean.cerrarDialogPrioridad()}"
+							update=":frm:messages" />
+					</b:column>
+				</b:row>
+			</h:form>
+		</p:dialog>
 	</ui:define>
 </ui:composition>
 </html>

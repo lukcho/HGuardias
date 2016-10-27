@@ -57,7 +57,7 @@ public class HgGuardia implements Serializable {
 
 	@Column(name="gua_estado", columnDefinition="bpchar", length=1)
 	private String guaEstado;
-	
+
 	@Column(name="gua_estado_civil", length=100)
 	private String guaEstadoCivil;
 
@@ -74,18 +74,24 @@ public class HgGuardia implements Serializable {
 	@Column(name="gua_sexo", columnDefinition="bpchar", length=1)
 	private String guaSexo;
 
-	@Column(name="gua_telefono", length=100)
+	@Column(name="gua_telefono", length=10)
 	private String guaTelefono;
+
+	@Column(name="gua_tipo_licencia_chofer", length=2)
+	private String guaTipoLicenciaChofer;
+
+	@Column(name="gua_tipo_licencia_motorizado", length=2)
+	private String guaTipoLicenciaMotorizado;
 
 	@Column(name="gua_tipo_sangre", length=100)
 	private String guaTipoSangre;
-	
+
 	//bi-directional many-to-one association to HgAusencia
-	@OneToMany(mappedBy="hgGuardia")
+	@OneToMany(mappedBy="hgGuardia",cascade=CascadeType.ALL)
 	private List<HgAusencia> hgAusencias;
 
 	//bi-directional many-to-one association to HgHorarioDet
-	@OneToMany(mappedBy="hgGuardia",cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="hgGuardia")
 	private List<HgHorarioDet> hgHorarioDets;
 
 	public HgGuardia() {
@@ -195,16 +201,16 @@ public class HgGuardia implements Serializable {
 		this.guaEstado = guaEstado;
 	}
 
-	public Date getGuaFechanac() {
-		return this.guaFechanac;
-	}
-	
 	public String getGuaEstadoCivil() {
-		return guaEstadoCivil;
+		return this.guaEstadoCivil;
 	}
-	
+
 	public void setGuaEstadoCivil(String guaEstadoCivil) {
 		this.guaEstadoCivil = guaEstadoCivil;
+	}
+
+	public Date getGuaFechanac() {
+		return this.guaFechanac;
 	}
 
 	public void setGuaFechanac(Date guaFechanac) {
@@ -243,16 +249,32 @@ public class HgGuardia implements Serializable {
 		this.guaTelefono = guaTelefono;
 	}
 
-	public List<HgAusencia> getHgAusencias() {
-		return this.hgAusencias;
+	public String getGuaTipoLicenciaChofer() {
+		return this.guaTipoLicenciaChofer;
 	}
-	
+
+	public void setGuaTipoLicenciaChofer(String guaTipoLicenciaChofer) {
+		this.guaTipoLicenciaChofer = guaTipoLicenciaChofer;
+	}
+
+	public String getGuaTipoLicenciaMotorizado() {
+		return this.guaTipoLicenciaMotorizado;
+	}
+
+	public void setGuaTipoLicenciaMotorizado(String guaTipoLicenciaMotorizado) {
+		this.guaTipoLicenciaMotorizado = guaTipoLicenciaMotorizado;
+	}
+
 	public String getGuaTipoSangre() {
 		return this.guaTipoSangre;
 	}
-	
+
 	public void setGuaTipoSangre(String guaTipoSangre) {
 		this.guaTipoSangre = guaTipoSangre;
+	}
+
+	public List<HgAusencia> getHgAusencias() {
+		return this.hgAusencias;
 	}
 
 	public void setHgAusencias(List<HgAusencia> hgAusencias) {

@@ -513,15 +513,9 @@ public class horarioCDBean implements Serializable {
 						if (lugar.getLugCctv() == true
 								&& guardia.getGuaCctv() != true)
 							guardiaAplica = false;
-						if (lugar.getLugCctv() == true
-								&& sinCCTV(guardiasDisponibles) == false)
-							guardiaAplica = true;
 						if (lugar.getLugControlAccesos() == true
 								&& guardia.getGuaControlAccesos() != true)
 							guardiaAplica = false;
-						if (lugar.getLugControlAccesos() == true
-								&& sinControlAccesos(guardiasDisponibles) == false)
-							guardiaAplica = true;
 						if (guardia.getGuaCasoEstudio() == true
 								&& (fechainicial.getDay() == 0 || fechainicial
 										.getDay() == 6))
@@ -581,15 +575,9 @@ public class horarioCDBean implements Serializable {
 					if (lugar.getLugCctv() == true
 							&& guardia.getGuaCctv() != true)
 						guardiaAplica = false;
-					if (lugar.getLugCctv() == true
-							&& sinCCTVPendiente(guardiasDisponiblesPendientes) == false)
-						guardiaAplica = true;
 					if (lugar.getLugControlAccesos() == true
 							&& guardia.getGuaControlAccesos() != true)
 						guardiaAplica = false;
-					if (lugar.getLugControlAccesos() == true
-							&& sinControlAccesosPendiente(guardiasDisponiblesPendientes) == false)
-						guardiaAplica = true;
 					if (guardia.getGuaCasoEstudio() == true
 							&& (fechainicial.getDay() == 0 || fechainicial
 									.getDay() == 6))

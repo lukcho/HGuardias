@@ -49,7 +49,7 @@ public class HgGuardiasPendiente implements Serializable {
 	@Column(name="gua_correo", length=255)
 	private String guaCorreo;
 
-	@Column(name="gua_direccion",length=255)
+	@Column(name="gua_direccion", length=255)
 	private String guaDireccion;
 
 	@Column(name="gua_estado", columnDefinition="bpchar", length=1)
@@ -71,8 +71,14 @@ public class HgGuardiasPendiente implements Serializable {
 	@Column(name="gua_sexo", columnDefinition="bpchar", length=1)
 	private String guaSexo;
 
-	@Column(name="gua_telefono", length=100)
+	@Column(name="gua_telefono", length=10)
 	private String guaTelefono;
+
+	@Column(name="gua_tipo_licencia_chofer", length=2)
+	private String guaTipoLicenciaChofer;
+
+	@Column(name="gua_tipo_licencia_motorizado", length=2)
+	private String guaTipoLicenciaMotorizado;
 
 	@Column(name="gua_tipo_sangre", length=100)
 	private String guaTipoSangre;
@@ -230,6 +236,22 @@ public class HgGuardiasPendiente implements Serializable {
 
 	public void setGuaTelefono(String guaTelefono) {
 		this.guaTelefono = guaTelefono;
+	}
+
+	public String getGuaTipoLicenciaChofer() {
+		return this.guaTipoLicenciaChofer;
+	}
+
+	public void setGuaTipoLicenciaChofer(String guaTipoLicenciaChofer) {
+		this.guaTipoLicenciaChofer = guaTipoLicenciaChofer;
+	}
+
+	public String getGuaTipoLicenciaMotorizado() {
+		return this.guaTipoLicenciaMotorizado;
+	}
+
+	public void setGuaTipoLicenciaMotorizado(String guaTipoLicenciaMotorizado) {
+		this.guaTipoLicenciaMotorizado = guaTipoLicenciaMotorizado;
 	}
 
 	public String getGuaTipoSangre() {

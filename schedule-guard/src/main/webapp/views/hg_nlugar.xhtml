@@ -22,6 +22,16 @@
 			<b:panel title="Registro de Lugares" look="primary">
 				<b:row>
 					<b:column span="2">
+						<h:outputLabel value="Prioridad: " for="prio" rendered="#{lugarBean.edicion}"/>
+					</b:column>
+					<b:column span="4">
+						<h:outputLabel id="prio" value="#{lugarBean.prioridad}" rendered="#{lugarBean.edicion}">
+						</h:outputLabel>
+					</b:column>
+				</b:row>
+				<br />
+				<b:row>
+					<b:column span="2">
 						<h:outputLabel value="Nombre:* " for="lug" />
 					</b:column>
 					<b:column span="4">

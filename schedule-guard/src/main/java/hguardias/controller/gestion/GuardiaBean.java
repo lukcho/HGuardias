@@ -53,10 +53,12 @@ public class GuardiaBean implements Serializable {
 	private boolean guardia_CCTV;
 	private boolean guardia_motorizado;
 	private boolean guardia_chofer;
+	private String guardia_licencia_chofer;
 	private boolean guardia_controlaccesos;
 	private Integer guardia_casoturno;
 	private boolean guardia_casoestudio;
 	private boolean guardia_casonocturno;
+	private boolean guardia_chofer_si;
 
 	private HgGuardia guardia;
 
@@ -305,6 +307,21 @@ public class GuardiaBean implements Serializable {
 	public void setEdicionbuscar(boolean edicionbuscar) {
 		this.edicionbuscar = edicionbuscar;
 	}
+	
+	public String getGuardia_licencia_chofer() {
+		return guardia_licencia_chofer;
+	}
+	
+	public void setGuardia_licencia_chofer(String guardia_licencia_chofer) {
+		this.guardia_licencia_chofer = guardia_licencia_chofer;
+	}
+	public boolean isGuardia_chofer_si() {
+		return guardia_chofer_si;
+	}
+	
+	public void setGuardia_chofer_si(boolean guardia_chofer_si) {
+		this.guardia_chofer_si = guardia_chofer_si;
+	}
 
 	// guardias
 	/**
@@ -329,7 +346,7 @@ public class GuardiaBean implements Serializable {
 						sqlfechai, guardia_ciudad.trim(), guardia_sexo.trim(),
 						guardia_telefono.trim(), guardia_celular.trim(),
 						guardia_correo.trim(), guardia_direccion.trim(),
-						guardia_CCTV, guardia_motorizado, guardia_chofer,
+						guardia_CCTV, guardia_motorizado, guardia_chofer,guardia_licencia_chofer,
 						guardia_controlaccesos, guardia_casoturno,
 						guardia_casoestudio, guardia_casonocturno,
 						guardia_estadoCivil, guardia_tipoSangre,
@@ -351,7 +368,7 @@ public class GuardiaBean implements Serializable {
 							guardia_sexo.trim(), guardia_telefono.trim(),
 							guardia_celular.trim(), guardia_correo.trim(),
 							guardia_direccion.trim(), guardia_CCTV,
-							guardia_motorizado, guardia_chofer,
+							guardia_motorizado, guardia_chofer,guardia_licencia_chofer,
 							guardia_controlaccesos, guardia_casoturno,
 							guardia_casoestudio, guardia_casonocturno,
 							guardia_estadoCivil, guardia_tipoSangre);
@@ -388,6 +405,7 @@ public class GuardiaBean implements Serializable {
 		guardia_CCTV = false;
 		guardia_motorizado = false;
 		guardia_chofer = false;
+		guardia_licencia_chofer=null;
 		guardia_controlaccesos = false;
 		guardia_casoturno = null;
 		guardia_casoestudio = false;
@@ -435,6 +453,7 @@ public class GuardiaBean implements Serializable {
 			guardia_CCTV = guardia.getGuaCctv();
 			guardia_motorizado = guardia.getGuaMotorizado();
 			guardia_chofer = guardia.getGuaChofer();
+			guardia_licencia_chofer = guardia.getGuaTipoLicenciaChofer();
 			guardia_controlaccesos = guardia.getGuaControlAccesos();
 			guardia_casoturno = guardia.getGuaCasoTurno();
 			guardia_casoestudio = guardia.getGuaCasoEstudio();
@@ -544,6 +563,27 @@ public class GuardiaBean implements Serializable {
 						+ Funciones.valorEstadoFemenino));
 		return lista;
 	}
+	
+	/**
+	 * Lista de LICENCIAS
+	 * 
+	 * @return lista de items de estados
+	 */
+	public List<SelectItem> getlistLicencias() {
+		List<SelectItem> lista = new ArrayList<SelectItem>();
+		lista.add(new SelectItem(Funciones.valorEstadoA,Funciones.valorEstadoA));
+		lista.add(new SelectItem(Funciones.valorEstadoA1,Funciones.valorEstadoA1));
+		lista.add(new SelectItem(Funciones.valorEstadoB,Funciones.valorEstadoB ));
+		lista.add(new SelectItem(Funciones.valorEstadoC,Funciones.valorEstadoC ));
+		lista.add(new SelectItem(Funciones.valorEstadoC1,Funciones.valorEstadoC1 ));
+		lista.add(new SelectItem(Funciones.valorEstadoD,Funciones.valorEstadoD ));
+		lista.add(new SelectItem(Funciones.valorEstadoD1,Funciones.valorEstadoD1 ));
+		lista.add(new SelectItem(Funciones.valorEstadoE,Funciones.valorEstadoE ));
+		lista.add(new SelectItem(Funciones.valorEstadoE1,Funciones.valorEstadoE1 ));
+		lista.add(new SelectItem(Funciones.valorEstadoF,Funciones.valorEstadoF ));
+		lista.add(new SelectItem(Funciones.valorEstadoG,Funciones.valorEstadoG ));
+		return lista;
+	}
 
 	/**
 	 * Redirecciona a la pagina de creacion de guardias
@@ -567,12 +607,14 @@ public class GuardiaBean implements Serializable {
 		guardia_CCTV = false;
 		guardia_motorizado = false;
 		guardia_chofer = false;
+		guardia_licencia_chofer=null;
 		guardia_controlaccesos = false;
 		guardia_casoturno = null;
 		guardia_casoestudio = false;
 		guardia_casonocturno = false;
 		mostrarguardia_id = false;
 		edicion = false;
+		guardia_chofer_si=true;
 		edicionbuscar = true;
 		return "hg_nguardia?faces-redirect=true";
 	}
@@ -601,6 +643,7 @@ public class GuardiaBean implements Serializable {
 		guardia_CCTV = false;
 		guardia_motorizado = false;
 		guardia_chofer = false;
+		guardia_licencia_chofer=null;
 		guardia_controlaccesos = false;
 		guardia_casoturno = null;
 		guardia_casoestudio = false;
@@ -608,6 +651,7 @@ public class GuardiaBean implements Serializable {
 		mostrarguardia_id = false;
 		edicion = false;
 		edicionbuscar = true;
+		guardia_chofer_si=true;
 		getListaguardias().clear();
 		getListaguardias().addAll(managergest.findAllGuardias());
 		return "hg_guardias?faces-redirect=true";
@@ -722,7 +766,14 @@ public class GuardiaBean implements Serializable {
 		} else {
 			Mensaje.crearMensajeWARN("No se encuentra dicha persona.");
 		}
-
+	}
+	
+	public void mostrarLicencia(){
+		if(guardia_chofer==true){
+			guardia_chofer_si=false;
+		}else{
+			guardia_chofer_si=true;
+		}
 	}
 
 }

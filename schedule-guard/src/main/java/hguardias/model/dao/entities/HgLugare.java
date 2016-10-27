@@ -54,6 +54,9 @@ public class HgLugare implements Serializable {
 	@Column(name="lug_nro_guardias")
 	private Integer lugNroGuardias;
 
+	@Column(name="lug_prioridad")
+	private Integer lugPrioridad;
+
 	@Column(name="lug_sabado")
 	private Boolean lugSabado;
 
@@ -67,6 +70,10 @@ public class HgLugare implements Serializable {
 	//bi-directional many-to-one association to HgLugarTurno
 	@OneToMany(mappedBy="hgLugare")
 	private List<HgLugarTurno> hgLugarTurnos;
+
+	//bi-directional many-to-one association to HgLugaresTurnosVacio
+	@OneToMany(mappedBy="hgLugare")
+	private List<HgLugaresTurnosVacio> hgLugaresTurnosVacios;
 
 	public HgLugare() {
 	}
@@ -167,6 +174,14 @@ public class HgLugare implements Serializable {
 		this.lugNroGuardias = lugNroGuardias;
 	}
 
+	public Integer getLugPrioridad() {
+		return this.lugPrioridad;
+	}
+
+	public void setLugPrioridad(Integer lugPrioridad) {
+		this.lugPrioridad = lugPrioridad;
+	}
+
 	public Boolean getLugSabado() {
 		return this.lugSabado;
 	}
@@ -225,6 +240,28 @@ public class HgLugare implements Serializable {
 		hgLugarTurno.setHgLugare(null);
 
 		return hgLugarTurno;
+	}
+
+	public List<HgLugaresTurnosVacio> getHgLugaresTurnosVacios() {
+		return this.hgLugaresTurnosVacios;
+	}
+
+	public void setHgLugaresTurnosVacios(List<HgLugaresTurnosVacio> hgLugaresTurnosVacios) {
+		this.hgLugaresTurnosVacios = hgLugaresTurnosVacios;
+	}
+
+	public HgLugaresTurnosVacio addHgLugaresTurnosVacio(HgLugaresTurnosVacio hgLugaresTurnosVacio) {
+		getHgLugaresTurnosVacios().add(hgLugaresTurnosVacio);
+		hgLugaresTurnosVacio.setHgLugare(this);
+
+		return hgLugaresTurnosVacio;
+	}
+
+	public HgLugaresTurnosVacio removeHgLugaresTurnosVacio(HgLugaresTurnosVacio hgLugaresTurnosVacio) {
+		getHgLugaresTurnosVacios().remove(hgLugaresTurnosVacio);
+		hgLugaresTurnosVacio.setHgLugare(null);
+
+		return hgLugaresTurnosVacio;
 	}
 
 }
