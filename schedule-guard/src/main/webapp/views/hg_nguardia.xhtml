@@ -222,25 +222,33 @@
 						<h:outputLabel value="Es Chofer:* " for="chof" />
 					</b:column>
 					<b:column span="3" style="margin-bottom:10px">
-						<p:selectOneRadio id="chof" value="#{guardiaBean.guardia_chofer}" 
+						<p:selectOneRadio id="chof" value="#{guardiaBean.guardia_chofer}"
 							style="margin-top:10px">
 							<f:selectItem itemLabel="SI" itemValue="true" />
 							<f:selectItem itemLabel="NO" itemValue="false" />
-							<p:ajax listener="#{guardiaBean.mostrarLicencia()}"  event="change" 
-											 update="licchof" />
+							<p:ajax listener="#{guardiaBean.mostrarLicencia()}"
+								event="change" update="licchof" />
 						</p:selectOneRadio>
 					</b:column>
 				</b:row>
 				<br />
 				<b:row>
-					<b:column span="5"></b:column>
 					<b:column span="2">
-						<h:outputLabel value="Licencia tipo:* " for="licchof" />
+						<h:outputLabel value="Motorizado licencia: "
+							rendered="#{guardiaBean.edicion}" />
 					</b:column>
 					<b:column span="3">
-						<b:selectOneMenu id="licchof" disabled="#{guardiaBean.guardia_chofer_si}" 
-						value="#{guardiaBean.guardia_licencia_chofer}">
-							<f:selectItem itemLabel="Seleccione licencia" itemValue=""/>
+						<h:outputLabel value="#{guardiaBean.guardia_licencia_motorizado}"
+							rendered="#{guardiaBean.edicion}" />
+					</b:column>
+					<b:column span="2">
+						<h:outputLabel value="Chofer licencia tipo:* " for="licchof" />
+					</b:column>
+					<b:column span="3">
+						<b:selectOneMenu id="licchof"
+							disabled="#{guardiaBean.guardia_chofer_si}"
+							value="#{guardiaBean.guardia_licencia_chofer}">
+							<f:selectItem itemLabel="Seleccione licencia" itemValue="" />
 							<f:selectItems value="#{guardiaBean.listLicencias}" />
 						</b:selectOneMenu>
 					</b:column>

@@ -267,11 +267,15 @@ public class ManagerGestion {
 		gua.setGuaCctv(gua_cctv);
 		gua.setGuaMotorizado(gua_motorizado);
 		gua.setGuaChofer(gua_chofer);
-		if(gua_motorizado=true)
-		{
-			gua.setGuaTipoLicenciaChofer("A");
-		}else if(gua_chofer==true){
+		if(gua_motorizado==true){
+			gua.setGuaTipoLicenciaMotorizado("A");
+		}else{
+			gua.setGuaTipoLicenciaMotorizado(null);
+		}
+		if(gua_chofer== true){
 			gua.setGuaTipoLicenciaChofer(gua_licencia_chofer);
+		}else{
+			gua.setGuaTipoLicenciaChofer(null);
 		}
 		gua.setGuaControlAccesos(gua_controlaccs);
 		gua.setGuaCasoTurno(gua_casoturno);
@@ -316,11 +320,15 @@ public class ManagerGestion {
 		gua.setGuaCctv(gua_cctv);
 		gua.setGuaMotorizado(gua_motorizado);
 		gua.setGuaChofer(gua_chofer);
-		if(gua_motorizado==true)
-		{
-			gua.setGuaTipoLicenciaChofer("A");
-		}else if(gua_chofer== true){
+		if(gua_motorizado==true){
+			gua.setGuaTipoLicenciaMotorizado("A");
+		}else{
+			gua.setGuaTipoLicenciaMotorizado(null);
+		}
+		if(gua_chofer== true){
 			gua.setGuaTipoLicenciaChofer(gua_licencia_chofer);
+		}else{
+			gua.setGuaTipoLicenciaChofer(null);
 		}
 		gua.setGuaControlAccesos(gua_controlaccs);
 		gua.setGuaCasoTurno(gua_casoturno);
