@@ -682,4 +682,36 @@ public class ManagerHorario {
 			return mDAO.findWhere(HgAusencia.class, " o.hgGuardia.guaCedula = '"+cedula+"' "
 					+ "and o.ausFechaInicio <= '"+finicial+"' and o.ausFechaFin >= '"+finicial+"' ", null).size();
 		}
+		
+		//cambio de turnos
+		
+		/**
+		 * buscar los horariosdet por ID
+		 * 
+		 * @param hdet_id
+		 * @throws Exception
+		 */
+		@SuppressWarnings("unchecked")
+		public List<HgHorarioDet> horarioDetByCedulaFecha(String cedula, Date fecha) throws Exception {
+			Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fecha));
+			return mDAO.findWhere(HgHorarioDet.class," o.hdetFechaInicio = '"+finicial+"' and o.hgGuardia.guaCedula = '"+cedula+"' ",null);
+		}
+		
+		/**
+		 * Cambiar datos de cabecera
+		 * 
+		 * @param turno_id
+		 * @param tur_descripcion
+		 * @param tur_hora_inicio
+		 * @param tur_hora_fin
+		 * @param estado
+		 * @throws Exception
+		 */
+		public void editarGuardiasDetalle(HgHorarioDet hdet)
+				throws Exception {
+			HgHorarioDet detalle = this.horarioDetByID(hdet.getHdetId());
+			detalle.setHgGuardia(hdet.getHgGuardia());
+			mDAO.actualizar(detalle);
+		}
+		
 }

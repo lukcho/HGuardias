@@ -39,7 +39,7 @@
 					reflow="true" var="lug" rows="10" emptyMessage="Sin Datos"
 					paginator="true"
 					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
-					<p:column headerText="OPCIONES" width="40">
+					<p:column headerText="OPCIONES" width="40" exportable="false">
 						<p:commandButton id="btnE" icon="ui-icon-pencil"
 							action="#{lugarBean.cargarLugar(lug)}">
 							<p:tooltip id="toolTipTrack1" for="btnE"
@@ -74,6 +74,22 @@
 						<h:outputText value="#{lug.lugEstado}"></h:outputText>
 					</p:column>
 				</p:dataTable>
+				<h3>Exportar Datos</h3>
+					<h:commandButton style="width:40px;height:40px" ajax="false"
+						image="/resources/img/excel.png">
+						<p:dataExporter type="xls" target="tbb" fileName="rptlugares"
+							pageOnly="false" />
+					</h:commandButton>&nbsp;&nbsp;&nbsp;
+					<h:commandButton style="width:40px;height:40px" ajax="false"
+						image="/resources/img/pdf.png">
+						<p:dataExporter type="pdf" target="tbb" fileName="rptlugares"
+							pageOnly="false" />
+					</h:commandButton>&nbsp;&nbsp;&nbsp;
+					<h:commandButton style="width:40px;height:40px" ajax="false"
+						image="/resources/img/csv.png">
+						<p:dataExporter type="csv" target="tbb" fileName="rptlugares"
+							pageOnly="false" />
+					</h:commandButton>&nbsp;&nbsp;&nbsp;
 			</b:panel>
 		</h:form>
 		<p:dialog responsive="true" header="Prioridad de lugares" width="360"

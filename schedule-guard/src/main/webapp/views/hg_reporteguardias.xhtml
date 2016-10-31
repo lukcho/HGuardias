@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="titulo">
+            Reporte Guardias
+        </ui:define>
+	<ui:define name="contenido">
+		<h:form>
+			<center>
+				<h1>Reporte de Guardias</h1>
+			</center>
+			<b:row>
+				<p:remoteCommand name="onload"
+					actionListener="#{sesionBean.validaIndex()}" autoRun="true" />
+			</b:row>
+		</h:form>
+		<br />
+		<h:form id="frm">
+			<p:growl id="messages" showDetail="false" />
+			<b:panel title="Listado de Guardias" look="primary">
+				<p:dataTable id="tbb" value="#{reporteGuardiaBean.listaguardias}"
+					scrollable="true" scrollWidth="98%" reflow="true" var="gua"
+					rows="20" emptyMessage="Sin Datos" paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+					<f:facet name="header">
+						<p:commandButton id="toggler" type="button" value="Columns"
+							style="float:right" icon="ui-icon-calculator" />
+						<p:columnToggler datasource="tbb" trigger="toggler" />
+					</f:facet>
+					<p:column filterBy="#{gua.guaCedula}" filterMatchMode="contains"
+						sortBy="#{gua.guaCedula}" headerText="CÉDULA" width="70">
+						<h:outputText value="#{gua.guaCedula}"></h:outputText>
+					</p:column>
+					<p:column filterBy="#{gua.guaApellido}" filterMatchMode="contains"
+						headerText="NOMBRE/APELLIDO" width="120">
+						<h:outputText value="#{gua.guaNombre} #{gua.guaApellido}"></h:outputText>
+					</p:column>
+					<p:column headerText="SEXO" sortBy="#{gua.guaSexo}" width="30">
+						<h:outputText value="#{gua.guaSexo}"></h:outputText>
+					</p:column>
+					<p:column headerText="CORREO" width="150">
+						<h:outputText value="#{gua.guaCorreo}"></h:outputText>
+					</p:column>
+					<p:column headerText="CIUDAD" width="55" sortBy="#{gua.guaCiudad}">
+						<h:outputText value="#{gua.guaCiudad}"></h:outputText>
+					</p:column>
+					<p:column headerText="DIR." width="55">
+						<h:outputText value="#{gua.guaDireccion}"></h:outputText>
+					</p:column>
+					<p:column headerText="E. CIVIL" width="55"
+						sortBy="#{gua.guaEstadoCivil}">
+						<h:outputText value="#{gua.guaEstadoCivil}"></h:outputText>
+					</p:column>
+					<p:column headerText="T. SANGRE" width="35"
+						sortBy="#{gua.guaTipoSangre}">
+						<h:outputText value="#{gua.guaTipoSangre}"></h:outputText>
+					</p:column>
+					<p:column headerText="TELÉF." width="40">
+						<h:outputText value="#{gua.guaTelefono}"></h:outputText>
+					</p:column>
+					<p:column headerText="CEL." width="35">
+						<h:outputText value="#{gua.guaCelular}"></h:outputText>
+					</p:column>
+					<p:column headerText="CCTV" width="30" sortBy="#{gua.guaCctv}">
+						<p:selectBooleanCheckbox disabled="true" value="#{gua.guaCctv}" />
+					</p:column>
+					<p:column headerText="CNTRL. ACCS" width="30"
+						sortBy="#{gua.guaControlAccesos}">
+						<p:selectBooleanCheckbox disabled="true"
+							value="#{gua.guaControlAccesos}" />
+					</p:column>
+					<p:column headerText="MOTORIZADO" width="30"
+						sortBy="#{gua.guaMotorizado}">
+						<p:selectBooleanCheckbox disabled="true"
+							value="#{gua.guaMotorizado}" />
+					</p:column>
+					<p:column headerText="CHOFER" width="30" sortBy="#{gua.guaChofer}">
+						<p:selectBooleanCheckbox disabled="true" value="#{gua.guaChofer}" />
+					</p:column>
+					<p:column headerText="ESTUDIO" width="30"
+						sortBy="#{gua.guaCasoEstudio}">
+						<p:selectBooleanCheckbox disabled="true"
+							value="#{gua.guaCasoEstudio}" />
+					</p:column>
+					<p:column headerText="NOCTURNO" width="30"
+						sortBy="#{gua.guaCasoNocturno}">
+						<p:selectBooleanCheckbox disabled="true"
+							value="#{gua.guaCasoNocturno}" />
+					</p:column>
+					<p:column headerText="TURNO" width="30"
+						sortBy="#{reporteGuardiaBean.cambiarNombre(gua.guaCasoTurno)}">
+						<h:outputText
+							value="#{reporteGuardiaBean.cambiarNombre(gua.guaCasoTurno)}"></h:outputText>
+					</p:column>
+					<p:column headerText="ESTADO" filterMatchMode="contains" width="50">
+						<h:outputText value="#{gua.guaEstado}"></h:outputText>
+					</p:column>
+				</p:dataTable>
+				<h3>Exportar Datos</h3>
+				<h:commandButton style="width:40px;height:40px" ajax="false"
+					image="/resources/img/excel.png">
+					<p:dataExporter type="xls" target="tbb" fileName="rptguardias"
+						pageOnly="false" />
+				</h:commandButton>&nbsp;&nbsp;&nbsp;
+					<h:commandButton style="width:40px;height:40px" ajax="false"
+					image="/resources/img/pdf.png">
+					<p:dataExporter type="pdf" target="tbb" fileName="rptguardias"
+						pageOnly="false" />
+				</h:commandButton>&nbsp;&nbsp;&nbsp;
+					
+					<h:commandButton style="width:40px;height:40px" ajax="false"
+					image="/resources/img/csv.png">
+					<p:dataExporter type="csv" target="tbb" fileName="rptguardias"
+						pageOnly="false" />
+				</h:commandButton>&nbsp;&nbsp;&nbsp;
+			</b:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

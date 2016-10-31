@@ -1015,4 +1015,46 @@ public class ManagerGestion {
 		return orden;
 	}
 	
+	/**
+	 * Método que permite asegurar obtener guardias que estaban libres los 2
+	 * dias
+	 * 
+	 * @param fechainicial
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<HgGuardia> findGuardiasXFecha(Date fechainicial) {
+		List<HgGuardia> l = new ArrayList<HgGuardia>();
+		Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechainicial));
+		List<Object> lista = mDAO
+				.ejectNativeSQL3("select o.gua_cedula, o.gua_nombre, o.gua_apellido, o.gua_estado, "
+						+ "o.gua_cctv, o.gua_motorizado, o.gua_chofer, o.gua_control_accesos, "
+						+ "o.gua_caso_estudio, o.gua_caso_nocturno from hg_guardias o where "
+						+ "o.gua_estado='A' and o.gua_cedula in "
+						+ "( select p.gua_cedula from hg_horario_det p where p.hdet_fecha_inicio = '"
+						+finicial+ "') order by o.gua_apellido ");
+		l = ObjectToClassxFecha(lista);
+		return l;
+	}
+
+	private List<HgGuardia> ObjectToClassxFecha(List<Object> lista) {
+		List<HgGuardia> li = new ArrayList<HgGuardia>();
+		Iterator it = lista.iterator();
+		while (it.hasNext()) {
+			HgGuardia s = new HgGuardia();
+			Object[] obj = (Object[]) it.next();
+			s.setGuaCedula(String.valueOf(obj[0]));
+			s.setGuaNombre(String.valueOf(obj[1]));
+			s.setGuaApellido(String.valueOf(obj[2]));
+			s.setGuaEstado(String.valueOf(obj[3]));
+			s.setGuaCctv(Boolean.valueOf(String.valueOf(obj[4])));
+			s.setGuaMotorizado(Boolean.valueOf(String.valueOf(obj[5])));
+			s.setGuaChofer(Boolean.valueOf(String.valueOf(obj[6])));
+			s.setGuaControlAccesos(Boolean.valueOf(String.valueOf(obj[7])));
+			s.setGuaCasoEstudio(Boolean.valueOf(String.valueOf(obj[8])));
+			s.setGuaCasoNocturno(Boolean.valueOf(String.valueOf(obj[9])));
+			li.add(s);
+		}
+		return li;
+	}
 }

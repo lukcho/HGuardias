@@ -38,7 +38,7 @@
 					reflow="true" var="gua" rows="20" emptyMessage="Sin Datos"
 					paginator="true"
 					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
-					<p:column headerText="OPCIONES" width="40">
+					<p:column headerText="OPCIONES" width="40" exportable="false">
 						<p:commandButton id="btnE" icon="ui-icon-pencil"
 							action="#{guardiaBean.cargarGuardia(gua)}">
 							<p:tooltip id="toolTipTrack1" for="btnE"
@@ -71,6 +71,23 @@
 						<h:outputText value="#{gua.guaEstado}"></h:outputText>
 					</p:column>
 				</p:dataTable>
+				<h3>Exportar Datos</h3>
+					<h:commandButton style="width:40px;height:40px" ajax="false"
+						image="/resources/img/excel.png">
+						<p:dataExporter type="xls" target="tbb2" fileName="rptguardias"
+							pageOnly="false" />
+					</h:commandButton>&nbsp;&nbsp;&nbsp;
+					<h:commandButton style="width:40px;height:40px" ajax="false"
+						image="/resources/img/pdf.png">
+						<p:dataExporter type="pdf" target="tbb2" fileName="rptguardias"
+							pageOnly="false" />
+					</h:commandButton>&nbsp;&nbsp;&nbsp;
+					
+					<h:commandButton style="width:40px;height:40px" ajax="false"
+						image="/resources/img/csv.png">
+						<p:dataExporter type="csv" target="tbb2" fileName="rptguardias"
+							pageOnly="false" />
+					</h:commandButton>&nbsp;&nbsp;&nbsp;
 			</b:panel>
 		</h:form>
 	</ui:define>

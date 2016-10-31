@@ -91,7 +91,21 @@ public class horarioCDBean implements Serializable {
 	private Integer numeroRegistrosTotal;
 	private Integer numeroLugaresVacios;
 	private Integer numeroRegistrosCreados;
+	
+//	Cambio turno
+	private Date cambio_fecha;
+	private List<HgGuardia> listaguardiasXFecha;
+	private HgGuardia guardia1;
+	private HgGuardia guardia2;
+	private String guardiaId1;
+	private String guardiaId2;
+	private String nombreguardia1;
+	private String apellidoguardia1;
+	private String nombreguardia2;
+	private String apellidoguardia2;
 
+	private List<SelectItem> lstGuardias;
+	
 	@Inject
 	SesionBean ms;
 
@@ -121,6 +135,17 @@ public class horarioCDBean implements Serializable {
 		numeroLugaresVacios = 0;
 		numeroRegistrosCreados = 0;
 		numeroRegistrosTotal = 0;
+		listaguardiasXFecha = new ArrayList<HgGuardia>();
+		guardia1 = new HgGuardia();
+		guardia2 = new HgGuardia();
+		cambio_fecha = null;
+		guardiaId1 = null;
+		guardiaId2=null;
+		nombreguardia1 = "";
+		apellidoguardia1 = "";
+		nombreguardia2 = "";
+		apellidoguardia2 = "";
+		lstGuardias = new ArrayList<SelectItem>();
 	}
 
 	public java.sql.Date getSqlfechai() {
@@ -304,7 +329,79 @@ public class horarioCDBean implements Serializable {
 	public void setNumeroRegistrosTotal(Integer numeroRegistrosTotal) {
 		this.numeroRegistrosTotal = numeroRegistrosTotal;
 	}
+	
+	public Date getCambio_fecha() {
+		return cambio_fecha;
+	}
+	
+	public void setCambio_fecha(Date cambio_fecha) {
+		this.cambio_fecha = cambio_fecha;
+	}
 
+	public List<HgGuardia> getListaguardiasXFecha() {
+		return listaguardiasXFecha;
+	}
+	
+	public void setListaguardiasXFecha(List<HgGuardia> listaguardiasXFecha) {
+		this.listaguardiasXFecha = listaguardiasXFecha;
+	}
+	
+	public String getGuardiaId1() {
+		return guardiaId1;
+	}
+	
+	public String getGuardiaId2() {
+		return guardiaId2;
+	}
+	
+	public void setGuardiaId1(String guardiaId1) {
+		this.guardiaId1 = guardiaId1;
+	}
+	
+	public void setGuardiaId2(String guardiaId2) {
+		this.guardiaId2 = guardiaId2;
+	}
+	
+	public String getNombreguardia1() {
+		return nombreguardia1;
+	}
+	
+	public String getApellidoguardia1() {
+		return apellidoguardia1;
+	}
+	
+	public String getApellidoguardia2() {
+		return apellidoguardia2;
+	}
+	
+	public String getNombreguardia2() {
+		return nombreguardia2;
+	}
+	
+	public void setNombreguardia1(String nombreguardia1) {
+		this.nombreguardia1 = nombreguardia1;
+	}
+	
+	public void setNombreguardia2(String nombreguardia2) {
+		this.nombreguardia2 = nombreguardia2;
+	}
+	
+	public void setApellidoguardia1(String apellidoguardia1) {
+		this.apellidoguardia1 = apellidoguardia1;
+	}
+	
+	public void setApellidoguardia2(String apellidoguardia2) {
+		this.apellidoguardia2 = apellidoguardia2;
+	}
+	
+	public List<SelectItem> getLstGuardias() {
+		return lstGuardias;
+	}
+	
+	public void setLstGuardias(List<SelectItem> lstGuardias) {
+		this.lstGuardias = lstGuardias;
+	}
+	
 	// horariocab
 	/**
 	 * accion para invocar el manager y crear horario
@@ -346,8 +443,6 @@ public class horarioCDBean implements Serializable {
 		try {
 			Date fechainicial = java.sql.Date.valueOf(new SimpleDateFormat(
 					"yyyy-MM-dd").format(sqlfechai));
-			Date fechafinal = java.sql.Date.valueOf(new SimpleDateFormat(
-					"yyyy-MM-dd").format(sqlfechaf));
 			Integer dias = diasXFi_Ff();
 			for (Integer numeroDia = 0; numeroDia <= dias; numeroDia++) {
 				for (HgLugare lugar : lugares) {
@@ -367,20 +462,20 @@ public class horarioCDBean implements Serializable {
 										if (managerhorario
 												.guardiaPendienteByID(guardiaAlmacenar.getGuaCedula()) != null) {
 											almacenarDetalles(guardiaAlmacenar,lugar,
-													lugarTurno.getHgTurno(),fechainicial, fechainicial,cab_id);
+													lugarTurno.getHgTurno(),fechainicial, null,cab_id);
 											managerhorario
 													.EliminarGuardiaPendienteLibre(guardiaAlmacenar);
 										} else {
 											almacenarDetalles(guardiaAlmacenar,
 													lugar,
 													lugarTurno.getHgTurno(),
-													fechainicial, fechainicial,
+													fechainicial, null,
 													cab_id);
 										}
 									} else {
 										almacenarDetalles(guardiaAlmacenar,
 												lugar, lugarTurno.getHgTurno(),
-												fechainicial, fechainicial,
+												fechainicial, null,
 												cab_id);
 										managerhorario
 												.insertarGuardiaPendienteLibre(guardiaAlmacenar);
@@ -652,44 +747,6 @@ public class horarioCDBean implements Serializable {
 		return guardia;
 	}
 
-	private boolean sinCCTV(List<HgGuardia> hgGuardia) {
-		boolean resultado = true;
-		for (HgGuardia guardia : hgGuardia) {
-			if (guardia.getGuaCctv() == false)
-				resultado = false;
-		}
-		return resultado;
-	}
-
-	private boolean sinCCTVPendiente(
-			List<HgGuardiasPendiente> hgGuardiasPendientes) {
-		boolean resultado = true;
-		for (HgGuardiasPendiente guardia : hgGuardiasPendientes) {
-			if (guardia.getGuaCctv() == false)
-				resultado = false;
-		}
-		return resultado;
-	}
-
-	private boolean sinControlAccesos(List<HgGuardia> hgGuardia) {
-		boolean resultado = true;
-		for (HgGuardia guardia : hgGuardia) {
-			if (guardia.getGuaControlAccesos() == false)
-				resultado = false;
-		}
-		return resultado;
-	}
-
-	private boolean sinControlAccesosPendiente(
-			List<HgGuardiasPendiente> hgGuardia) {
-		boolean resultado = true;
-		for (HgGuardiasPendiente guardia : hgGuardia) {
-			if (guardia.getGuaControlAccesos() == false)
-				resultado = false;
-		}
-		return resultado;
-	}
-
 	public Integer diasXFi_Ff() {
 		Long diff = sqlfechaf.getTime() - sqlfechai.getTime();
 		return (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
@@ -804,6 +861,14 @@ public class horarioCDBean implements Serializable {
 		getListaLugarTurnoVacio().clear();
 		getListaLugarTurnoVacio().addAll(managergest.allLugarTurnoByID(cab_id));
 		RequestContext.getCurrentInstance().execute("PF('info').show();");
+	}
+	
+	/**
+	 * accion para abrir el dialogo
+	 * 
+	 */
+	public void abrirDialog2() {
+		RequestContext.getCurrentInstance().execute("PF('cambioturno').show();");
 	}
 
 	/**
@@ -931,5 +996,144 @@ public class horarioCDBean implements Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	
+	//cambio de turno
+	public void obtenerGuardiaXFecha() {
+		Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(cambio_fecha));
+		cargarGuardias(finicial);
+	}
+	
+	public void cargarGuardias( Date finicial){
+		getLstGuardias().clear();
+		getLstGuardias().add(new SelectItem("", " --Seleccione-- "));
+		listaguardiasXFecha = managergest.findGuardiasXFecha(finicial);
+		for (HgGuardia i : listaguardiasXFecha) {
+			getLstGuardias().add(new SelectItem(i.getGuaCedula(), i.getGuaCedula()+ " | "
+					+ i.getGuaApellido()+ " " + i.getGuaNombre()));
+		}
+	}
+
+	/**
+	 * Mestodo q carga datos del guardia
+	 * 
+	 * @return guardia
+	 */
+	public void mostrara() {
+		HgGuardia gua;
+		try {
+			nombreguardia1 = "";
+			apellidoguardia1 = "";
+			gua = managergest.guardiaByID(guardiaId1);
+			nombreguardia1 = gua.getGuaNombre();
+			apellidoguardia1 = gua.getGuaApellido();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Mestodo q carga datos del guardia
+	 * 
+	 * @return guardia
+	 */
+	public void mostrarb() {
+		HgGuardia gua;
+		try {
+			nombreguardia2 = "";
+			apellidoguardia2 = "";
+			gua = managergest.guardiaByID(guardiaId2);
+			nombreguardia2 = gua.getGuaNombre();
+			apellidoguardia2 = gua.getGuaApellido();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * metodo para asignar el guardia
+	 * 
+	 */
+	public String asignarGuardia1() {
+		guardia1 = managergest.asignarGuardia(guardiaId1);
+		return "";
+	}
+
+	/**
+	 * metodo para asignar el guardia
+	 * 
+	 */
+	public String asignarGuardia2() {
+		guardia2 = managergest.asignarGuardia(guardiaId2);
+		return "";
+	}
+	
+	/**
+	 * accion para abrir el dialogo
+	 * 
+	 */
+	public void abrirDialogConfirm() {
+			RequestContext.getCurrentInstance().execute("PF('cambio').show();");
+	}
+
+	/**
+	 * limpia la informacion de ausencia
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public String volverCambio() throws Exception {
+		cambio_fecha = null;
+		guardiaId1 = null;
+		guardiaId2=null;
+		nombreguardia1 = "";
+		apellidoguardia1 = "";
+		nombreguardia2 = "";
+		apellidoguardia2 = "";
+		listaguardiasXFecha.clear();
+		return "hg_nhorario?faces-redirect=true";
+	}
+	
+	public String cambioGuardias() {
+		try {
+			HgGuardia guardiaID1 = null;
+			HgGuardia guardiaID2 = null;
+			List<HgHorarioDet> horarioDetalleGuardia1 = managerhorario.horarioDetByCedulaFecha(guardiaId1,cambio_fecha);
+			List<HgHorarioDet> horarioDetalleGuardia2 = managerhorario.horarioDetByCedulaFecha(guardiaId2,cambio_fecha);
+			
+			for(HgHorarioDet hordet1 : horarioDetalleGuardia1){
+				for(HgHorarioDet hordet2 : horarioDetalleGuardia2){
+					if(hordet1.getHgTurno().getTurId() == 1 || hordet2.getHgTurno().getTurId() == 1){
+						if ((managerhorario.existeGuardiaXturnoMNoc(hordet2.getHgHorarioCab().getHcabId(),restDays(cambio_fecha), guardiaId1) == 1)||
+						managerhorario.existeGuardiaXturnoMNoc(hordet1.getHgHorarioCab().getHcabId(),restDays(cambio_fecha), guardiaId2) == 1){
+						Mensaje.crearMensajeWARN("El día anterior el guardia trabaja en turno nocturno, no se puede realizar esta acción");
+						}else{
+							guardiaID1 = guardia1;
+							guardiaID2 = guardia2;
+							hordet2.setHgGuardia(guardiaID1);
+							hordet1.setHgGuardia(guardiaID2);
+							managerhorario.editarGuardiasDetalle(hordet1);
+							managerhorario.editarGuardiasDetalle(hordet2);
+							Mensaje.crearMensajeINFO("El cambio se realizó correctamente");
+						}
+					}else{
+						guardiaID1 = guardia1;
+						guardiaID2 = guardia2;
+						hordet2.setHgGuardia(guardiaID1);
+						hordet1.setHgGuardia(guardiaID2);
+						managerhorario.editarGuardiasDetalle(hordet1);
+						managerhorario.editarGuardiasDetalle(hordet2);
+						Mensaje.crearMensajeINFO("El cambio se realizó correctamente");
+						RequestContext.getCurrentInstance().execute("PF('cambio').hide();");
+					}
+				}
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		getListaHorarioDet().clear();
+		getListaHorarioDet().addAll(managerhorario.findAllHorariosDetXIdCab(cab_id));
+		return "";
 	}
 }
