@@ -367,7 +367,7 @@ public class ausenciaBean implements Serializable {
 		for (HgGuardia t : managergest.findAllGuardias()) {
 			if (!t.getGuaEstado().equals("I")) {
 				listadoSI.add(new SelectItem(t.getGuaCedula(), t.getGuaCedula()
-						+ " - " + t.getGuaNombre() + " " + t.getGuaApellido()));
+						+ " " + t.getGuaApellido() +" "+ t.getGuaNombre() ));
 			}
 		}
 		return listadoSI;

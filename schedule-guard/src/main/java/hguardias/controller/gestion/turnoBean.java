@@ -33,6 +33,7 @@ public class turnoBean implements Serializable {
 	@EJB
 	private ManagerGestion managergest;
 
+	private static String Activo = "A";
 	// Turnos
 	private Integer turno_id;
 	private String turno_descripcion;
@@ -381,5 +382,13 @@ public class turnoBean implements Serializable {
 		lista.add(new SelectItem(Funciones.hora_23, Funciones.hora_23));
 		lista.add(new SelectItem(Funciones.hora_24, Funciones.hora_24));
 		return lista;
+	}
+	
+	public String cambiarNombre(String param){
+		if(param.equals(Activo)){
+			return "Activo";
+		}else{
+			return "Inactivo";
+		}
 	}
 }

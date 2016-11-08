@@ -28,7 +28,7 @@
 						<h:panelGroup>
 							<p:selectOneMenu required="true"
 								value="#{ausenciaBean.gua_id}" id="gua" disabled="#{ausenciaBean.edicion}" style="width:200px"
-								requiredMessage="Requerido guardia" filter="true" filterMatchMode="startsWith">
+								requiredMessage="Requerido guardia" filter="true" filterMatchMode="contains">
 								<p:ajax listener="#{ausenciaBean.mostrara()}"
 									update="nombre apellido">
 								</p:ajax>

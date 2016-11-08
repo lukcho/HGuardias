@@ -27,6 +27,8 @@ public class reporteGuardiaBean implements Serializable {
 	@EJB
 	private ManagerBuscar managerBuscar;
 
+	private static String Activo = "A";
+	private static String Masculino = "M";
 	// guardias
 	private String guardia_id;
 	private String guardia_nombre;
@@ -451,5 +453,21 @@ public class reporteGuardiaBean implements Serializable {
 			r= "Nocturno";
 		}	
 		return r;
+	}
+	
+	public String cambiarNombreEstado(String param){
+		if(param.equals(Activo)){
+			return "Activo";
+		}else{
+			return "Inactivo";
+		}
+	}
+	
+	public String cambiarSexo(String param){
+		if(param.equals(Masculino)){
+			return "Masculino";
+		}else{
+			return "Femenino";
+		}
 	}
 }

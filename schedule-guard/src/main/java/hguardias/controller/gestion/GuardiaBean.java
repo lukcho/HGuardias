@@ -36,6 +36,8 @@ public class GuardiaBean implements Serializable {
 	@EJB
 	private ManagerBuscar managerBuscar;
 
+	private static String Activo = "A";
+	private static String Masculino = "M";
 	// guardias
 	private String guardia_id;
 	private String guardia_nombre;
@@ -792,5 +794,20 @@ public class GuardiaBean implements Serializable {
 			guardia_licencia_chofer = "";
 		}
 	}
-
+	
+	public String cambiarNombre(String param){
+		if(param.equals(Activo)){
+			return "Activo";
+		}else{
+			return "Inactivo";
+		}
+	}
+	
+	public String cambiarSexo(String param){
+		if(param.equals(Masculino)){
+			return "Masculino";
+		}else{
+			return "Femenino";
+		}
+	}
 }

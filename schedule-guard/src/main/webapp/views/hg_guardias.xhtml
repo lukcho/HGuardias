@@ -53,10 +53,10 @@
 					</p:column>
 					<p:column filterBy="#{gua.guaApellido}" filterMatchMode="contains"
 						headerText="NOMBRE/APELLIDO" width="80">
-						<h:outputText value="#{gua.guaNombre} #{gua.guaApellido}"></h:outputText>
+						<h:outputText value="#{gua.guaApellido} #{gua.guaNombre} "></h:outputText>
 					</p:column>
 					<p:column headerText="SEXO" filterBy="#{gua.guaSexo}" filterMatchMode="contains" width="50">
-						<h:outputText value="#{gua.guaSexo}"></h:outputText>
+					<h:outputText value="#{guardiaBean.cambiarSexo(gua.guaSexo)}"></h:outputText>
 					</p:column>
 					<p:column headerText="CORREO" width="80">
 						<h:outputText value="#{gua.guaCorreo}"></h:outputText>
@@ -68,7 +68,7 @@
 						<h:outputText value="#{gua.guaCelular}"></h:outputText>
 					</p:column>
 					<p:column headerText="ESTADO" filterBy="#{gua.guaEstado}" filterMatchMode="contains" width="50">
-						<h:outputText value="#{gua.guaEstado}"></h:outputText>
+						<h:outputText value="#{guardiaBean.cambiarNombre(gua.guaEstado)}"></h:outputText>
 					</p:column>
 				</p:dataTable>
 				<h3>Exportar Datos</h3>

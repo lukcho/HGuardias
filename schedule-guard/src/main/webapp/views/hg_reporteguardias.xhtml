@@ -39,10 +39,10 @@
 					</p:column>
 					<p:column filterBy="#{gua.guaApellido}" filterMatchMode="contains"
 						headerText="NOMBRE/APELLIDO" width="120">
-						<h:outputText value="#{gua.guaNombre} #{gua.guaApellido}"></h:outputText>
+						<h:outputText value="#{gua.guaApellido} #{gua.guaNombre} "></h:outputText>
 					</p:column>
-					<p:column headerText="SEXO" sortBy="#{gua.guaSexo}" width="30">
-						<h:outputText value="#{gua.guaSexo}"></h:outputText>
+					<p:column headerText="SEXO" sortBy="#{gua.guaSexo}" width="60">
+						<h:outputText value="#{reporteGuardiaBean.cambiarSexo(gua.guaSexo)}"></h:outputText>
 					</p:column>
 					<p:column headerText="CORREO" width="150">
 						<h:outputText value="#{gua.guaCorreo}"></h:outputText>
@@ -99,7 +99,7 @@
 							value="#{reporteGuardiaBean.cambiarNombre(gua.guaCasoTurno)}"></h:outputText>
 					</p:column>
 					<p:column headerText="ESTADO" filterMatchMode="contains" width="50">
-						<h:outputText value="#{gua.guaEstado}"></h:outputText>
+						<h:outputText value="#{reporteGuardiaBean.cambiarNombreEstado(gua.guaEstado)}"></h:outputText>
 					</p:column>
 				</p:dataTable>
 				<h3>Exportar Datos</h3>

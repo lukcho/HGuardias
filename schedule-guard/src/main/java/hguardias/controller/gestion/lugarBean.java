@@ -34,6 +34,7 @@ public class lugarBean implements Serializable {
 	@EJB
 	private ManagerGestion managergest;
 
+	private static String Activo = "A";
 	// Lugares
 	private Integer lug_id;
 	private String lug_nombre;
@@ -801,6 +802,13 @@ public class lugarBean implements Serializable {
 		FacesContext context = FacesContext.getCurrentInstance();
 		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 				"Lista reordenada", null));
-		
+	}
+	
+	public String cambiarNombre(String param){
+		if(param.equals(Activo)){
+			return "Activo";
+		}else{
+			return "Inactivo";
+		}
 	}
 }

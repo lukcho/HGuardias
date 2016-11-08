@@ -12,6 +12,11 @@
         </ui:define>
 	<ui:define name="contenido">
 		<h:form>
+			<p:remoteCommand name="onload"
+				actionListener="#{sesionBean.validaIndex()}" autoRun="true" />
+		</h:form>
+		<br />
+		<h:form>
 			<center>
 				<h1>Gesti&oacute;n de Lugares</h1>
 			</center>
@@ -48,14 +53,14 @@
 							&nbsp;&nbsp;&nbsp;
 					</p:column>
 					<p:column filterBy="#{lug.lugNombre}" filterMatchMode="contains"
-						headerText="NOMBRE" width="80">
+						headerText="NOMBRE" width="100">
 						<h:outputText value="#{lug.lugNombre}"></h:outputText>
 					</p:column>
 					<p:column filterBy="#{lug.lugCiudad}" filterMatchMode="contains"
 						headerText="SECTOR" width="40">
 						<h:outputText value="#{lug.lugCiudad}"></h:outputText>
 					</p:column>
-					<p:column headerText="CCTV" width="30" sortBy="#{lug.lugCctv}">
+					<p:column headerText="CCTV" width="20" sortBy="#{lug.lugCctv}">
 						<p:selectBooleanCheckbox disabled="true" value="#{lug.lugCctv}">
 						</p:selectBooleanCheckbox>
 					</p:column>
@@ -66,44 +71,46 @@
 						</p:selectBooleanCheckbox>
 					</p:column>
 					<p:column filterMatchMode="contains" headerText="PRIORIDAD"
-						width="40">
+						width="20">
 						<h:outputText value="#{lug.lugPrioridad}"></h:outputText>
 					</p:column>
 					<p:column filterBy="#{lug.lugEstado}" filterMatchMode="contains"
-						headerText="ESTADO" width="40">
-						<h:outputText value="#{lug.lugEstado}"></h:outputText>
+						headerText="ESTADO" width="30">
+						<h:outputText value="#{lugarBean.cambiarNombre(lug.lugEstado)}"></h:outputText>
 					</p:column>
 				</p:dataTable>
 				<h3>Exportar Datos</h3>
+				<h:commandButton style="width:40px;height:40px" ajax="false"
+					image="/resources/img/excel.png">
+					<p:dataExporter type="xls" target="tbb" fileName="rptlugares"
+						pageOnly="false" />
+				</h:commandButton>&nbsp;&nbsp;&nbsp;
 					<h:commandButton style="width:40px;height:40px" ajax="false"
-						image="/resources/img/excel.png">
-						<p:dataExporter type="xls" target="tbb" fileName="rptlugares"
-							pageOnly="false" />
-					</h:commandButton>&nbsp;&nbsp;&nbsp;
+					image="/resources/img/pdf.png">
+					<p:dataExporter type="pdf" target="tbb" fileName="rptlugares"
+						pageOnly="false" />
+				</h:commandButton>&nbsp;&nbsp;&nbsp;
 					<h:commandButton style="width:40px;height:40px" ajax="false"
-						image="/resources/img/pdf.png">
-						<p:dataExporter type="pdf" target="tbb" fileName="rptlugares"
-							pageOnly="false" />
-					</h:commandButton>&nbsp;&nbsp;&nbsp;
-					<h:commandButton style="width:40px;height:40px" ajax="false"
-						image="/resources/img/csv.png">
-						<p:dataExporter type="csv" target="tbb" fileName="rptlugares"
-							pageOnly="false" />
-					</h:commandButton>&nbsp;&nbsp;&nbsp;
+					image="/resources/img/csv.png">
+					<p:dataExporter type="csv" target="tbb" fileName="rptlugares"
+						pageOnly="false" />
+				</h:commandButton>&nbsp;&nbsp;&nbsp;
 			</b:panel>
 		</h:form>
-		<p:dialog responsive="true" header="Prioridad de lugares" width="360"
-			height="300" draggable="true" closable="false" closeOnEscape="false"
+		<p:dialog positionType="center" responsive="true"
+			header="Prioridad de lugares" width="350" height="300"
+			draggable="true" closable="true" closeOnEscape="true" dynamic="true" 
 			showEffect="fade" hideEffect="explode" widgetVar="dlgprioridad"
-			modal="true" dynamic="true" id="prioridad" resizable="false">
+			modal="true" id="prioridad" resizable="false">
 			<h:form>
+			<b:panel look="primary">
 				<b:row>
 					<b:column span="3">
 						<p:orderList id="orderlist" controlsLocation="left"
 							value="#{lugarBean.lugaresPriorizar}" var="lug"
 							moveUpLabel="Subir" moveDownLabel="Bajar"
 							moveBottomLabel="Mover al fondo" moveTopLabel="Mover al inicio"
-							itemValue="#{lug.lugId}" >
+							itemValue="#{lug.lugId}">
 							<p:column>
 								<h:outputText value="#{lug.lugNombre}" />
 							</p:column>
@@ -116,15 +123,21 @@
 						</p:orderList>
 					</b:column>
 				</b:row>
+				<br />
 				<b:row>
-					<b:column span="2">
-						<p:commandButton id="prioridades" value="Guardar"
-							action="#{lugarBean.guardarPrioridad()}" update="frm" />&nbsp;&nbsp;
-						<p:commandButton value="Volver" onclick="PF('prioridad').hide()"
-							action="#{lugarBean.cerrarDialogPrioridad()}"
-							update=":frm:messages" />
+					<b:column span="12">
+						<b:commandButton id="prioridades" value="Guardar"
+							styleClass="btn btn-info" style="padding:7px;"
+							action="#{lugarBean.guardarPrioridad()}" update=":frm"></b:commandButton>&nbsp;&nbsp;&nbsp;
+							
+						<b:commandButton value="Volver" styleClass="btn btn-info"
+							style="padding:7px;"
+							action="#{lugarBean.cerrarDialogPrioridad()}" update=":frm"
+							look="info" process="@this">
+						</b:commandButton>&nbsp;&nbsp;&nbsp;
 					</b:column>
 				</b:row>
+				</b:panel>
 			</h:form>
 		</p:dialog>
 	</ui:define>

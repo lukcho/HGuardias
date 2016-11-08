@@ -5,6 +5,7 @@ import hguardias.model.dao.entities.*;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -218,10 +219,10 @@ public class ManagerHorario {
 	 * 
 	 * @throws Exception
 	 */
-	public Integer trabajoLugTurnDiaAnterior(HgGuardia g,HgTurno t, Date fecha_inicial) {
-		Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fecha_inicial));
+	public Integer trabajoLugTurnDiaAnterior(HgGuardia g,HgTurno t, Date fecha_inicial, HgLugare lugar) {
+		Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(restDays(fecha_inicial)));
 		return mDAO.findWhere(HgHorarioDet.class," o.hgGuardia.guaCedula = '"+ g.getGuaCedula()
-								+ "' and o.hdetFechaFin = '"+finicial+"' and o.hgTurno.turId = "+t.getTurId()+" ", null).size();
+								+ "' and o.hdetFechaFin = '"+finicial+"' and o.hgLugare.lugId = "+lugar.getLugId()+" ", null).size();
 	}
 	
 
@@ -366,6 +367,15 @@ public class ManagerHorario {
 		return mDAO.findWhere(HgHorarioDet.class, " o.hdetFechaInicio = '"
 				+ fantes + "' " + " and o.hgGuardia.guaCedula = '" + cedula
 				+ "' and o.hgTurno.turId= 3 ", null).size();
+	}
+	
+	public Integer trabajoSemanaAnteriorLugar(Date fecha7dias, String cedula, Integer id_lugar) {
+		Date f7dias = rest5Days(restDays(restDays(fecha7dias)));
+		Date f1dia = restDays(fecha7dias);
+		Date f7diasa = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(f7dias));
+		Date f1diasb = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(f1dia));
+		return mDAO.findWhere(HgHorarioDet.class, " o.hdetFechaInicio <= '"+f1diasb+"' and o.hdetFechaInicio >= '"+f7diasa+"'"
+				+ "and o.hgGuardia.guaCedula = '"+cedula+"' and o.hgLugare.lugId = "+id_lugar+" ", null).size(); 
 	}
 
 	// Horariocabecera
@@ -636,6 +646,16 @@ public class ManagerHorario {
 			return (HgGuardia) mDAO.findById(HgGuardia.class, con_id);
 		}
 		
+		/**
+		 * buscar guardias por ID
+		 * 
+		 * @param con_id
+		 * @throws Exception
+		 */
+		public HgGuardiasPendiente guardiaByIDPendiente(String con_id) throws Exception {
+			return (HgGuardiasPendiente) mDAO.findById(HgGuardiasPendiente.class, con_id);
+		}
+		
 
 		/**
 		 * buscar guardias por ID
@@ -713,5 +733,29 @@ public class ManagerHorario {
 			detalle.setHgGuardia(hdet.getHgGuardia());
 			mDAO.actualizar(detalle);
 		}
-		
+		/**
+		 * Metodo para reducir en un dia cada fecha
+		 * 
+		 * @param date
+		 * @return
+		 */
+		public static Date restDays(Date date) {
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(date);
+			cal.add(Calendar.DATE, -1); // minus number would decrement the days
+			return cal.getTime();
+		}
+
+		/**
+		 * Metodo para reducir en 5 dias cada fecha
+		 * 
+		 * @param date
+		 * @return
+		 */
+		public static Date rest5Days(Date date) {
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(date);
+			cal.add(Calendar.DATE, -5); // minus number would decrement the days
+			return cal.getTime();
+		}
 }

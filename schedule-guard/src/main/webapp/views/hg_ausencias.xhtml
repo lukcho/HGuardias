@@ -11,6 +11,11 @@
             Ausencias
         </ui:define>
 	<ui:define name="contenido">
+	<h:form>
+			<p:remoteCommand name="onload"
+				actionListener="#{sesionBean.validaIndex()}" autoRun="true" />
+		</h:form>
+		<br />
 		<h:form>
 			<center>
 				<h1>Gesti&oacute;n de Ausencias</h1>

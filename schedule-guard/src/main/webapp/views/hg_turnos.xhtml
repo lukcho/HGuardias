@@ -11,6 +11,11 @@
             Turnos
         </ui:define>
 	<ui:define name="contenido">
+	<h:form>
+			<p:remoteCommand name="onload"
+				actionListener="#{sesionBean.validaIndex()}" autoRun="true" />
+		</h:form>
+		<br />
 		<h:form>
 			<center>
 				<h1>Gesti&oacute;n de Turnos</h1>
@@ -56,7 +61,7 @@
 					</p:column>
 					<p:column filterBy="#{tur.turEstado}" filterMatchMode="contains"
 						headerText="ESTADO" width="40">
-						<h:outputText value="#{tur.turEstado}"></h:outputText>
+						<h:outputText value="#{turnoBean.cambiarNombre(tur.turEstado)}"></h:outputText>
 					</p:column>
 				</p:dataTable>
 			</b:panel>
