@@ -20,6 +20,7 @@ import hguardias.model.generic.Funciones;
 import hguardias.model.dao.entidades.Guardias;
 import hguardias.model.dao.entities.HgAusencia;
 import hguardias.model.dao.entities.HgGuardia;
+import hguardias.model.dao.entities.HgTipoAusencia;
 import hguardias.model.generic.Mensaje;
 import hguardias.model.manager.ManagerGestion;
 
@@ -42,7 +43,7 @@ public class ausenciaBean implements Serializable {
 	private Guardias guardia;
 	private String nombreguardia;
 	private String apellidoguardia;
-
+	private Integer tipoause_id;
 	// mmostrar
 	private boolean mostrarlug_id;
 	private boolean edicion;
@@ -54,6 +55,8 @@ public class ausenciaBean implements Serializable {
 
 	private String usuario;
 
+	private HgAusencia ausenciaElsita;
+	
 	@Inject
 	SesionBean ms;
 
@@ -183,6 +186,22 @@ public class ausenciaBean implements Serializable {
 	public void setApellidoguardia(String apellidoguardia) {
 		this.apellidoguardia = apellidoguardia;
 	}
+	
+	public HgAusencia getAusenciaElsita() {
+		return ausenciaElsita;
+	}
+	
+	public void setAusenciaElsita(HgAusencia ausenciaElsita) {
+		this.ausenciaElsita = ausenciaElsita;
+	}
+	
+	public Integer getTipoause_id() {
+		return tipoause_id;
+	}
+	
+	public void setTipoause_id(Integer tipoause_id) {
+		this.tipoause_id = tipoause_id;
+	}
 
 	// ausencias
 	/**
@@ -196,7 +215,6 @@ public class ausenciaBean implements Serializable {
 	 */
 	public String crearAusencia() {
 		try {
-
 			java.util.Date fechai = aus_fechainicio;
 			SimpleDateFormat dateFormati = new SimpleDateFormat("yyyy-MM-dd");
 			final String stringDatei = dateFormati.format(fechai);
@@ -220,7 +238,8 @@ public class ausenciaBean implements Serializable {
 				gua_id = null;
 				nombreguardia = "";
 				apellidoguardia = "";
-
+				tipoause_id = null;
+				Mensaje.crearMensajeINFO("Ausecia Editada");
 			} else {
 				managergest.insertarAusencia(sqlfechai, sqlfechaf,
 						aus_descripcion.trim());
@@ -231,9 +250,11 @@ public class ausenciaBean implements Serializable {
 				aus_fechainicio = null;
 				aus_fechafin = null;
 				aus_descripcion = null;
+				tipoause_id = null;
 				gua_id = null;
 				nombreguardia = "";
 				apellidoguardia = "";
+				Mensaje.crearMensajeINFO("Ausencia creada");
 			}
 			return "hg_ausencias?faces-redirect=true";
 		} catch (Exception e) {
@@ -248,10 +269,14 @@ public class ausenciaBean implements Serializable {
 	 * 
 	 */
 	public void abrirDialog() {
-		if (aus_fechainicio.after(aus_fechafin))
+		Date fechainicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(aus_fechainicio));
+		Date fechafinal = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(aus_fechafin));
+		if (fechainicial.after(fechafinal))
 			Mensaje.crearMensajeWARN("Fecha inicio debe ser menor que la Fecha Fin");
-		else
+		else if(managergest.ausenciaXFecha(fechainicial,fechainicial,gua_id) == 0){
 			RequestContext.getCurrentInstance().execute("PF('gu').show();");
+		}else
+			Mensaje.crearMensajeWARN("El guardia tiene ausencia en esas fechas");
 	}
 
 	/**
@@ -270,6 +295,7 @@ public class ausenciaBean implements Serializable {
 			aus_fechafin = (Date) aus.getAusFechaFin();
 			aus_descripcion = aus.getAusDescripcion();
 			gua_id = aus.getHgGuardia().getGuaCedula();
+			tipoause_id = aus.getHgTipoAusencia().getTipAusId();
 			asignarGuardia();
 			mostrara();
 			edicion = true;
@@ -326,7 +352,7 @@ public class ausenciaBean implements Serializable {
 	public String nuevoAusencia() {
 		aus_id = null;aus_fechainicio = null;
 		aus_fechafin = null;aus_descripcion = null;
-		gua_id = null;nombreguardia = "";
+		gua_id = null;nombreguardia = "";tipoause_id = null;
 		apellidoguardia = "";ediciontipo = false;
 		mostrarlug_id = false;edicion = false;
 		return "hg_nausencia?faces-redirect=true";
@@ -343,6 +369,7 @@ public class ausenciaBean implements Serializable {
 		aus_fechafin = null;aus_descripcion = null;
 		gua_id = null;nombreguardia = "";
 		apellidoguardia = "";mostrarlug_id = false;
+		tipoause_id = null;
 		edicion = false;
 		getListaAusencias().clear();
 		getListaAusencias().addAll(managergest.findAllAusencias());
@@ -355,6 +382,16 @@ public class ausenciaBean implements Serializable {
 	 */
 	public String asignarGuardia() {
 		managergest.asignarGuardia(gua_id);
+		return "";
+	}
+	
+	
+	/**
+	 * metodo para asignar el guardia
+	 * 
+	 */
+	public String asignarTipoAusencia() {
+		managergest.asignarTipoAusencia(tipoause_id);
 		return "";
 	}
 
@@ -370,6 +407,18 @@ public class ausenciaBean implements Serializable {
 						+ " " + t.getGuaApellido() +" "+ t.getGuaNombre() ));
 			}
 		}
+		return listadoSI;
+	}
+	
+	/**
+	 * metodo para mostrar los guardias
+	 * 
+	 */
+	public List<SelectItem> getListaTipoAusencia() {
+		List<SelectItem> listadoSI = new ArrayList<SelectItem>();
+		for (HgTipoAusencia t : managergest.findAllTipoAusencias()) {
+				listadoSI.add(new SelectItem(t.getTipAusId(), t.getTipAusNombre()));
+			}
 		return listadoSI;
 	}
 
@@ -389,5 +438,34 @@ public class ausenciaBean implements Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * eliminar ausencia abriendo el dialogo
+	 * 
+	 * @param pro_id
+	 * @throws Exception
+	 */
+	public void abrirDialogAusenciaEliminar(HgAusencia item) {
+		setAusenciaElsita(item);
+		RequestContext.getCurrentInstance().execute("PF('ef').show();");
+	}
+	
+	/**
+	 * eliminar un fotoproducto
+	 * 
+	 * @param pro_id
+	 * @throws Exception
+	 */
+	public String eliminarAusencia() {
+		try {
+			managergest.eliminarAusencia(ausenciaElsita.getAusId());
+			Mensaje.crearMensajeINFO("Ausencia eliminada");
+			getListaAusencias().clear();
+			getListaAusencias().addAll(managergest.findAllAusencias());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "";
 	}
 }

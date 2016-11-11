@@ -38,11 +38,16 @@
 					reflow="true" var="horc" rows="10" emptyMessage="Sin Datos"
 					paginator="true"
 					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
-					<p:column headerText="OPCIONES" width="30">
+					<p:column headerText="OPCIONES" width="45">
 						<p:commandButton id="btnE" icon="ui-icon-pencil"
 							action="#{horarioCDBean.cargarHorarioCab(horc)}">
 							<p:tooltip id="toolTipTrack1" for="btnE"
 								value="Bot&oacute;n para modificar el Horario" trackMouse="true" />
+						</p:commandButton>
+						<p:commandButton id="btnEliminar" icon="ui-icon-close"
+							action="#{horarioCDBean.abrirDialogHorarioEliminar(horc)}">
+							<p:tooltip id="toolTipTrack2" for="btnE"
+								value="Bot&oacute;n para eliminar el Horario" trackMouse="true" />
 						</p:commandButton>
 					</p:column>
 					<p:column filterBy="#{horc.hcabId}" filterMatchMode="contains"
@@ -70,6 +75,19 @@
 				</p:dataTable>
 			</b:panel>
 		</h:form>
+
+		<p:confirmDialog header="Confirmación"
+			message="Está seguro de borrar el horario" closable="false"
+			showEffect="fade" hideEffect="explode" widgetVar="ef">
+			<h:form>
+				<p:commandButton value="Si" styleClass="ui-confirmdialog-yes"
+					icon="ui-icon-check" action="#{horarioCDBean.eliminarHorarioCab()}"
+					oncomplete="PF('ef').hide();" update="frm frm:tbb" />
+				<p:commandButton value="No" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					onclick="PF('ef').hide();" />
+			</h:form>
+		</p:confirmDialog>
 	</ui:define>
 </ui:composition>
 </html>

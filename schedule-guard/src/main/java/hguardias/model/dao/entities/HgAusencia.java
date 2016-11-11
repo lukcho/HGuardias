@@ -37,6 +37,11 @@ public class HgAusencia implements Serializable {
 	@JoinColumn(name="gua_cedula")
 	private HgGuardia hgGuardia;
 
+	//bi-directional many-to-one association to HgTipoAusencia
+	@ManyToOne
+	@JoinColumn(name="tip_aus_id")
+	private HgTipoAusencia hgTipoAusencia;
+
 	public HgAusencia() {
 	}
 
@@ -78,6 +83,14 @@ public class HgAusencia implements Serializable {
 
 	public void setHgGuardia(HgGuardia hgGuardia) {
 		this.hgGuardia = hgGuardia;
+	}
+
+	public HgTipoAusencia getHgTipoAusencia() {
+		return this.hgTipoAusencia;
+	}
+
+	public void setHgTipoAusencia(HgTipoAusencia hgTipoAusencia) {
+		this.hgTipoAusencia = hgTipoAusencia;
 	}
 
 }

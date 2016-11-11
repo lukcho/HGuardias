@@ -70,11 +70,11 @@
 							value="#{lug.lugControlAccesos}">
 						</p:selectBooleanCheckbox>
 					</p:column>
-					<p:column filterMatchMode="contains" headerText="PRIORIDAD"
+					<p:column filterMatchMode="contains" headerText="PRIORIDAD" sortBy="#{lug.lugPrioridad}"
 						width="20">
 						<h:outputText value="#{lug.lugPrioridad}"></h:outputText>
 					</p:column>
-					<p:column filterBy="#{lug.lugEstado}" filterMatchMode="contains"
+					<p:column filterMatchMode="contains" sortBy="#{lug.lugEstado}"
 						headerText="ESTADO" width="30">
 						<h:outputText value="#{lugarBean.cambiarNombre(lug.lugEstado)}"></h:outputText>
 					</p:column>

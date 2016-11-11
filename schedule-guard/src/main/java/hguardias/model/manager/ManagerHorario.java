@@ -5,6 +5,7 @@ import hguardias.model.dao.entities.*;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -51,7 +52,7 @@ public class ManagerHorario {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<HgHorarioDet> findAllHorariosDet() {
-		return mDAO.findAll(HgHorarioDet.class);
+		return mDAO.findAll(HgHorarioDet.class," o.hdetFechaInicio desc ");
 	}
 
 	/**
@@ -76,10 +77,11 @@ public class ManagerHorario {
 	@SuppressWarnings("unchecked")
 	public List<HgHorarioDet> existeGuardiaFechaAct(Date fechai, Date fechaant,
 			String cedula) {
-		Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechai));
-		return mDAO.findWhere(HgHorarioDet.class, " o.hgGuardia.guaCedula = '"
-				+ cedula + "' " + "and o.hdetFechaInicio = '" + finicial
-				+ "' ", null);
+		Date finicial = java.sql.Date
+				.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechai));
+		return mDAO.findWhere(HgHorarioDet.class,
+				" o.hgGuardia.guaCedula = '" + cedula + "' "
+						+ "and o.hdetFechaInicio = '" + finicial + "' ", null);
 	}
 
 	/**
@@ -91,13 +93,13 @@ public class ManagerHorario {
 	@SuppressWarnings("unchecked")
 	public List<HgHorarioDet> findAllGuardiasxFecha(Date fechaIn,
 			Date fechasigui, Integer cab_id) {
-		Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechaIn));
+		Date finicial = java.sql.Date
+				.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechaIn));
 		return mDAO.findWhere(HgHorarioDet.class, " o.hdetFechaInicio = '"
 				+ finicial + "' and o.hgTurno.turId not in (3)  "
 				// + "or (o.hdetFechaInicio = '"+ fechadesp +
 				// "' and o.hgTurno.turId = 3 )"
-				+ " ",
-				" o.hdetFechaInicio ");
+				+ " ", " o.hdetFechaInicio ");
 	}
 
 	/**
@@ -146,8 +148,10 @@ public class ManagerHorario {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<HgHorarioDet> findAllHorarioDetXFecha(Date fechai, Date fechaf) {
-		Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechai));
-		Date ffinal = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechaf));
+		Date finicial = java.sql.Date
+				.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechai));
+		Date ffinal = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd")
+				.format(fechaf));
 		return mDAO.findWhere(HgHorarioDet.class, "o.hdetFechaInicio between '"
 				+ finicial + "' and  '" + ffinal + "'",
 				" o.hdetFechaInicio desc , o.hdetHoraInicio desc");
@@ -161,13 +165,20 @@ public class ManagerHorario {
 	 * 
 	 * @throws Exception
 	 */
-	public Integer findNumDiasxGuardia(HgGuardia g, Date fecha_inicial, Date fecha5dias) {
-		Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fecha_inicial));
-		Date finicial5dias = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fecha5dias));
-		return mDAO.findWhere(HgHorarioDet.class," o.hgGuardia.guaCedula = '" + g.getGuaCedula()
-								+ "'  and o.hdetFechaInicio between '"+finicial5dias+"' and  '"+finicial+"'  ", null).size();
+	public Integer findNumDiasxGuardia(HgGuardia g, Date fecha_inicial,
+			Date fecha5dias) {
+		Date finicial = java.sql.Date
+				.valueOf(new SimpleDateFormat("yyyy-MM-dd")
+						.format(fecha_inicial));
+		Date finicial5dias = java.sql.Date.valueOf(new SimpleDateFormat(
+				"yyyy-MM-dd").format(fecha5dias));
+		return mDAO.findWhere(
+				HgHorarioDet.class,
+				" o.hgGuardia.guaCedula = '" + g.getGuaCedula()
+						+ "'  and o.hdetFechaInicio between '" + finicial5dias
+						+ "' and  '" + finicial + "'  ", null).size();
 	}
-	
+
 	/**
 	 * listar x guardia los horariosdet con la fecha contar los dias que trabaja
 	 * 
@@ -177,11 +188,16 @@ public class ManagerHorario {
 	 * @throws Exception
 	 */
 	public Integer trabajoDiaAnterior(HgGuardia g, Date fecha_inicial) {
-		Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fecha_inicial));
-		return mDAO.findWhere(HgHorarioDet.class," o.hgGuardia.guaCedula = '" + g.getGuaCedula()
-								+ "'  and o.hdetFechaInicio = '"+finicial+"' ", null).size();
+		Date finicial = java.sql.Date
+				.valueOf(new SimpleDateFormat("yyyy-MM-dd")
+						.format(fecha_inicial));
+		return mDAO.findWhere(
+				HgHorarioDet.class,
+				" o.hgGuardia.guaCedula = '" + g.getGuaCedula()
+						+ "'  and o.hdetFechaInicio = '" + finicial + "' ",
+				null).size();
 	}
-	
+
 	/**
 	 * listar x guardia los horariosdet con la fecha contar los dias que trabaja
 	 * 
@@ -190,13 +206,20 @@ public class ManagerHorario {
 	 * 
 	 * @throws Exception
 	 */
-	public Integer findNumDiasxGuardiaPendiente(HgGuardiasPendiente g, Date fecha_inicial, Date fecha5dias) {
-		Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fecha_inicial));
-		Date finicial5dias = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fecha5dias));
-		return mDAO.findWhere(HgHorarioDet.class," o.hgGuardia.guaCedula = '" + g.getGuaCedula()
-								+ "'  and o.hdetFechaInicio between '"+finicial5dias+"' and  '"+finicial+"'  ", null).size();
+	public Integer findNumDiasxGuardiaPendiente(HgGuardiasPendiente g,
+			Date fecha_inicial, Date fecha5dias) {
+		Date finicial = java.sql.Date
+				.valueOf(new SimpleDateFormat("yyyy-MM-dd")
+						.format(fecha_inicial));
+		Date finicial5dias = java.sql.Date.valueOf(new SimpleDateFormat(
+				"yyyy-MM-dd").format(fecha5dias));
+		return mDAO.findWhere(
+				HgHorarioDet.class,
+				" o.hgGuardia.guaCedula = '" + g.getGuaCedula()
+						+ "'  and o.hdetFechaInicio between '" + finicial5dias
+						+ "' and  '" + finicial + "'  ", null).size();
 	}
-	
+
 	/**
 	 * listar x guardia los horariosdet con la fecha contar los dias que trabaja
 	 * 
@@ -205,12 +228,18 @@ public class ManagerHorario {
 	 * 
 	 * @throws Exception
 	 */
-	public Integer trabajoDiaAnteriorPendiente(HgGuardiasPendiente g, Date fecha_inicial) {
-		Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fecha_inicial));
-		return mDAO.findWhere(HgHorarioDet.class," o.hgGuardia.guaCedula = '" + g.getGuaCedula()
-								+ "'  and o.hdetFechaInicio = '"+finicial+"' ", null).size();
+	public Integer trabajoDiaAnteriorPendiente(HgGuardiasPendiente g,
+			Date fecha_inicial) {
+		Date finicial = java.sql.Date
+				.valueOf(new SimpleDateFormat("yyyy-MM-dd")
+						.format(fecha_inicial));
+		return mDAO.findWhere(
+				HgHorarioDet.class,
+				" o.hgGuardia.guaCedula = '" + g.getGuaCedula()
+						+ "'  and o.hdetFechaInicio = '" + finicial + "' ",
+				null).size();
 	}
-	
+
 	/**
 	 * listar x guardia los horariosdet con la fecha contar los dias que trabaja
 	 * 
@@ -219,12 +248,11 @@ public class ManagerHorario {
 	 * 
 	 * @throws Exception
 	 */
-	public Integer trabajoLugTurnDiaAnterior(HgGuardia g,HgTurno t, Date fecha_inicial, HgLugare lugar) {
+	public Integer trabajoLugDiaAnterior(HgGuardia g, HgLugare lugar, Date fecha_inicial) {
 		Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(restDays(fecha_inicial)));
-		return mDAO.findWhere(HgHorarioDet.class," o.hgGuardia.guaCedula = '"+ g.getGuaCedula()
-								+ "' and o.hdetFechaFin = '"+finicial+"' and o.hgLugare.lugId = "+lugar.getLugId()+" ", null).size();
+		return mDAO.findWhere(HgHorarioDet.class," o.hgGuardia.guaCedula = '" + g.getGuaCedula()+ "' and o.hdetFechaInicio = '" + finicial
+						+ "' and o.hgLugare.lugId = " + lugar.getLugId() + " ",null).size();
 	}
-	
 
 	/**
 	 * listar todos las horariosdet ordenadas x cedula de guardia
@@ -232,12 +260,18 @@ public class ManagerHorario {
 	 * @param gua_cid
 	 * @throws Exception
 	 */
-	public Integer FindDiasLibresxGuardia(Date fechaInicial,
-			Date fechaFinal, HgGuardia g, Integer cab_id) {
-		Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechaInicial));
-		Date fantes= java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechaFinal));
-		return mDAO.findWhere(HgHorarioDet.class, " o.hgGuardia.guaCedula = '"+g.getGuaCedula()+"' "
-				 + "and (o.hdetFechaInicio = '"+finicial+"' or o.hdetFechaInicio ='" +fantes +"' )  ",
+	public Integer FindDiasLibresxGuardia(Date fechaInicial, Date fechaFinal,
+			HgGuardia g, Integer cab_id) {
+		Date finicial = java.sql.Date
+				.valueOf(new SimpleDateFormat("yyyy-MM-dd")
+						.format(fechaInicial));
+		Date fantes = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd")
+				.format(fechaFinal));
+		return mDAO.findWhere(
+				HgHorarioDet.class,
+				" o.hgGuardia.guaCedula = '" + g.getGuaCedula() + "' "
+						+ "and (o.hdetFechaInicio = '" + finicial
+						+ "' or o.hdetFechaInicio ='" + fantes + "' )  ",
 				" o.hdetFechaInicio ").size();
 	}
 
@@ -347,35 +381,44 @@ public class ManagerHorario {
 	 * @return true o false
 	 */
 	public Integer existeGuardia(Integer cab_id, Date fechai, String cedula) {
-		Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechai));
-		return mDAO.findWhere(HgHorarioDet.class, " o.hgGuardia.guaCedula = '" + cedula + "' "
-				+ "and o.hdetFechaInicio = '" + finicial + "' ", null).size();
+		Date finicial = java.sql.Date
+				.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechai));
+		return mDAO.findWhere(
+				HgHorarioDet.class,
+				" o.hgGuardia.guaCedula = '" + cedula + "' "
+						+ "and o.hdetFechaInicio = '" + finicial + "' ", null)
+				.size();
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<HgHorarioDet> existeGuardiaLibre(Integer cab_id, Date fechaant,
 			String cedula) {
-		Date fantes = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechaant));
+		Date fantes = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd")
+				.format(fechaant));
 		return mDAO.findWhere(HgHorarioDet.class, " o.hdetFechaInicio = '"
 				+ fantes + "' " + " and o.hgGuardia.guaCedula = '" + cedula
 				+ "' and o.hgTurno.turId= 4 ", null);
 	}
 
-	public Integer existeGuardiaXturnoMNoc(Integer cab_id,
-			Date fechaant, String cedula) {
-		Date fantes = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechaant));
-		return mDAO.findWhere(HgHorarioDet.class, " o.hdetFechaInicio = '"
-				+ fantes + "' " + " and o.hgGuardia.guaCedula = '" + cedula
-				+ "' and o.hgTurno.turId= 3 ", null).size();
+	public Integer existeGuardiaXturnoMNoc(Integer cab_id, Date fechaant,
+			String cedula) {
+		Date fantes = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd")
+				.format(fechaant));
+		return mDAO.findWhere(
+				HgHorarioDet.class,
+				" o.hdetFechaInicio = '" + fantes + "' "
+						+ " and o.hgGuardia.guaCedula = '" + cedula
+						+ "' and o.hgTurno.turId= 3 ", null).size();
 	}
-	
-	public Integer trabajoSemanaAnteriorLugar(Date fecha7dias, String cedula, Integer id_lugar) {
+
+	public Integer trabajoSemanaAnteriorLugar(Date fecha7dias, String cedula,
+			Integer id_lugar) {
 		Date f7dias = rest5Days(restDays(restDays(fecha7dias)));
 		Date f1dia = restDays(fecha7dias);
 		Date f7diasa = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(f7dias));
 		Date f1diasb = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(f1dia));
-		return mDAO.findWhere(HgHorarioDet.class, " o.hdetFechaInicio <= '"+f1diasb+"' and o.hdetFechaInicio >= '"+f7diasa+"'"
-				+ "and o.hgGuardia.guaCedula = '"+cedula+"' and o.hgLugare.lugId = "+id_lugar+" ", null).size(); 
+		return mDAO.findWhere(HgHorarioDet.class," o.hdetFechaInicio <= '" + f1diasb+ "' and o.hdetFechaInicio >= '" + f7diasa + "'"
+						+ "and o.hgGuardia.guaCedula = '" + cedula+ "' and o.hgLugare.lugId = " + id_lugar + " ", null).size();
 	}
 
 	// Horariocabecera
@@ -385,7 +428,6 @@ public class ManagerHorario {
 	 * 
 	 * @throws Exception
 	 */
-
 	@SuppressWarnings("unchecked")
 	public List<HgHorarioCab> findHorariocab() {
 		return mDAO.findWhere(HgHorarioCab.class, "1=1", null);
@@ -432,12 +474,13 @@ public class ManagerHorario {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<HgHorarioCab> findAllHorarioCabXFecha(Date fechai, Date fechaf) {
-		Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechai));
-		Date ffinal = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechaf));
-		return mDAO
-				.findWhere(HgHorarioCab.class, "o.hcabFechaInicio between '"
-						+ finicial + "' and  '" + ffinal + "'",
-						" o.hcabFechaInicio desc");
+		Date finicial = java.sql.Date
+				.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechai));
+		Date ffinal = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd")
+				.format(fechaf));
+		return mDAO.findWhere(HgHorarioCab.class, "o.hcabFechaInicio between '"
+				+ finicial + "' and  '" + ffinal + "'",
+				" o.hcabFechaInicio desc");
 	}
 
 	/**
@@ -464,7 +507,7 @@ public class ManagerHorario {
 
 		mDAO.insertar(hor_cab);
 	}
-	
+
 	/**
 	 * Cambiar datos de cabecera
 	 * 
@@ -475,7 +518,9 @@ public class ManagerHorario {
 	 * @param estado
 	 * @throws Exception
 	 */
-	public void editarCabecera(Integer cab_id, Integer hcabnumeroregistrosTotal,Integer hcabNumeroRegistrosCreados, Integer hcabNumeroLugaresVacios )
+	public void editarCabecera(Integer cab_id,
+			Integer hcabnumeroregistrosTotal,
+			Integer hcabNumeroRegistrosCreados, Integer hcabNumeroLugaresVacios)
 			throws Exception {
 		HgHorarioCab cabecera = this.horarioCabByID(cab_id);
 		cabecera.setHcabNumeroRegistrosTotal(hcabnumeroregistrosTotal);
@@ -562,9 +607,9 @@ public class ManagerHorario {
 		}
 		return hg_hcab;
 	}
-	
-	//guardia pendiente libre
-	
+
+	// guardia pendiente libre
+
 	/**
 	 * Agrega guardias
 	 * 
@@ -575,7 +620,8 @@ public class ManagerHorario {
 	 * @param con_correo
 	 * @throws Exception
 	 */
-	public void insertarGuardiaPendienteLibre(HgGuardia guardia) throws Exception {
+	public void insertarGuardiaPendienteLibre(HgGuardia guardia)
+			throws Exception {
 		HgGuardiasPendiente gua = new HgGuardiasPendiente();
 		gua.setGuaCedula(guardia.getGuaCedula());
 		gua.setGuaNombre(guardia.getGuaNombre());
@@ -599,163 +645,186 @@ public class ManagerHorario {
 		gua.setGuaEstado(guardia.getGuaEstado());
 		mDAO.insertar(gua);
 	}
-	
-		/**
-		 * Elimina guardias
-		 * 
-		 * @param gua_cedid
-		 * @param con_nombre
-		 * @param con_apellido
-		 * @param con_telefono
-		 * @param con_correo
-		 * @throws Exception
-		 */
-		public void EliminarGuardiaPendienteLibre(HgGuardia guardia) throws Exception {
-			mDAO.eliminar(HgGuardiasPendiente.class, guardia.getGuaCedula());
-		}
-	
-		/**
-		 * listar todos los guardias
-		 * 
-		 * @throws Exception
-		 */
-		@SuppressWarnings("unchecked")
-		public List<HgGuardiasPendiente> findAllGuardiasPendientes() {
-			return mDAO.findAll(HgGuardiasPendiente.class," o.guaCedula asc ");
-		}
-		
-		/**
-		 * listar todos los guardias
-		 * 
-		 * @throws Exception
-		 */
-		@SuppressWarnings("unchecked")
-		public List<HgGuardia> findAllGuardiasDesc() {
-			return mDAO.findAll(HgGuardia.class, " o.guaCedula desc ");
-		}
-		
-		
 
-		/**
-		 * buscar guardias por ID
-		 * 
-		 * @param con_id
-		 * @throws Exception
-		 */
-		public HgGuardia guardiaByID(String con_id) throws Exception {
-			return (HgGuardia) mDAO.findById(HgGuardia.class, con_id);
-		}
-		
-		/**
-		 * buscar guardias por ID
-		 * 
-		 * @param con_id
-		 * @throws Exception
-		 */
-		public HgGuardiasPendiente guardiaByIDPendiente(String con_id) throws Exception {
-			return (HgGuardiasPendiente) mDAO.findById(HgGuardiasPendiente.class, con_id);
-		}
-		
+	/**
+	 * Elimina guardias
+	 * 
+	 * @param gua_cedid
+	 * @param con_nombre
+	 * @param con_apellido
+	 * @param con_telefono
+	 * @param con_correo
+	 * @throws Exception
+	 */
+	public void EliminarGuardiaPendienteLibre(HgGuardia guardia)
+			throws Exception {
+		mDAO.eliminar(HgGuardiasPendiente.class, guardia.getGuaCedula());
+	}
 
-		/**
-		 * buscar guardias por ID
-		 * 
-		 * @param con_id
-		 * @throws Exception
-		 */
-		public HgGuardiasPendiente guardiaPendienteByID(String con_id) throws Exception {
-			return (HgGuardiasPendiente) mDAO.findById(HgGuardiasPendiente.class, con_id);
-		}
-		
+	/**
+	 * listar todos los guardias
+	 * 
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<HgGuardiasPendiente> findAllGuardiasPendientes() {
+		return mDAO.findAll(HgGuardiasPendiente.class, " o.guaCedula asc ");
+	}
+
+	/**
+	 * listar todos los guardias
+	 * 
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<HgGuardia> findAllGuardiasDesc() {
+		return mDAO.findAll(HgGuardia.class, " o.guaCedula desc ");
+	}
+
+	/**
+	 * buscar guardias por ID
+	 * 
+	 * @param con_id
+	 * @throws Exception
+	 */
+	public HgGuardia guardiaByID(String con_id) throws Exception {
+		return (HgGuardia) mDAO.findById(HgGuardia.class, con_id);
+	}
+
+	/**
+	 * buscar guardias por ID
+	 * 
+	 * @param con_id
+	 * @throws Exception
+	 */
+	public HgGuardiasPendiente guardiaByIDPendiente(String con_id)
+			throws Exception {
+		return (HgGuardiasPendiente) mDAO.findById(HgGuardiasPendiente.class,
+				con_id);
+	}
+
+	/**
+	 * buscar guardias por ID
+	 * 
+	 * @param con_id
+	 * @throws Exception
+	 */
+	public HgGuardiasPendiente guardiaPendienteByID(String con_id)
+			throws Exception {
+		return (HgGuardiasPendiente) mDAO.findById(HgGuardiasPendiente.class,
+				con_id);
+	}
+
 	// lugarturno vacio
-		
-		public void insertarLugarTurnoVacio(Integer hor_cab, HgTurno t, HgLugare l , Date det_fechaini) throws Exception {
-			HgLugaresTurnosVacio lugturvacio = new HgLugaresTurnosVacio();
-			lugturvacio.setHgHorarioCab(this.horarioCabByID(hor_cab));
-			lugturvacio.setHgTurno(t);
-			lugturvacio.setHgLugare(l);
-			lugturvacio.setHglugturFechaInicio(det_fechaini);
-			mDAO.insertar(lugturvacio);
-		}
-		
-		/**
-		 * listar todos las horariosdet ordenadas x cedula de guardia
-		 * 
-		 * @param gua_cid
-		 * @throws Exception
-		 */
-		@SuppressWarnings("unchecked")
-		public List<HgLugaresTurnosVacio> lugarTurnoVacio(Integer cab_id) {
-			return mDAO.findWhere(HgLugaresTurnosVacio.class, " o.hgHorarioCab.hcabId = '"+ cab_id + "' ",null);
-		}
-		
-		//ausensias
-		/**
-		 * Verifica si el guardia exite
-		 * 
-		 * @param u
-		 *            guardia a analizar
-		 * @return true o false
-		 */
-		public Integer existeAusencia(String cedula,Date fechai) {
-			Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechai));
-			return mDAO.findWhere(HgAusencia.class, " o.hgGuardia.guaCedula = '"+cedula+"' "
-					+ "and o.ausFechaInicio <= '"+finicial+"' and o.ausFechaFin >= '"+finicial+"' ", null).size();
-		}
-		
-		//cambio de turnos
-		
-		/**
-		 * buscar los horariosdet por ID
-		 * 
-		 * @param hdet_id
-		 * @throws Exception
-		 */
-		@SuppressWarnings("unchecked")
-		public List<HgHorarioDet> horarioDetByCedulaFecha(String cedula, Date fecha) throws Exception {
-			Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fecha));
-			return mDAO.findWhere(HgHorarioDet.class," o.hdetFechaInicio = '"+finicial+"' and o.hgGuardia.guaCedula = '"+cedula+"' ",null);
-		}
-		
-		/**
-		 * Cambiar datos de cabecera
-		 * 
-		 * @param turno_id
-		 * @param tur_descripcion
-		 * @param tur_hora_inicio
-		 * @param tur_hora_fin
-		 * @param estado
-		 * @throws Exception
-		 */
-		public void editarGuardiasDetalle(HgHorarioDet hdet)
-				throws Exception {
-			HgHorarioDet detalle = this.horarioDetByID(hdet.getHdetId());
-			detalle.setHgGuardia(hdet.getHgGuardia());
-			mDAO.actualizar(detalle);
-		}
-		/**
-		 * Metodo para reducir en un dia cada fecha
-		 * 
-		 * @param date
-		 * @return
-		 */
-		public static Date restDays(Date date) {
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(date);
-			cal.add(Calendar.DATE, -1); // minus number would decrement the days
-			return cal.getTime();
-		}
 
-		/**
-		 * Metodo para reducir en 5 dias cada fecha
-		 * 
-		 * @param date
-		 * @return
-		 */
-		public static Date rest5Days(Date date) {
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(date);
-			cal.add(Calendar.DATE, -5); // minus number would decrement the days
-			return cal.getTime();
-		}
+	public void insertarLugarTurnoVacio(Integer hor_cab, HgTurno t, HgLugare l,
+			Date det_fechaini) throws Exception {
+		HgLugaresTurnosVacio lugturvacio = new HgLugaresTurnosVacio();
+		lugturvacio.setHgHorarioCab(this.horarioCabByID(hor_cab));
+		lugturvacio.setHgTurno(t);
+		lugturvacio.setHgLugare(l);
+		lugturvacio.setHglugturFechaInicio(det_fechaini);
+		mDAO.insertar(lugturvacio);
+	}
+
+	/**
+	 * listar todos las horariosdet ordenadas x cedula de guardia
+	 * 
+	 * @param gua_cid
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<HgLugaresTurnosVacio> lugarTurnoVacio(Integer cab_id) {
+		return mDAO.findWhere(HgLugaresTurnosVacio.class,
+				" o.hgHorarioCab.hcabId = '" + cab_id + "' ", null);
+	}
+
+	// ausensias
+	/**
+	 * Verifica si el guardia exite
+	 * 
+	 * @param u
+	 *            guardia a analizar
+	 * @return true o false
+	 */
+	public Integer existeAusencia(String cedula, Date fechai) {
+		Date finicial = java.sql.Date
+				.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechai));
+		return mDAO.findWhere(
+				HgAusencia.class," o.hgGuardia.guaCedula = '" + cedula + "' "+ "and o.ausFechaInicio <= '" + finicial+ "' and o.ausFechaFin >= '" + finicial + "' ", null)
+				.size();
+	}
+
+	// cambio de turnos
+
+	/**
+	 * buscar los horariosdet por ID
+	 * 
+	 * @param hdet_id
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<HgHorarioDet> horarioDetByCedulaFecha(String cedula, Date fecha)
+			throws Exception {
+		Date finicial = java.sql.Date
+				.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fecha));
+		return mDAO.findWhere(HgHorarioDet.class, " o.hdetFechaInicio = '"
+				+ finicial + "' and o.hgGuardia.guaCedula = '" + cedula + "' ",
+				null);
+	}
+
+	/**
+	 * Cambiar datos de cabecera
+	 * 
+	 * @param turno_id
+	 * @param tur_descripcion
+	 * @param tur_hora_inicio
+	 * @param tur_hora_fin
+	 * @param estado
+	 * @throws Exception
+	 */
+	public void editarGuardiasDetalle(HgHorarioDet hdet) throws Exception {
+		HgHorarioDet detalle = this.horarioDetByID(hdet.getHdetId());
+		detalle.setHgGuardia(hdet.getHgGuardia());
+		mDAO.actualizar(detalle);
+	}
+
+	/**
+	 * Metodo para reducir en un dia cada fecha
+	 * 
+	 * @param date
+	 * @return
+	 */
+	public static Date restDays(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.DATE, -1); // minus number would decrement the days
+		return cal.getTime();
+	}
+
+	/**
+	 * Metodo para reducir en 5 dias cada fecha
+	 * 
+	 * @param date
+	 * @return
+	 */
+	public static Date rest5Days(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.DATE, -5); // minus number would decrement the days
+		return cal.getTime();
+	}
+
+	/**
+	 * Método que permite asegurar obtener guardias que estaban libres los 2
+	 * dias
+	 * 
+	 * @param fechainicial
+	 * @return
+	 */
+	public void eliminarHorarioCab(Integer hcab_id) {
+		mDAO.ejectJPQL("delete from HgHorarioDet where hgHorarioCab.hcabId = "+hcab_id+"  ");
+		mDAO.ejectJPQL("delete from HgLugaresTurnosVacio where hgHorarioCab.hcabId = "+hcab_id+"  ");
+		mDAO.ejectJPQL("delete from HgHorarioCab where hcabId  = "+hcab_id+" ");
+	}
 }

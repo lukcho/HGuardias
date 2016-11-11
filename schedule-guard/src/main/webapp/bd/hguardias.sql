@@ -7,7 +7,6 @@ CREATE SEQUENCE seq_hg_lugares
 ALTER TABLE seq_hg_lugares
   OWNER TO postgres;
 
-
 CREATE SEQUENCE seq_hg_turno
   INCREMENT 1
   MINVALUE 1
@@ -16,7 +15,6 @@ CREATE SEQUENCE seq_hg_turno
   CACHE 1;
 ALTER TABLE seq_hg_turno
   OWNER TO postgres;
-
 
 CREATE SEQUENCE seq_hg_ausencias
   INCREMENT 1
@@ -27,7 +25,15 @@ CREATE SEQUENCE seq_hg_ausencias
 ALTER TABLE seq_hg_ausencias
   OWNER TO postgres;
 
-
+CREATE SEQUENCE seq_hg_tipo_aus
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE seq_hg_tipo_aus
+  OWNER TO postgres;  
+  
 CREATE SEQUENCE seq_hg_horario_det
   INCREMENT 1
   MINVALUE 1
@@ -88,12 +94,14 @@ create table HG_HORARIO_DET (
    constraint PK_HG_HORARIO_DET primary key (HDET_ID)
 );
 
+
 /*==============================================================*/
 /* Table: HG_AUSENCIAS                                          */
 /*==============================================================*/
 create table HG_AUSENCIAS (
    AUS_ID               INT4                 not null DEFAULT nextval('seq_hg_ausencias'::regclass),
    GUA_CEDULA           VARCHAR(100)         null,
+   TIP_AUS_ID           INT4                 null,
    AUS_FECHA_INICIO     DATE                 null,
    AUS_FECHA_FIN        DATE                 null,
    AUS_DESCRIPCION      VARCHAR(255)         null,
@@ -193,6 +201,16 @@ create table HG_LUGARES_TURNOS_VACIOS (
 );
 
 /*==============================================================*/
+/* Table: HG_TIPO_AUSENCIA                                      */
+/*==============================================================*/
+create table HG_TIPO_AUSENCIA (
+   TIP_AUS_ID           INT4                 not null DEFAULT nextval('seq_hg_tipo_aus'::regclass),
+   TIP_AUS_NOMBRE       VARCHAR(100)         null,
+   TIP_AUS_DESCRIPCION  VARCHAR(100)         null,
+   constraint PK_HG_TIPO_AUSENCIA primary key (TIP_AUS_ID)
+);
+
+/*==============================================================*/
 /* Table: HG_LUGAR_TURNO                                        */
 /*==============================================================*/
 create table HG_LUGAR_TURNO (
@@ -224,6 +242,11 @@ create table HG_TURNO (
    TUR_ESTADO           CHAR(1)              null,
    constraint PK_HG_TURNO primary key (TUR_ID)
 );
+
+alter table HG_AUSENCIAS
+   add constraint FK_HG_AUSEN_REFERENCE_HG_TIPO_ foreign key (TIP_AUS_ID)
+      references HG_TIPO_AUSENCIA (TIP_AUS_ID)
+      on delete restrict on update restrict;
 
 alter table HG_AUSENCIAS
    add constraint FK_HG_AUSEN_REFERENCE_HG_GUARD foreign key (GUA_CEDULA)

@@ -105,6 +105,8 @@ public class horarioCDBean implements Serializable {
 	private String apellidoguardia2;
 
 	private List<SelectItem> lstGuardias;
+	
+	private HgHorarioCab hcabElsita;
 
 	@Inject
 	SesionBean ms;
@@ -401,6 +403,14 @@ public class horarioCDBean implements Serializable {
 	public void setLstGuardias(List<SelectItem> lstGuardias) {
 		this.lstGuardias = lstGuardias;
 	}
+	
+	public HgHorarioCab getHcabElsita() {
+		return hcabElsita;
+	}
+	
+	public void setHcabElsita(HgHorarioCab hcabElsita) {
+		this.hcabElsita = hcabElsita;
+	}
 
 	// horariocab
 	/**
@@ -416,8 +426,7 @@ public class horarioCDBean implements Serializable {
 		try {
 			fecha = new Date();
 			sqlfechai = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(horcab_fechainicio));
-			sqlfechaf = java.sql.Date
-					.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(horcab_fechafin));
+			sqlfechaf = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(horcab_fechafin));
 			horcab_fecha_creacion = new Timestamp(fecha.getTime());
 			horcab_usuarioreg = usuariologeado.trim();
 			managerhorario.insertarHorarioCab(cab_id, sqlfechai, sqlfechaf,horcab_nombre.trim(), horcab_usuarioreg,horcab_fecha_creacion);
@@ -434,7 +443,7 @@ public class horarioCDBean implements Serializable {
 	}
 
 	public void generacionFechaLugarTurnoGuardia(Integer cab_id) {
-		List<HgLugare> lugares = managergest.findAllLugares();
+		List<HgLugare> lugares = managergest.findAllLugaresActivos();
 		try {
 			Date fechainicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(sqlfechai));
 			Integer dias = diasXFi_Ff();
@@ -452,7 +461,7 @@ public class horarioCDBean implements Serializable {
 									managerhorario.insertarLugarTurnoVacio(cab_id, lugarTurno.getHgTurno(),lugar, fechainicial);
 								}
 								if (guardia) {
-									if (numeroDia%26 != 0) {
+									if (numeroDia != 26) {
 										if (managerhorario.guardiaPendienteByID(guardiaAlmacenar.getGuaCedula()) != null) {
 											almacenarDetalles(guardiaAlmacenar,lugar,lugarTurno.getHgTurno(),fechainicial, null, cab_id);
 											managerhorario.EliminarGuardiaPendienteLibre(guardiaAlmacenar);
@@ -489,8 +498,6 @@ public class horarioCDBean implements Serializable {
 		}
 	}
 
-	
-
 	private HgGuardia obtenerGuardia(HgLugare lugar, Date fecha, HgTurno turno,
 			Integer numeroDias) {
 		HgGuardia guardiaelegido = new HgGuardia();
@@ -498,10 +505,10 @@ public class horarioCDBean implements Serializable {
 		List<HgGuardia> guardiasDisponibles = new ArrayList<HgGuardia>();
 		List<HgGuardiasPendiente> guardiasDisponiblesPendientes = new ArrayList<HgGuardiasPendiente>();
 		
-		if (guardiaelegido.getGuaCedula() == null) {
-			guardiasDisponibles = managergest.findGuardias7Dias(fecha);
-			guardiaelegido = obtenerGuardiaCompatible(lugar, fecha, turno,guardiasDisponibles, numeroDias);
-		}
+//		if (guardiaelegido.getGuaCedula() == null) {
+//			guardiasDisponibles = managergest.findGuardias7Dias(fecha);
+//			guardiaelegido = obtenerGuardiaCompatible(lugar, fecha, turno,guardiasDisponibles, numeroDias);
+//		}
 		if (numeroDias % 3 != 0) {
 			guardiasDisponibles = managergest.findGuardiasDisponibles(fecha);
 			guardiaelegido = obtenerGuardiaCompatible(lugar, fecha, turno,guardiasDisponibles, numeroDias);
@@ -534,8 +541,6 @@ public class horarioCDBean implements Serializable {
 			Integer diasTrabajados = 5;
 			if (managerhorario.existeAusencia(guardia.getGuaCedula(),
 					fechainicial) == 0) {
-				// if(managerhorario.trabajoLugTurnDiaAnterior(guardia,turno,fechainicial)==
-				// 0){
 				if ((managerhorario.existeGuardia(cab_id, fechainicial,
 						guardia.getGuaCedula()) != 1)) {
 					if (managerhorario.trabajoDiaAnterior(guardia,
@@ -550,7 +555,15 @@ public class horarioCDBean implements Serializable {
 								rest5Days(restDays(restDays(fechainicial))));
 					}
 					if (vecestrabajo < diasTrabajados) {
-//						if(managerhorario.trabajoSemanaAnteriorLugar(fechainicial, guardia.getGuaCedula(), lugar.getLugId()) == 0)
+//						if(managerhorario.trabajoSemanaAnteriorLugar(fechainicial, guardia.getGuaCedula(), lugar.getLugId()) == 0 )
+//							guardiaAplica = false;
+//						if(managerhorario.trabajoLugDiaAnterior(guardia,lugar,fechainicial)==1)
+//							guardiaAplica = false;
+//						if(managerhorario.trabajoLugDiaAnterior(guardia,lugar,restDays(fechainicial))==1)
+//							guardiaAplica = false;
+//						if(managerhorario.trabajoLugDiaAnterior(guardia,lugar,restDays(restDays(fechainicial)))==1)
+//							guardiaAplica = false;
+//						if(managerhorario.trabajoLugDiaAnterior(guardia,lugar,restDays(restDays(restDays(fechainicial))))==1)
 //							guardiaAplica = false;
 						if (managerhorario.existeGuardiaXturnoMNoc(cab_id,restDays(fechainicial), guardia.getGuaCedula()) == 1&& turno.getTurId() == 1)
 							guardiaAplica = false;
@@ -673,7 +686,13 @@ public class horarioCDBean implements Serializable {
 		}
 		return resultado;
 	}
-
+	
+	public Integer diasXFi_Ff() {
+		Long diff = sqlfechaf.getTime() - sqlfechai.getTime();
+		long dias = diff / (1000 * 60 * 60 * 24);
+		return (int) dias;
+	}
+	
 	/**
 	 * accion cerrar horario
 	 * 
@@ -721,11 +740,6 @@ public class horarioCDBean implements Serializable {
 		guardia.setGuaTipoSangre(guardiapendiente.getGuaEstadoCivil());
 		guardia.setGuaEstado(guardiapendiente.getGuaEstado());
 		return guardia;
-	}
-
-	public Integer diasXFi_Ff() {
-		Long diff = sqlfechaf.getTime() - sqlfechai.getTime();
-		return (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 	}
 
 	/**
@@ -875,6 +889,34 @@ public class horarioCDBean implements Serializable {
 			getListaLugarTurnoVacio().addAll(
 					managergest.allLugarTurnoByID(cab_id));
 			return "hg_nhorario?faces-redirect=true";
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+	
+	/**
+	 * eliminar lugturno abriendo el dialogo
+	 * 
+	 * @param pro_id
+	 * @throws Exception
+	 */
+	public void abrirDialogHorarioEliminar(HgHorarioCab item) {
+		setHcabElsita(item);
+		RequestContext.getCurrentInstance().execute("PF('ef').show();");
+	}
+	
+	/**
+	 * eliminar un fotoproducto
+	 * 
+	 * @param pro_id
+	 * @throws Exception
+	 */
+	public String eliminarHorarioCab() {
+		try {
+			managerhorario.eliminarHorarioCab(hcabElsita.getHcabId());
+			getlistaHorarioCab().clear();
+			getlistaHorarioCab().addAll(managerhorario.findAllHorariosCab());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

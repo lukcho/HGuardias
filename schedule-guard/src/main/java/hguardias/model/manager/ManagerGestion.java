@@ -20,6 +20,7 @@ public class ManagerGestion {
 	private ManagerDAO mDAO;
 
 	private static HgGuardia hg_gua;
+	private static HgTipoAusencia hg_tipo_ausencia;
 
 	private static HgTurno hg_turno;
 	private static HgLugare hg_lugar;
@@ -384,7 +385,17 @@ public class ManagerGestion {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<HgLugare> findAllLugares() {
-		return mDAO.findAll(HgLugare.class, "o.lugPrioridad asc");
+		return mDAO.findAll(HgLugare.class, " o.lugPrioridad asc ");
+	}
+	
+	/**
+	 * listar todos los Lugares
+	 * 
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<HgLugare> findAllLugaresActivos() {
+		return mDAO.findWhere(HgLugare.class, " o.lugEstado = 'A' ", "o.lugPrioridad asc");
 	}
 
 	/**
@@ -537,7 +548,7 @@ public class ManagerGestion {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<HgAusencia> findAllAusencias() {
-		return mDAO.findAll(HgAusencia.class);
+		return mDAO.findAll(HgAusencia.class, " o.ausFechaInicio desc ");
 	}
 
 	/**
@@ -563,13 +574,14 @@ public class ManagerGestion {
 			String aus_descripcion) throws Exception {
 		HgAusencia aus = new HgAusencia();
 		aus.setHgGuardia(hg_gua);
+		aus.setHgTipoAusencia(hg_tipo_ausencia);
 		aus.setAusFechaInicio(aus_fecha_inicio);
 		aus.setAusFechaFin(aus_fecha_fin);
 		aus.setAusDescripcion(aus_descripcion);
 
 		mDAO.insertar(aus);
 	}
-
+	
 	/**
 	 * Cambiar datos de Ausencia
 	 * 
@@ -591,6 +603,80 @@ public class ManagerGestion {
 
 		mDAO.actualizar(aus);
 	}
+	
+	//tipoausencias
+	
+	/**
+	 * listar todos las Ausencias
+	 * 
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<HgTipoAusencia> findAllTipoAusencias() {
+		return mDAO.findAll(HgTipoAusencia.class);
+	}
+	
+	/**
+	 * buscar Ausencia por ID
+	 * 
+	 * @param con_id
+	 * @throws Exception
+	 */
+	public HgTipoAusencia tipoAusenciaByID(Integer aus_id) throws Exception {
+		return (HgTipoAusencia) mDAO.findById(HgTipoAusencia.class, aus_id);
+	}
+	
+	/**
+	 * metodo para asignar el guardia
+	 * 
+	 * @param u
+	 *            guardia a analizar
+	 * @return true o false
+	 */
+	public HgTipoAusencia asignarTipoAusencia(Integer tipoaus) {
+		try {
+			hg_tipo_ausencia = this.tipoAusenciaByID(tipoaus);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return hg_tipo_ausencia;
+	}
+	
+	/**
+	 * Agrega Ausencia
+	 * 
+	 * @param hg_gua
+	 * @param aus_fecha_inicio
+	 * @param aus_fecha_fin
+	 * @param aus_descripcion
+	 * @throws Exception
+	 */
+	public void insertarTipoAusencia(String tipoaus_nombre, String tipoaus_descripcion) throws Exception {
+		HgTipoAusencia tipoaus = new HgTipoAusencia();
+		tipoaus.setTipAusNombre(tipoaus_nombre);
+		tipoaus.setTipAusDescripcion(tipoaus_descripcion);
+
+		mDAO.insertar(tipoaus);
+	}
+	
+	/**
+	 * Cambiar datos de Ausencia
+	 * 
+	 * @param hg_gua
+	 * @param aus_fecha_inicio
+	 * @param aus_fecha_fin
+	 * @param aus_descripcion
+	 * @throws Exception
+	 */
+	public void editarTipoAusencia(Integer tipoaus_id, String tipoaus_nombre ,String tipoaus_descripcion) throws Exception {
+
+		HgTipoAusencia tipoaus = this.tipoAusenciaByID(tipoaus_id);
+		tipoaus.setTipAusNombre(tipoaus_nombre);
+		tipoaus.setTipAusDescripcion(tipoaus_descripcion);
+
+		mDAO.actualizar(tipoaus);
+	}
+
 
 	// asignaciones
 
@@ -900,6 +986,16 @@ public class ManagerGestion {
 	public void eliminarTurnoLugar(Integer itemf_id) throws Exception {
 		mDAO.eliminar(HgLugarTurno.class, itemf_id);
 	}
+	
+	/**
+	 * Elimina lugarturno
+	 * 
+	 * @param prod_id
+	 * @throws Exception
+	 */
+	public void eliminarAusencia(Integer itemf_id) throws Exception {
+		mDAO.eliminar(HgAusencia.class, itemf_id);
+	}
 
 	/**
 	 * Método para buscar la imagen por Id del item
@@ -1007,5 +1103,22 @@ public class ManagerGestion {
 						+finicial+ "') order by o.gua_apellido ");
 		l = ObjectToClass1(lista);
 		return l;
+	}
+	
+	/**
+	 * Verifica si el guardia exite
+	 * 
+	 * @param u
+	 *            guardia a analizar
+	 * @return true o false
+	 */
+	public Integer ausenciaXFecha(Date fechainicial,Date fechafinal,String gua_id){
+		Date finicial = java.sql.Date
+				.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechainicial));
+		Date ffinal = java.sql.Date
+				.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechafinal));
+		return mDAO.findWhere(HgAusencia.class," o.hgGuardia.guaCedula = '" + gua_id + "' "+ " and (o.ausFechaInicio <= '" + fechainicial
+						+ "' and o.ausFechaFin >= '" + finicial + "' or o.ausFechaInicio <= '" + fechafinal+"' "
+						+ " and o.ausFechaFin >= '" + fechafinal+"' ) ", null).size();
 	}
 }

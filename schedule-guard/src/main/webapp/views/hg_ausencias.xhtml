@@ -11,7 +11,7 @@
             Ausencias
         </ui:define>
 	<ui:define name="contenido">
-	<h:form>
+		<h:form>
 			<p:remoteCommand name="onload"
 				actionListener="#{sesionBean.validaIndex()}" autoRun="true" />
 		</h:form>
@@ -33,54 +33,78 @@
 		</h:form>
 		<br />
 		<h:form id="frm">
-			<p:growl id="messages" showDetail="true" />
+			<p:growl id="messages" showDetail="false" />
 			<b:panel title="Listado de Ausencias" look="primary">
 				<p:dataTable id="tbb" value="#{ausenciaBean.listaAusencias}"
 					reflow="true" var="aus" rows="8" emptyMessage="Sin Datos"
 					paginator="true"
 					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
-					<p:column headerText="OPCIONES" width="50" exportable="false">
+					<p:column headerText="OPCIONES" width="30" exportable="false">
 						<p:commandButton id="btnE" icon="ui-icon-pencil"
 							action="#{ausenciaBean.cargarAusencia(aus)}">
 							<p:tooltip id="toolTipTrack1" for="btnE"
-								value="Bot&oacute;n para modificar la ausencia" trackMouse="true" />
+								value="Bot&oacute;n para modificar la ausencia"
+								trackMouse="true" />
+						</p:commandButton>
+						<p:commandButton id="btnEliminar" icon="ui-icon-close"
+							action="#{ausenciaBean.abrirDialogAusenciaEliminar(aus)}">
+							<p:tooltip id="toolTipTrack2" for="btnE"
+								value="Bot&oacute;n para eliminar la ausencia" trackMouse="true" />
 						</p:commandButton>
 					</p:column>
 					<p:column filterBy="#{aus.ausId}" filterMatchMode="contains"
-						headerText="ID" width="70">
+						headerText="ID" width="40">
 						<h:outputText value="#{aus.ausId}"></h:outputText>
 					</p:column>
-					<p:column filterBy="#{aus.hgGuardia.guaApellido}" filterMatchMode="contains"
-						headerText="GUARDIA" width="70">
-						<h:outputText value="#{aus.hgGuardia.guaNombre} #{aus.hgGuardia.guaApellido}"></h:outputText>
+					<p:column filterBy="#{aus.hgGuardia.guaApellido}"
+						filterMatchMode="contains" headerText="GUARDIA" width="100">
+						<h:outputText
+							value="#{aus.hgGuardia.guaNombre} #{aus.hgGuardia.guaApellido}"></h:outputText>
 					</p:column>
-					<p:column filterBy="#{aus.ausDescripcion}" filterMatchMode="contains"
-						headerText="DESCRIPCIÓN" width="70">
+					<p:column filterBy="#{aus.hgTipoAusencia.tipAusNombre}"
+						filterMatchMode="contains" headerText="TIPO AUSENCIA" width="65">
+						<h:outputText
+							value="#{aus.hgTipoAusencia.tipAusNombre}"></h:outputText>
+					</p:column>
+					<p:column filterBy="#{aus.ausDescripcion}"
+						filterMatchMode="contains" headerText="DESCRIPCIÓN" width="100">
 						<h:outputText value="#{aus.ausDescripcion}"></h:outputText>
 					</p:column>
-					<p:column headerText="FECHA INICIO/FIN" width="100">
+					<p:column headerText="FECHA INICIO/FIN" width="60">
 						<h:outputText value="#{aus.ausFechaInicio} - #{aus.ausFechaFin}">
 						</h:outputText>
 					</p:column>
 				</p:dataTable>
 				<h3>Exportar Datos</h3>
+				<h:commandButton style="width:40px;height:40px" ajax="false"
+					image="/resources/img/excel.png">
+					<p:dataExporter type="xls" target="tbb" fileName="rptausencias"
+						pageOnly="false" />
+				</h:commandButton>&nbsp;&nbsp;&nbsp;
 					<h:commandButton style="width:40px;height:40px" ajax="false"
-						image="/resources/img/excel.png">
-						<p:dataExporter type="xls" target="tbb" fileName="rptausencias"
-							pageOnly="false" />
-					</h:commandButton>&nbsp;&nbsp;&nbsp;
+					image="/resources/img/pdf.png">
+					<p:dataExporter type="pdf" target="tbb" fileName="rptausencias"
+						pageOnly="false" />
+				</h:commandButton>&nbsp;&nbsp;&nbsp;
 					<h:commandButton style="width:40px;height:40px" ajax="false"
-						image="/resources/img/pdf.png">
-						<p:dataExporter type="pdf" target="tbb" fileName="rptausencias"
-							pageOnly="false" />
-					</h:commandButton>&nbsp;&nbsp;&nbsp;
-					<h:commandButton style="width:40px;height:40px" ajax="false"
-						image="/resources/img/csv.png">
-						<p:dataExporter type="csv" target="tbb" fileName="rptausencias"
-							pageOnly="false" />
-					</h:commandButton>&nbsp;&nbsp;&nbsp;
+					image="/resources/img/csv.png">
+					<p:dataExporter type="csv" target="tbb" fileName="rptausencias"
+						pageOnly="false" />
+				</h:commandButton>&nbsp;&nbsp;&nbsp;
 			</b:panel>
 		</h:form>
+		<p:confirmDialog header="Confirmación"
+			message="Está seguro de borrar la ausencia" closable="false"
+			showEffect="fade" hideEffect="explode" widgetVar="ef">
+			<h:form>
+				<p:commandButton value="Si" styleClass="ui-confirmdialog-yes"
+					icon="ui-icon-check" action="#{ausenciaBean.eliminarAusencia()}"
+					oncomplete="PF('ef').hide();" update="frm frm:tbb" />
+				<p:commandButton value="No" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					onclick="PF('ef').hide();" />
+			</h:form>
+		</p:confirmDialog>
 	</ui:define>
 </ui:composition>
 </html>
