@@ -2,6 +2,7 @@ package hguardias.controller.gestion;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -456,6 +457,9 @@ public class horarioCDBean implements Serializable {
 								HgGuardia guardiaAlmacenar = new HgGuardia();
 								boolean guardia = true;
 								guardiaAlmacenar = obtenerGuardia(lugar,fechainicial, lugarTurno.getHgTurno(),numeroDia);
+								if (guardiaAlmacenar.getGuaCedula() == null && (lugar.getLugCctv()== true || lugar.getLugControlAccesos()== true)) {
+									guardiaAlmacenar = obtenerGuardiaSG(lugar,fechainicial, lugarTurno.getHgTurno(),numeroDia);
+								}
 								if (guardiaAlmacenar.getGuaCedula() == null) {
 									guardia = false;
 									managerhorario.insertarLugarTurnoVacio(cab_id, lugarTurno.getHgTurno(),lugar, fechainicial);
@@ -590,6 +594,72 @@ public class horarioCDBean implements Serializable {
 		}
 		return guardiaelegido;
 	}
+	
+	private HgGuardia obtenerGuardiaSG(HgLugare lugar, Date fecha, HgTurno turno,
+			Integer numeroDias) {
+		HgGuardia guardiaelegido = new HgGuardia();
+		HgGuardiasPendiente guardiaelegidoPendiente = new HgGuardiasPendiente();
+		List<HgGuardia> guardiasDisponibles = new ArrayList<HgGuardia>();
+		List<HgGuardiasPendiente> guardiasDisponiblesPendientes = new ArrayList<HgGuardiasPendiente>();
+		
+		if (numeroDias % 3 != 0) {
+			guardiasDisponibles = managergest.findGuardiasDisponibles(fecha);
+			guardiaelegido = obtenerGuardiaCompatibleSG(lugar, fecha, turno,guardiasDisponibles, numeroDias);
+		}
+		if (guardiaelegido.getGuaCedula() == null) {
+			guardiasDisponibles = managergest.findGuardiasDisponiblesSinLibres(fecha);
+			guardiaelegido = obtenerGuardiaCompatibleSG(lugar, fecha, turno,guardiasDisponibles, numeroDias);
+		}
+		if (guardiaelegido.getGuaCedula() == null) {
+			guardiasDisponibles = managergest.findGuardiasUltimosDosDiasLibres(fecha);
+			guardiaelegido = obtenerGuardiaCompatibleSG(lugar, fecha, turno,guardiasDisponibles, numeroDias);
+		}
+		if (guardiaelegido.getGuaCedula() == null) {
+			guardiasDisponiblesPendientes = managerhorario.findAllGuardiasPendientes();
+			// setear
+			guardiaelegidoPendiente = obtenerGuardiaCompatiblePendiente(lugar,fecha, turno, guardiasDisponiblesPendientes, numeroDias);
+			guardiaelegido = setearHgGuardia(guardiaelegidoPendiente);
+		}
+		return guardiaelegido;
+	}
+	
+	@SuppressWarnings("deprecation")
+	private HgGuardia obtenerGuardiaCompatibleSG(HgLugare lugar,
+			Date fechainicial, HgTurno turno,
+			List<HgGuardia> guardiasDisponibles, Integer numeroDias) {
+		HgGuardia guardiaelegido = new HgGuardia();
+		for (HgGuardia guardia : guardiasDisponibles) {
+			Boolean guardiaAplica = true;
+			Integer vecestrabajo = 0;
+			Integer diasTrabajados = 5;
+			if (managerhorario.existeAusencia(guardia.getGuaCedula(),
+					fechainicial) == 0) {
+				if ((managerhorario.existeGuardia(cab_id, fechainicial,
+						guardia.getGuaCedula()) != 1)) {
+					if (managerhorario.trabajoDiaAnterior(guardia,
+							restDays(fechainicial)) == 1) {
+						vecestrabajo = managerhorario.findNumDiasxGuardia(
+								guardia, restDays(fechainicial),
+								rest5Days(restDays(fechainicial)));
+					} else if (managerhorario.trabajoDiaAnterior(guardia,
+							restDays(restDays(fechainicial))) == 1) {
+						vecestrabajo = managerhorario.findNumDiasxGuardia(
+								guardia, restDays(restDays(fechainicial)),
+								rest5Days(restDays(restDays(fechainicial))));
+					}
+					if (vecestrabajo < diasTrabajados) {
+						if (managerhorario.existeGuardiaXturnoMNoc(cab_id,restDays(fechainicial), guardia.getGuaCedula()) == 1&& turno.getTurId() == 1)
+							guardiaAplica = false;
+						if (guardiaAplica) {
+							guardiaelegido = guardia;
+							break;
+						}
+					}
+				}
+			}
+		}
+		return guardiaelegido;
+	}
 
 	@SuppressWarnings("deprecation")
 	private HgGuardiasPendiente obtenerGuardiaCompatiblePendiente(
@@ -659,29 +729,38 @@ public class horarioCDBean implements Serializable {
 	 * @param lugar
 	 * @param fechainicial
 	 * @return
+	 * @throws ParseException 
 	 */
 	@SuppressWarnings("deprecation")
-	public boolean averiguarDia(HgLugare lugar, Date fechainicial) {
+	public boolean averiguarDia(HgLugare lugar, Date fechainicial) throws ParseException {
 		boolean resultado = true;
-		if (lugar.getLugLunes() == false && fechainicial.getDay() == 1) {
+		SimpleDateFormat df = new SimpleDateFormat( "dd/MM/yy" );
+		//parse in the date
+		java.util.Date date = fechainicial;
+		//change the pattern to output the day of week
+		df.applyPattern( "EEE" );
+		//print the formatted date out
+		System.out.println( "Day of Week = " + df.format( date ) );
+		
+		if (lugar.getLugDomingo() == false && df.format(date).equals("dom")) {
 			resultado = false;
 		}
-		if (lugar.getLugMartes() == false && fechainicial.getDay() == 2) {
+		if (lugar.getLugLunes() == false && df.format(date).equals("lun")) {
 			resultado = false;
 		}
-		if (lugar.getLugMiercoles() == false && fechainicial.getDay() == 3) {
+		if (lugar.getLugMartes() == false && df.format(date).equals("mar")) {
 			resultado = false;
 		}
-		if (lugar.getLugJueves() == false && fechainicial.getDay() == 4) {
+		if (lugar.getLugMiercoles() == false && df.format(date).equals("mié")) {
 			resultado = false;
 		}
-		if (lugar.getLugViernes() == false && fechainicial.getDay() == 5) {
+		if (lugar.getLugJueves() == false && df.format(date).equals("jue")) {
 			resultado = false;
 		}
-		if (lugar.getLugSabado() == false && fechainicial.getDay() == 6) {
+		if (lugar.getLugViernes() == false && df.format(date).equals("vie")) {
 			resultado = false;
 		}
-		if (lugar.getLugDomingo() == false && fechainicial.getDay() == 0) {
+		if (lugar.getLugSabado() == false && df.format(date).equals("sáb")) {
 			resultado = false;
 		}
 		return resultado;

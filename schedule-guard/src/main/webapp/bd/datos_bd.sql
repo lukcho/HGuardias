@@ -455,6 +455,12 @@ INSERT  INTO hg_horario_det ( hdet_id, tur_id, lug_id, gua_cedula, hdet_fecha_in
 INSERT  INTO hg_horario_det ( hdet_id, tur_id, lug_id, gua_cedula, hdet_fecha_inicio, hdet_fecha_fin, hdet_hora_inicio, hdet_hora_fin, hdet_estado) values (default,3,12,'1002769980','2016-09-30','2016-09-30','00:00:00','00:00:00','A');
 INSERT  INTO hg_horario_det ( hdet_id, tur_id, lug_id, gua_cedula, hdet_fecha_inicio, hdet_fecha_fin, hdet_hora_inicio, hdet_hora_fin, hdet_estado) values (default,2,14,'1002769980','2016-10-01','2016-10-01','00:00:00','00:00:00','A');
 INSERT  INTO hg_horario_det ( hdet_id, tur_id, lug_id, gua_cedula, hdet_fecha_inicio, hdet_fecha_fin, hdet_hora_inicio, hdet_hora_fin, hdet_estado) values (default,1,6,'1002769980','2016-10-02','2016-10-02','00:00:00','00:00:00','A');
+INSERT  INTO hg_horario_det ( hdet_id, tur_id, lug_id, gua_cedula, hdet_fecha_inicio, hdet_fecha_fin, hdet_hora_inicio, hdet_hora_fin, hdet_estado) values (default,1,2,'1004025258','2016-09-26','2016-09-26','00:00:00','00:00:00','A');
+INSERT  INTO hg_horario_det ( hdet_id, tur_id, lug_id, gua_cedula, hdet_fecha_inicio, hdet_fecha_fin, hdet_hora_inicio, hdet_hora_fin, hdet_estado) values (default,1,5,'1004025258','2016-09-27','2016-09-27','00:00:00','00:00:00','A');
+INSERT  INTO hg_horario_det ( hdet_id, tur_id, lug_id, gua_cedula, hdet_fecha_inicio, hdet_fecha_fin, hdet_hora_inicio, hdet_hora_fin, hdet_estado) values (default,1,2,'1004025258','2016-09-28','2016-09-28','00:00:00','00:00:00','A');
+INSERT  INTO hg_horario_det ( hdet_id, tur_id, lug_id, gua_cedula, hdet_fecha_inicio, hdet_fecha_fin, hdet_hora_inicio, hdet_hora_fin, hdet_estado) values (default,3,4,'1004025258','2016-09-29','2016-09-29','00:00:00','00:00:00','A');
+INSERT  INTO hg_horario_det ( hdet_id, tur_id, lug_id, gua_cedula, hdet_fecha_inicio, hdet_fecha_fin, hdet_hora_inicio, hdet_hora_fin, hdet_estado) values (default,2,2,'1004025258','2016-09-30','2016-09-30','00:00:00','00:00:00','A');
+
 
 INSERT  INTO hg_tipo_ausencia values (1, 'Vacación', 'Vacación');
 INSERT  INTO hg_tipo_ausencia values (2, 'Enfermedad', 'Enfermedad');

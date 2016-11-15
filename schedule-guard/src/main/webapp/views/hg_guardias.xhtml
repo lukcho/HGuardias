@@ -11,7 +11,7 @@
             Guardias
         </ui:define>
 	<ui:define name="contenido">
-	<h:form>
+		<h:form>
 			<p:remoteCommand name="onload"
 				actionListener="#{sesionBean.validaIndex()}" autoRun="true" />
 		</h:form>
@@ -42,10 +42,15 @@
 						<p:commandButton id="btnE" icon="ui-icon-pencil"
 							action="#{guardiaBean.cargarGuardia(gua)}">
 							<p:tooltip id="toolTipTrack1" for="btnE"
-								value="Bot&oacute;n para modificar el guardia"
-								trackMouse="true" />
+								value="Bot&oacute;n para modificar el guardia" trackMouse="true" />
 						</p:commandButton>
 							&nbsp;&nbsp;&nbsp;
+							<p:commandButton id="trackcamb" icon="ui-icon-refresh"
+							action="#{guardiaBean.cambiarEstadoGuardiaa(gua)}">
+							<p:tooltip id="toolTipTrack2" for="trackcamb"
+								value="Bot&oacute;n para cambiar el estado del guardia"
+								trackMouse="true" />
+						</p:commandButton>
 					</p:column>
 					<p:column filterBy="#{gua.guaCedula}" filterMatchMode="contains"
 						headerText="CÉDULA" width="50">
@@ -55,8 +60,9 @@
 						headerText="NOMBRE/APELLIDO" width="80">
 						<h:outputText value="#{gua.guaApellido} #{gua.guaNombre} "></h:outputText>
 					</p:column>
-					<p:column headerText="SEXO" filterBy="#{gua.guaSexo}" filterMatchMode="contains" width="50">
-					<h:outputText value="#{guardiaBean.cambiarSexo(gua.guaSexo)}"></h:outputText>
+					<p:column headerText="SEXO" filterBy="#{gua.guaSexo}"
+						filterMatchMode="contains" width="50">
+						<h:outputText value="#{guardiaBean.cambiarSexo(gua.guaSexo)}"></h:outputText>
 					</p:column>
 					<p:column headerText="CORREO" width="80">
 						<h:outputText value="#{gua.guaCorreo}"></h:outputText>
@@ -67,29 +73,42 @@
 					<p:column headerText="CELULAR" width="50">
 						<h:outputText value="#{gua.guaCelular}"></h:outputText>
 					</p:column>
-					<p:column headerText="ESTADO" filterBy="#{gua.guaEstado}" filterMatchMode="contains" width="50">
+					<p:column headerText="ESTADO" filterBy="#{gua.guaEstado}"
+						filterMatchMode="contains" width="50">
 						<h:outputText value="#{guardiaBean.cambiarNombre(gua.guaEstado)}"></h:outputText>
 					</p:column>
 				</p:dataTable>
 				<h3>Exportar Datos</h3>
+				<h:commandButton style="width:40px;height:40px" ajax="false"
+					image="/resources/img/excel.png">
+					<p:dataExporter type="xls" target="tbb" fileName="rptguardias"
+						pageOnly="false" />
+				</h:commandButton>&nbsp;&nbsp;&nbsp;
 					<h:commandButton style="width:40px;height:40px" ajax="false"
-						image="/resources/img/excel.png">
-						<p:dataExporter type="xls" target="tbb" fileName="rptguardias"
-							pageOnly="false" />
-					</h:commandButton>&nbsp;&nbsp;&nbsp;
-					<h:commandButton style="width:40px;height:40px" ajax="false"
-						image="/resources/img/pdf.png">
-						<p:dataExporter type="pdf" target="tbb" fileName="rptguardias"
-							pageOnly="false" />
-					</h:commandButton>&nbsp;&nbsp;&nbsp;
+					image="/resources/img/pdf.png">
+					<p:dataExporter type="pdf" target="tbb" fileName="rptguardias"
+						pageOnly="false" />
+				</h:commandButton>&nbsp;&nbsp;&nbsp;
 					
 					<h:commandButton style="width:40px;height:40px" ajax="false"
-						image="/resources/img/csv.png">
-						<p:dataExporter type="csv" target="tbb" fileName="rptguardias"
-							pageOnly="false" />
-					</h:commandButton>&nbsp;&nbsp;&nbsp;
+					image="/resources/img/csv.png">
+					<p:dataExporter type="csv" target="tbb" fileName="rptguardias"
+						pageOnly="false" />
+				</h:commandButton>&nbsp;&nbsp;&nbsp;
 			</b:panel>
 		</h:form>
+		<p:confirmDialog header="Confirmación"
+			message="Está seguro de cambiar el estado?" closable="false"
+			showEffect="fade" hideEffect="explode" widgetVar="ce">
+			<h:form>
+				<p:commandButton value="Si" styleClass="ui-confirmdialog-yes"
+					icon="ui-icon-check" action="#{guardiaBean.cambiarEstadoGuardia()}"
+					oncomplete="PF('ce').hide();" update=":frm:messages :frm:tbb" />
+				<p:commandButton value="No" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					onclick="PF('ce').hide();" />
+			</h:form>
+		</p:confirmDialog>
 	</ui:define>
 </ui:composition>
 </html>

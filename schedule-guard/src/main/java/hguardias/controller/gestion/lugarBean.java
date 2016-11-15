@@ -71,6 +71,7 @@ public class lugarBean implements Serializable {
 	private boolean guardado;
 
 	private List<HgLugare> listaLugares;
+	private HgLugare lugardelsita;
 
 	// prioridades
 	private List<HgLugare> lugaresPriorizar;
@@ -368,6 +369,14 @@ public class lugarBean implements Serializable {
 	
 	public void setPrioridad(Integer prioridad) {
 		this.prioridad = prioridad;
+	}
+	
+	public HgLugare getLugardelsita() {
+		return lugardelsita;
+	}
+	
+	public void setLugardelsita(HgLugare lugardelsita) {
+		this.lugardelsita = lugardelsita;
 	}
 
 	// Lugares
@@ -810,5 +819,33 @@ public class lugarBean implements Serializable {
 		}else{
 			return "Inactivo";
 		}
+	}
+	
+	/**
+	 * Metodo para cambiar el estado del Item
+	 * 
+	 * @param item
+	 */
+	public void cambiarEstadoLugar(HgLugare lug) {
+		setLugardelsita(lug);
+		RequestContext.getCurrentInstance().execute("PF('ce').show();");
+	}
+	
+
+	/**
+	 * Método para activar y desactivar estado del item
+	 * 
+	 * @param pro_id
+	 * @throws Exception
+	 */
+	public String cambiarEstado() {
+		try {
+			Mensaje.crearMensajeINFO(managergest.cambioEstadoLugar(getLugardelsita().getLugId()));
+			getListaLugares().clear();
+			getListaLugares().addAll(managergest.findAllLugares());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "items?faces-redirect=true";
 	}
 }

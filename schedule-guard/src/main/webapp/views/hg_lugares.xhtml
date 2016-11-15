@@ -51,6 +51,12 @@
 								value="Bot&oacute;n para modificar el lugar" trackMouse="true" />
 						</p:commandButton>
 							&nbsp;&nbsp;&nbsp;
+							<p:commandButton id="trackcamb" icon="ui-icon-refresh"
+							action="#{lugarBean.cambiarEstadoLugar(lug)}">
+							<p:tooltip id="toolTipTrack2" for="trackcamb"
+								value="Bot&oacute;n para cambiar el estado del lugar"
+								trackMouse="true" />
+						</p:commandButton>
 					</p:column>
 					<p:column filterBy="#{lug.lugNombre}" filterMatchMode="contains"
 						headerText="NOMBRE" width="100">
@@ -70,8 +76,8 @@
 							value="#{lug.lugControlAccesos}">
 						</p:selectBooleanCheckbox>
 					</p:column>
-					<p:column filterMatchMode="contains" headerText="PRIORIDAD" sortBy="#{lug.lugPrioridad}"
-						width="20">
+					<p:column filterMatchMode="contains" headerText="PRIORIDAD"
+						sortBy="#{lug.lugPrioridad}" width="20">
 						<h:outputText value="#{lug.lugPrioridad}"></h:outputText>
 					</p:column>
 					<p:column filterMatchMode="contains" sortBy="#{lug.lugEstado}"
@@ -99,47 +105,59 @@
 		</h:form>
 		<p:dialog positionType="center" responsive="true"
 			header="Prioridad de lugares" width="350" height="300"
-			draggable="true" closable="true" closeOnEscape="true" dynamic="true" 
+			draggable="true" closable="true" closeOnEscape="true" dynamic="true"
 			showEffect="fade" hideEffect="explode" widgetVar="dlgprioridad"
 			modal="true" id="prioridad" resizable="false">
 			<h:form>
-			<b:panel look="primary">
-				<b:row>
-					<b:column span="3">
-						<p:orderList id="orderlist" controlsLocation="left"
-							value="#{lugarBean.lugaresPriorizar}" var="lug"
-							moveUpLabel="Subir" moveDownLabel="Bajar"
-							moveBottomLabel="Mover al fondo" moveTopLabel="Mover al inicio"
-							itemValue="#{lug.lugId}">
-							<p:column>
-								<h:outputText value="#{lug.lugNombre}" />
-							</p:column>
-							<p:ajax event="select" listener="#{lugarBean.onSelect}"
-								update=":frm:messages" />
-							<p:ajax event="unselect" listener="#{lugarBean.onUnselect}"
-								update=":frm:messages" />
-							<p:ajax event="reorder" listener="#{lugarBean.onReorder}"
-								update=":frm:messages" />
-						</p:orderList>
-					</b:column>
-				</b:row>
-				<br />
-				<b:row>
-					<b:column span="12">
-						<b:commandButton id="prioridades" value="Guardar"
-							styleClass="btn btn-info" style="padding:7px;"
-							action="#{lugarBean.guardarPrioridad()}" update=":frm"></b:commandButton>&nbsp;&nbsp;&nbsp;
+				<b:panel look="primary">
+					<b:row>
+						<b:column span="3">
+							<p:orderList id="orderlist" controlsLocation="left"
+								value="#{lugarBean.lugaresPriorizar}" var="lug"
+								moveUpLabel="Subir" moveDownLabel="Bajar"
+								moveBottomLabel="Mover al fondo" moveTopLabel="Mover al inicio"
+								itemValue="#{lug.lugId}">
+								<p:column>
+									<h:outputText value="#{lug.lugNombre}" />
+								</p:column>
+								<p:ajax event="select" listener="#{lugarBean.onSelect}"
+									update=":frm:messages" />
+								<p:ajax event="unselect" listener="#{lugarBean.onUnselect}"
+									update=":frm:messages" />
+								<p:ajax event="reorder" listener="#{lugarBean.onReorder}"
+									update=":frm:messages" />
+							</p:orderList>
+						</b:column>
+					</b:row>
+					<br />
+					<b:row>
+						<b:column span="12">
+							<b:commandButton id="prioridades" value="Guardar"
+								styleClass="btn btn-info" style="padding:7px;"
+								action="#{lugarBean.guardarPrioridad()}" update=":frm"></b:commandButton>&nbsp;&nbsp;&nbsp;
 							
 						<b:commandButton value="Volver" styleClass="btn btn-info"
-							style="padding:7px;"
-							action="#{lugarBean.cerrarDialogPrioridad()}" update=":frm"
-							look="info" process="@this">
-						</b:commandButton>&nbsp;&nbsp;&nbsp;
+								style="padding:7px;"
+								action="#{lugarBean.cerrarDialogPrioridad()}" update=":frm"
+								look="info" process="@this">
+							</b:commandButton>&nbsp;&nbsp;&nbsp;
 					</b:column>
-				</b:row>
+					</b:row>
 				</b:panel>
 			</h:form>
 		</p:dialog>
+		<p:confirmDialog header="Confirmación"
+			message="Está seguro de cambiar el estado?" closable="false"
+			showEffect="fade" hideEffect="explode" widgetVar="ce">
+			<h:form>
+				<p:commandButton value="Si" styleClass="ui-confirmdialog-yes"
+					icon="ui-icon-check" action="#{lugarBean.cambiarEstado()}"
+					oncomplete="PF('ce').hide();" update=":frm:messages :frm:tbb" />
+				<p:commandButton value="No" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					onclick="PF('ce').hide();" />
+			</h:form>
+		</p:confirmDialog>
 	</ui:define>
 </ui:composition>
 </html>
