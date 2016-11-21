@@ -15,8 +15,6 @@ public class HgLugarTurno implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="HG_LUGAR_TURNO_LUGTUR_GENERATOR", sequenceName="SEQ_HG_LUG_TUR", allocationSize=1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="HG_LUGAR_TURNO_LUGTUR_GENERATOR")
 	@Column(name="lug_tur")
 	private Integer lugTur;
 

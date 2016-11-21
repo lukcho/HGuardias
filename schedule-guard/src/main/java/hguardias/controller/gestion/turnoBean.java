@@ -183,7 +183,7 @@ public class turnoBean implements Serializable {
 				Mensaje.crearMensajeINFO("Actualizado - Modificado");
 				limpiarCampos();
 			} else {
-				managergest.insertarTurno(turno_descripcion.trim(),
+				managergest.insertarTurno(turno_id,turno_descripcion.trim(),
 						horainiciotiemp, horafintiemp);
 				Mensaje.crearMensajeINFO("Registrado - Creado");
 				limpiarCampos();
@@ -317,7 +317,7 @@ public class turnoBean implements Serializable {
 	 * @return
 	 */
 	public String nuevoTurno() {
-		turno_id = null;
+		turno_id = managergest.ultimoOrdenCabeceraTurno();
 		turno_descripcion = null;
 		turno_estado = "A";
 		turno_hora_inicio = null;

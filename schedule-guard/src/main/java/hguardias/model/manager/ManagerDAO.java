@@ -65,8 +65,8 @@ public class ManagerDAO {
 	}
 	
 	/**
-	 * finder Genérico que devuelve todos las entidades de una tabla. Esta versión
-	 * no cierra la transacción, para que el Manager que la invoque lo haga.
+	 * finder Genï¿½rico que devuelve todos las entidades de una tabla. Esta versiï¿½n
+	 * no cierra la transacciï¿½n, para que el Manager que la invoque lo haga.
 	 * 
 	 * @param clase
 	 *            La clase que se desea consultar.
@@ -425,7 +425,7 @@ public class ManagerDAO {
     }
     
     /**
-     * Ejecuta una búsqueta analizando una fecha
+     * Ejecuta una bï¿½squeta analizando una fecha
      * @param clase
      * @param where
      * @param param
@@ -629,6 +629,20 @@ public class ManagerDAO {
                 valor = null;
             return valor;
     }
+   
+   @SuppressWarnings("rawtypes")
+   public Long tomarValorIntJPQLlong(String pClausulaJPQL) {
+           mostrarLog("findSQL", pClausulaJPQL);
+           Query q;
+           Long valor;
+           q = em.createQuery(pClausulaJPQL);
+           List lista = q.getResultList();
+           if(!lista.isEmpty())
+               valor = (Long) lista.get(0);
+           else
+               valor = null;
+           return valor;
+   }
    
    @SuppressWarnings("rawtypes")
 	 public List  ejectNativeSQL3(String pClausulaSQL) {

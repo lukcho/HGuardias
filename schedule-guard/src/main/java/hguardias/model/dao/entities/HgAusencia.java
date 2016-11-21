@@ -16,8 +16,6 @@ public class HgAusencia implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="HG_AUSENCIAS_AUSID_GENERATOR", sequenceName="SEQ_HG_AUSENCIAS", allocationSize=1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="HG_AUSENCIAS_AUSID_GENERATOR")
 	@Column(name="aus_id")
 	private Integer ausId;
 

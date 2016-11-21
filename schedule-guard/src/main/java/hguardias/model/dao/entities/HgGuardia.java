@@ -87,13 +87,21 @@ public class HgGuardia implements Serializable {
 	private String guaTipoSangre;
 
 	//bi-directional many-to-one association to HgAusencia
-	@OneToMany(mappedBy="hgGuardia",cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="hgGuardia")
 	private List<HgAusencia> hgAusencias;
+
+	//bi-directional many-to-one association to HgGuardiasPendiente
+	@OneToMany(mappedBy="hgGuardia")
+	private List<HgGuardiasPendiente> hgGuardiasPendientes;
 
 	//bi-directional many-to-one association to HgHorarioDet
 	@OneToMany(mappedBy="hgGuardia")
 	private List<HgHorarioDet> hgHorarioDets;
-
+	
+	//bi-directional many-to-one association to HgFalto
+	@OneToMany(mappedBy="hgGuardia")
+	private List<HgFalto> hgFaltos;
+		
 	public HgGuardia() {
 	}
 
@@ -295,6 +303,28 @@ public class HgGuardia implements Serializable {
 		return hgAusencia;
 	}
 
+	public List<HgGuardiasPendiente> getHgGuardiasPendientes() {
+		return this.hgGuardiasPendientes;
+	}
+
+	public void setHgGuardiasPendientes(List<HgGuardiasPendiente> hgGuardiasPendientes) {
+		this.hgGuardiasPendientes = hgGuardiasPendientes;
+	}
+
+	public HgGuardiasPendiente addHgGuardiasPendiente(HgGuardiasPendiente hgGuardiasPendiente) {
+		getHgGuardiasPendientes().add(hgGuardiasPendiente);
+		hgGuardiasPendiente.setHgGuardia(this);
+
+		return hgGuardiasPendiente;
+	}
+
+	public HgGuardiasPendiente removeHgGuardiasPendiente(HgGuardiasPendiente hgGuardiasPendiente) {
+		getHgGuardiasPendientes().remove(hgGuardiasPendiente);
+		hgGuardiasPendiente.setHgGuardia(null);
+
+		return hgGuardiasPendiente;
+	}
+
 	public List<HgHorarioDet> getHgHorarioDets() {
 		return this.hgHorarioDets;
 	}
@@ -316,5 +346,26 @@ public class HgGuardia implements Serializable {
 
 		return hgHorarioDet;
 	}
+	
+	public List<HgFalto> getHgFaltos() {
+		return this.hgFaltos;
+	}
 
+	public void setHgFaltos(List<HgFalto> hgFaltos) {
+		this.hgFaltos = hgFaltos;
+	}
+
+	public HgFalto addHgFalto(HgFalto hgFalto) {
+		getHgFaltos().add(hgFalto);
+		hgFalto.setHgGuardia(this);
+
+		return hgFalto;
+	}
+
+	public HgFalto removeHgFalto(HgFalto hgFalto) {
+		getHgFaltos().remove(hgFalto);
+		hgFalto.setHgGuardia(null);
+
+		return hgFalto;
+	}
 }

@@ -241,7 +241,7 @@ public class ausenciaBean implements Serializable {
 				tipoause_id = null;
 				Mensaje.crearMensajeINFO("Ausecia Editada");
 			} else {
-				managergest.insertarAusencia(sqlfechai, sqlfechaf,
+				managergest.insertarAusencia(aus_id,sqlfechai, sqlfechaf,
 						aus_descripcion.trim());
 				Mensaje.crearMensajeINFO("Registrado - Creado");
 				getListaAusencias().clear();
@@ -350,7 +350,8 @@ public class ausenciaBean implements Serializable {
 	 * @return
 	 */
 	public String nuevoAusencia() {
-		aus_id = null;aus_fechainicio = null;
+		aus_id = managergest.ultimoOrdenCabeceraAusencia();
+		aus_fechainicio = null;
 		aus_fechafin = null;aus_descripcion = null;
 		gua_id = null;nombreguardia = "";tipoause_id = null;
 		apellidoguardia = "";ediciontipo = false;

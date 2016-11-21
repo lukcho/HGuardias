@@ -16,8 +16,6 @@ public class HgLugaresTurnosVacio implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="HG_LUGARES_TURNOS_VACIOS_HGLUGTURID_GENERATOR", sequenceName="SEQ_HG_LUG_TUR_VACIOS", allocationSize=1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="HG_LUGARES_TURNOS_VACIOS_HGLUGTURID_GENERATOR")
 	@Column(name="hglugtur_id")
 	private Integer hglugturId;
 

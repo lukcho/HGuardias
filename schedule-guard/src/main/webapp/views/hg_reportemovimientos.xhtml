@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="titulo">
+            Reporte Movimientos
+        </ui:define>
+	<ui:define name="contenido">
+		<h:form>
+			<center>
+				<h1>Reporte de Movimientos</h1>
+			</center>
+			<b:row>
+				<p:remoteCommand name="onload"
+					actionListener="#{sesionBean.validaIndex()}" autoRun="true" />
+			</b:row>
+		</h:form>
+		<br />
+		<h:form id="frm">
+			<p:growl id="messages" showDetail="false" />
+			<b:panel title="Listado de Movimientos" look="primary">
+				<p:dataTable id="tbb"
+					value="#{reporteMovimientosBean.listamovimientos}"
+					scrollable="true" scrollWidth="98%" reflow="true" var="mov"
+					rows="20" emptyMessage="Sin Datos" paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+					<f:facet name="header">
+						<p:commandButton id="toggler" type="button" value="Columns"
+							style="float:right" icon="ui-icon-calculator" />
+						<p:columnToggler datasource="tbb" trigger="toggler" />
+					</f:facet>
+					<p:column filterBy="#{mov.hgHorarioCab}" filterMatchMode="contains"
+						headerText="HORARIO" width="70">
+						<h:outputText
+							value="#{reporteMovimientosBean.cambiarDescripcId(mov.hgHorarioCab.hcabId)} "></h:outputText>
+					</p:column>
+					<p:column headerText="GUARDIA DESDE" sortBy="#{mov.guaCedulaDesde}"
+						width="80">
+						<h:outputText
+							value="#{reporteMovimientosBean.cambiarNombreGuardia(mov.guaCedulaDesde)}"></h:outputText>
+					</p:column>
+					<p:column headerText="GUARDIA HACIA" sortBy="#{mov.guaCedulaHacia}"
+						width="80">
+						<h:outputText
+							value="#{reporteMovimientosBean.cambiarNombreGuardia(mov.guaCedulaHacia)}"></h:outputText>
+					</p:column>
+					<p:column headerText="LUGAR DESDE" sortBy="#{mov.lugIdDesde}"
+						width="60">
+						<h:outputText
+							value="#{reporteMovimientosBean.cambiarNombreLugar(mov.lugIdDesde)}"></h:outputText>
+					</p:column>
+					<p:column headerText="LUGAR HACIA" sortBy="#{mov.lugIdHacia}"
+						width="70">
+						<h:outputText
+							value="#{reporteMovimientosBean.cambiarNombreLugar(mov.lugIdHacia)}"></h:outputText>
+					</p:column>
+					<p:column headerText="FECHA" sortBy="#{mov.hdetFecha}" width="60">
+						<h:outputText value="#{mov.hdetFecha}">
+							<f:convertDateTime pattern="yyyy/MM/dd" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="FECHA CREACION" sortBy="#{mov.hdetFecha}"
+						width="70">
+						<h:outputText value="#{mov.histoFechaMovimiento}">
+							<f:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+						</h:outputText>
+					</p:column>
+				</p:dataTable>
+				<h3>Exportar Datos</h3>
+				<h:commandButton style="width:40px;height:40px" ajax="false"
+					image="/resources/img/excel.png">
+					<p:dataExporter type="xls" target="tbb" fileName="rptmovimientos"
+						pageOnly="false" />
+				</h:commandButton>&nbsp;&nbsp;&nbsp;
+					<h:commandButton style="width:40px;height:40px" ajax="false"
+					image="/resources/img/pdf.png">
+					<p:dataExporter type="pdf" target="tbb" fileName="rptmovimientos"
+						pageOnly="false" />
+				</h:commandButton>&nbsp;&nbsp;&nbsp;
+					
+					<h:commandButton style="width:40px;height:40px" ajax="false"
+					image="/resources/img/csv.png">
+					<p:dataExporter type="csv" target="tbb" fileName="rptmovimientos"
+						pageOnly="false" />
+				</h:commandButton>&nbsp;&nbsp;&nbsp;
+			</b:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

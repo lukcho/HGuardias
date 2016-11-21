@@ -5,7 +5,6 @@ import hguardias.model.dao.entities.*;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -215,7 +214,7 @@ public class ManagerHorario {
 				"yyyy-MM-dd").format(fecha5dias));
 		return mDAO.findWhere(
 				HgHorarioDet.class,
-				" o.hgGuardia.guaCedula = '" + g.getGuaCedula()
+				" o.hgGuardia.guaCedula = '" + g.getHgGuardia().getGuaCedula()
 						+ "'  and o.hdetFechaInicio between '" + finicial5dias
 						+ "' and  '" + finicial + "'  ", null).size();
 	}
@@ -235,7 +234,7 @@ public class ManagerHorario {
 						.format(fecha_inicial));
 		return mDAO.findWhere(
 				HgHorarioDet.class,
-				" o.hgGuardia.guaCedula = '" + g.getGuaCedula()
+				" o.hgGuardia.guaCedula = '" + g.getHgGuardia().getGuaCedula()
 						+ "'  and o.hdetFechaInicio = '" + finicial + "' ",
 				null).size();
 	}
@@ -620,32 +619,29 @@ public class ManagerHorario {
 	 * @param con_correo
 	 * @throws Exception
 	 */
-	public void insertarGuardiaPendienteLibre(HgGuardia guardia)
+	public void insertarGuardiaPendienteLibre(HgGuardia guardia,Date fecha)
 			throws Exception {
 		HgGuardiasPendiente gua = new HgGuardiasPendiente();
-		gua.setGuaCedula(guardia.getGuaCedula());
-		gua.setGuaNombre(guardia.getGuaNombre());
-		gua.setGuaApellido(guardia.getGuaApellido());
-		gua.setGuaFechanac(guardia.getGuaFechanac());
-		gua.setGuaCiudad(guardia.getGuaCiudad());
-		gua.setGuaSexo(guardia.getGuaSexo());
-		gua.setGuaTelefono(guardia.getGuaTelefono());
-		gua.setGuaCelular(guardia.getGuaCelular());
-		gua.setGuaCorreo(guardia.getGuaCorreo());
-		gua.setGuaDireccion(guardia.getGuaDireccion());
-		gua.setGuaCctv(guardia.getGuaCctv());
-		gua.setGuaMotorizado(guardia.getGuaMotorizado());
-		gua.setGuaChofer(guardia.getGuaChofer());
-		gua.setGuaControlAccesos(guardia.getGuaControlAccesos());
-		gua.setGuaCasoTurno(guardia.getGuaCasoTurno());
-		gua.setGuaCasoEstudio(guardia.getGuaCasoEstudio());
-		gua.setGuaCasoNocturno(guardia.getGuaCasoNocturno());
-		gua.setGuaEstadoCivil(guardia.getGuaEstadoCivil());
-		gua.setGuaTipoSangre(guardia.getGuaTipoSangre());
-		gua.setGuaEstado(guardia.getGuaEstado());
+		Integer pendienteid = ultimoOrdenPendiente();
+		gua.setGuapenId(pendienteid);
+		gua.setHgGuardia(guardia);
+		gua.setGuapenFecha(fecha);
 		mDAO.insertar(gua);
 	}
 
+	public Integer ultimoOrdenPendiente() {
+		Integer orden = mDAO
+				.tomarValorIntJPQL("select max(o.guapenId) from HgGuardiasPendiente o");
+		if (orden == null) {
+			orden = 1;
+			System.out.println(orden);
+		} else {
+			orden += 1;
+			System.out.println(orden);
+		}
+		return orden;
+	}
+	
 	/**
 	 * Elimina guardias
 	 * 
@@ -656,21 +652,23 @@ public class ManagerHorario {
 	 * @param con_correo
 	 * @throws Exception
 	 */
-	public void EliminarGuardiaPendienteLibre(HgGuardia guardia)
+	public void eliminarGuardiaPendienteLibre(Integer cab_id,String guardia,Date fechainicial)
 			throws Exception {
-		mDAO.eliminar(HgGuardiasPendiente.class, guardia.getGuaCedula());
+		Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechainicial));
+		mDAO.ejectJPQL("delete from HgGuardiasPendiente where hgGuardia.guaCedula = '"+guardia+"' and guapenFecha = '"+finicial+"' ");
 	}
 
 	/**
-	 * listar todos los guardias
+	 * listar todos los guardias pendientes
 	 * 
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public List<HgGuardiasPendiente> findAllGuardiasPendientes() {
-		return mDAO.findAll(HgGuardiasPendiente.class, " o.guaCedula asc ");
+	public List<HgGuardiasPendiente> findAllGuardiasPendientes(Date fechainicial) {
+		return mDAO.findWhere(HgGuardiasPendiente.class, " o.guapenFecha = '"+fechainicial+"' ", " o.hgGuardia.guaCedula asc ");
 	}
 
+	//guardias
 	/**
 	 * listar todos los guardias
 	 * 
@@ -692,34 +690,38 @@ public class ManagerHorario {
 	}
 
 	/**
-	 * buscar guardias por ID
+	 * buscar guardiaspendiente por ID
 	 * 
 	 * @param con_id
 	 * @throws Exception
 	 */
-	public HgGuardiasPendiente guardiaByIDPendiente(String con_id)
-			throws Exception {
-		return (HgGuardiasPendiente) mDAO.findById(HgGuardiasPendiente.class,
-				con_id);
-	}
-
-	/**
-	 * buscar guardias por ID
-	 * 
-	 * @param con_id
-	 * @throws Exception
-	 */
-	public HgGuardiasPendiente guardiaPendienteByID(String con_id)
-			throws Exception {
-		return (HgGuardiasPendiente) mDAO.findById(HgGuardiasPendiente.class,
-				con_id);
+	public Integer guardiaPendienteByID(String ced_id,Date fechainicial)throws Exception {
+		Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechainicial));
+		Long abc = mDAO.tomarValorIntJPQLlong("select count(o) from HgGuardiasPendiente o where o.hgGuardia.guaCedula = '"+ced_id+"' and o.guapenFecha = '"+finicial+"' "); 
+		Integer r =  (int) (long) abc;
+		return  r;
 	}
 
 	// lugarturno vacio
 
+	public Integer ultimoOrdenLugarTurnoVacio() {
+		Integer orden = mDAO
+				.tomarValorIntJPQL("select max(o.hglugturId) from HgLugaresTurnosVacio o");
+		if (orden == null) {
+			orden = 1;
+			System.out.println(orden);
+		} else {
+			orden += 1;
+			System.out.println(orden);
+		}
+		return orden;
+	}
+	
 	public void insertarLugarTurnoVacio(Integer hor_cab, HgTurno t, HgLugare l,
 			Date det_fechaini) throws Exception {
+		Integer lugturn = this.ultimoOrdenLugarTurnoVacio();
 		HgLugaresTurnosVacio lugturvacio = new HgLugaresTurnosVacio();
+		lugturvacio.setHglugturId(lugturn);
 		lugturvacio.setHgHorarioCab(this.horarioCabByID(hor_cab));
 		lugturvacio.setHgTurno(t);
 		lugturvacio.setHgLugare(l);
@@ -772,6 +774,16 @@ public class ManagerHorario {
 				+ finicial + "' and o.hgGuardia.guaCedula = '" + cedula + "' ",
 				null);
 	}
+	
+	/**
+	 * buscar horairodetalle por ID
+	 * 
+	 * @param con_id
+	 * @throws Exception
+	 */
+	public HgHorarioDet dertalleByID(Integer det_id) throws Exception {
+		return (HgHorarioDet) mDAO.findById(HgHorarioDet.class, det_id);
+	}
 
 	/**
 	 * Cambiar datos de cabecera
@@ -816,14 +828,20 @@ public class ManagerHorario {
 	}
 
 	/**
-	 * Método que permite asegurar obtener guardias que estaban libres los 2
+	 * Mï¿½todo que permite asegurar obtener guardias que estaban libres los 2
 	 * dias
 	 * 
 	 * @param fechainicial
 	 * @return
-	 */
-	public void eliminarHorarioCab(Integer hcab_id) {
+	 */ 
+	public void eliminarHorarioCab(Integer hcab_id, Date fechaFinal,Date fechaInicial) {
+		Date ffinal = java.sql.Date
+				.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechaFinal));
+		Date finicial = java.sql.Date
+				.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechaInicial));
 		mDAO.ejectJPQL("delete from HgHorarioDet where hgHorarioCab.hcabId = "+hcab_id+"  ");
+		mDAO.ejectJPQL("delete from HgGuardiasPendiente where guapenFecha <= '"+ffinal+"' and guapenFecha >= '"+finicial+"' ");
+		mDAO.ejectJPQL("delete from HgHistorialMovimiento where hgHorarioCab.hcabId = "+hcab_id+"  ");
 		mDAO.ejectJPQL("delete from HgLugaresTurnosVacio where hgHorarioCab.hcabId = "+hcab_id+"  ");
 		mDAO.ejectJPQL("delete from HgHorarioCab where hcabId  = "+hcab_id+" ");
 	}

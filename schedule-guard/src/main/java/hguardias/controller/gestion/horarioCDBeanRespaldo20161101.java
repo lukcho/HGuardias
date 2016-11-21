@@ -428,7 +428,7 @@ public class horarioCDBeanRespaldo20161101 implements Serializable {
 					horcab_fecha_creacion);
 			if (!managergest.findAllGuardias().isEmpty()) {
 				generacionFechaLugarTurnoGuardia(cab_id);
-				Mensaje.crearMensajeINFO("Se creó satisfactoriamente");
+				Mensaje.crearMensajeINFO("Se creï¿½ satisfactoriamente");
 			} else {
 				Mensaje.crearMensajeWARN("Error detalle vacio revisar guardias");
 			}
@@ -461,15 +461,15 @@ public class horarioCDBeanRespaldo20161101 implements Serializable {
 								}
 								if (guardia) {
 									if (numeroDia != 26) {
-										if (managerhorario.guardiaPendienteByID(guardiaAlmacenar.getGuaCedula()) != null) {
+										if (managerhorario.guardiaPendienteByID(guardiaAlmacenar.getGuaCedula(),fechainicial) != 0) {
 											almacenarDetalles(guardiaAlmacenar,lugar,lugarTurno.getHgTurno(),fechainicial, null, cab_id);
-											managerhorario.EliminarGuardiaPendienteLibre(guardiaAlmacenar);
+//											managerhorario.eliminarGuardiaPendienteLibre(cab_id,guardiaAlmacenar,fechainicial);
 										} else {
 											almacenarDetalles(guardiaAlmacenar,lugar,lugarTurno.getHgTurno(),fechainicial, null, cab_id);
 										}
 									} else {
 										almacenarDetalles(guardiaAlmacenar,lugar, lugarTurno.getHgTurno(),fechainicial, null, cab_id);
-										managerhorario.insertarGuardiaPendienteLibre(guardiaAlmacenar);
+										managerhorario.insertarGuardiaPendienteLibre(guardiaAlmacenar,fechainicial);
 									}
 								}
 							}
@@ -491,7 +491,7 @@ public class horarioCDBeanRespaldo20161101 implements Serializable {
 			horcab_fechafin = java.sql.Date.valueOf(new SimpleDateFormat(
 					"yyyy-MM-dd").format(sqlfechaf));
 		} catch (Exception e) {
-			Mensaje.crearMensajeWARN("Error en la creación");
+			Mensaje.crearMensajeWARN("Error en la creaciï¿½n");
 		}
 	}
 
@@ -549,10 +549,9 @@ public class horarioCDBeanRespaldo20161101 implements Serializable {
 			guardiaelegido = obtenerGuardiaCompatible(lugar, fecha, turno,guardiasDisponibles, numeroDias);
 		}
 		if (guardiaelegido.getGuaCedula() == null) {
-			guardiasDisponiblesPendientes = managerhorario.findAllGuardiasPendientes();
+//			guardiasDisponiblesPendientes = managerhorario.findAllGuardiasPendientes();
 			// setear
 			guardiaelegidoPendiente = obtenerGuardiaCompatiblePendiente(lugar,fecha, turno, guardiasDisponiblesPendientes, numeroDias);
-			guardiaelegido = setearHgGuardia(guardiaelegidoPendiente);
 		}
 		return guardiaelegido;
 	}
@@ -633,7 +632,7 @@ public class horarioCDBeanRespaldo20161101 implements Serializable {
 			// if(managerhorario.trabajoLugTurnDiaAnterior(guardia,turno,restDays(fechainicial))==
 			// 0){
 			if ((managerhorario.existeGuardia(cab_id, fechainicial,
-					guardia.getGuaCedula()) != 1)) {
+					guardia.getHgGuardia().getGuaCedula()) != 1)) {
 				if (managerhorario.trabajoDiaAnteriorPendiente(guardia,
 						restDays(fechainicial)) == 1) {
 					vecestrabajo = managerhorario.findNumDiasxGuardiaPendiente(
@@ -647,20 +646,20 @@ public class horarioCDBeanRespaldo20161101 implements Serializable {
 				}
 				if (vecestrabajo < diasTrabajados) {
 					if (managerhorario.existeGuardiaXturnoMNoc(cab_id,
-							restDays(fechainicial), guardia.getGuaCedula()) == 1
+							restDays(fechainicial), guardia.getHgGuardia().getGuaCedula()) == 1
 							&& turno.getTurId() == 1)
 						guardiaAplica = false;
 					if (lugar.getLugCctv() == true
-							&& guardia.getGuaCctv() != true)
+							&& guardia.getHgGuardia().getGuaCctv() != true)
 						guardiaAplica = false;
 					if (lugar.getLugControlAccesos() == true
-							&& guardia.getGuaControlAccesos() != true)
+							&& guardia.getHgGuardia().getGuaControlAccesos() != true)
 						guardiaAplica = false;
-					if (guardia.getGuaCasoEstudio() == true
+					if (guardia.getHgGuardia().getGuaCasoEstudio() == true
 							&& (fechainicial.getDay() == 0 || fechainicial
 									.getDay() == 6))
 						guardiaAplica = false;
-					if (guardia.getGuaCasoNocturno() == true
+					if (guardia.getHgGuardia().getGuaCasoNocturno() == true
 							&& turno.getTurId() == 3)
 						guardiaAplica = false;
 					if ((lugar.getLugNombre() == "Instituto"
@@ -669,7 +668,7 @@ public class horarioCDBeanRespaldo20161101 implements Serializable {
 							|| lugar.getLugNombre() == "CCTV"
 							|| lugar.getLugNombre() == "Tanques de Agua" || lugar
 							.getLugNombre() == "Control 1")
-							&& guardia.getGuaMotorizado() == true)
+							&& guardia.getHgGuardia().getGuaMotorizado() == true)
 						guardiaAplica = false;
 					if (guardiaAplica) {
 						guardiaelegido = guardia;
@@ -703,31 +702,6 @@ public class horarioCDBeanRespaldo20161101 implements Serializable {
 		getlistaHorarioCab().clear();
 		getlistaHorarioCab().addAll(managerhorario.findAllHorariosCab());
 		return "hg_horarios?faces-redirect=true";
-	}
-
-	private HgGuardia setearHgGuardia(HgGuardiasPendiente guardiapendiente) {
-		HgGuardia guardia = new HgGuardia();
-		guardia.setGuaCedula(guardiapendiente.getGuaCedula());
-		guardia.setGuaNombre(guardiapendiente.getGuaNombre());
-		guardia.setGuaApellido(guardiapendiente.getGuaApellido());
-		guardia.setGuaFechanac(guardiapendiente.getGuaFechanac());
-		guardia.setGuaCiudad(guardiapendiente.getGuaCiudad());
-		guardia.setGuaSexo(guardiapendiente.getGuaSexo());
-		guardia.setGuaTelefono(guardiapendiente.getGuaTelefono());
-		guardia.setGuaCelular(guardiapendiente.getGuaCelular());
-		guardia.setGuaCorreo(guardiapendiente.getGuaCorreo());
-		guardia.setGuaDireccion(guardiapendiente.getGuaDireccion());
-		guardia.setGuaCctv(guardiapendiente.getGuaCctv());
-		guardia.setGuaMotorizado(guardiapendiente.getGuaMotorizado());
-		guardia.setGuaChofer(guardiapendiente.getGuaChofer());
-		guardia.setGuaControlAccesos(guardiapendiente.getGuaControlAccesos());
-		guardia.setGuaCasoTurno(guardiapendiente.getGuaCasoTurno());
-		guardia.setGuaCasoEstudio(guardiapendiente.getGuaCasoEstudio());
-		guardia.setGuaCasoNocturno(guardiapendiente.getGuaCasoNocturno());
-		guardia.setGuaEstadoCivil(guardiapendiente.getGuaEstadoCivil());
-		guardia.setGuaTipoSangre(guardiapendiente.getGuaEstadoCivil());
-		guardia.setGuaEstado(guardiapendiente.getGuaEstado());
-		return guardia;
 	}
 
 	public Integer diasXFi_Ff() {
@@ -1105,7 +1079,7 @@ public class horarioCDBeanRespaldo20161101 implements Serializable {
 								|| managerhorario.existeGuardiaXturnoMNoc(
 										hordet1.getHgHorarioCab().getHcabId(),
 										restDays(cambio_fecha), guardiaId2) == 1) {
-							Mensaje.crearMensajeWARN("El día anterior el guardia trabaja en turno nocturno, no se puede realizar esta acción");
+							Mensaje.crearMensajeWARN("El dï¿½a anterior el guardia trabaja en turno nocturno, no se puede realizar esta acciï¿½n");
 						} else {
 							guardiaID1 = guardia1;
 							guardiaID2 = guardia2;
@@ -1113,7 +1087,7 @@ public class horarioCDBeanRespaldo20161101 implements Serializable {
 							hordet1.setHgGuardia(guardiaID2);
 							managerhorario.editarGuardiasDetalle(hordet1);
 							managerhorario.editarGuardiasDetalle(hordet2);
-							Mensaje.crearMensajeINFO("El cambio se realizó correctamente");
+							Mensaje.crearMensajeINFO("El cambio se realizï¿½ correctamente");
 						}
 					} else {
 						guardiaID1 = guardia1;
@@ -1122,7 +1096,7 @@ public class horarioCDBeanRespaldo20161101 implements Serializable {
 						hordet1.setHgGuardia(guardiaID2);
 						managerhorario.editarGuardiasDetalle(hordet1);
 						managerhorario.editarGuardiasDetalle(hordet2);
-						Mensaje.crearMensajeINFO("El cambio se realizó correctamente");
+						Mensaje.crearMensajeINFO("El cambio se realizï¿½ correctamente");
 						RequestContext.getCurrentInstance().execute(
 								"PF('cambio').hide();");
 					}

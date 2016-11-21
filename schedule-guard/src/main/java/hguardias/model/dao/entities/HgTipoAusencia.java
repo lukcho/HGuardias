@@ -16,8 +16,6 @@ public class HgTipoAusencia implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="HG_TIPO_AUSENCIA_TIPAUSID_GENERATOR", sequenceName="SEQ_HG_TIPO_AUS", allocationSize=1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="HG_TIPO_AUSENCIA_TIPAUSID_GENERATOR")
 	@Column(name="tip_aus_id")
 	private Integer tipAusId;
 

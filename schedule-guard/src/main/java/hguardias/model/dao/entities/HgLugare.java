@@ -16,8 +16,6 @@ public class HgLugare implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="HG_LUGARES_LUGID_GENERATOR", sequenceName="SEQ_HG_LUGARES", allocationSize=1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="HG_LUGARES_LUGID_GENERATOR")
 	@Column(name="lug_id")
 	private Integer lugId;
 

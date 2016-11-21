@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="titulo">
+            Faltos
+        </ui:define>
+	<ui:define name="contenido">
+		<h:form>
+			<p:remoteCommand name="onload"
+				actionListener="#{sesionBean.validaIndex()}" autoRun="true" />
+		</h:form>
+		<br />
+		<h:form>
+			<center>
+				<h1>Gesti&oacute;n de Faltos</h1>
+			</center>
+			<b:row>
+				<b:column span="1">
+					<b:commandButton value="Nuevo" iconAwesome="file-o"
+						action="#{faltoBean.nuevoFalto()}" />
+				</b:column>
+				<b:column span="1">
+					<b:commandButton value="Volver" iconAwesome="angle-left"
+						action="index?faces-redirect=true" />
+				</b:column>
+			</b:row>
+		</h:form>
+		<br />
+		<h:form id="frm">
+			<p:growl id="messages" showDetail="false" />
+			<b:panel title="Listado de Ausencias" look="primary">
+				<p:dataTable id="tbb" value="#{faltoBean.listaFaltos}"
+					reflow="true" var="fal" rows="8" emptyMessage="Sin Datos"
+					paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+					<p:column headerText="OPCIONES" width="30" exportable="false">
+						<p:commandButton id="btnE" icon="ui-icon-pencil"
+							action="#{faltoBean.cargarFaltos(fal)}">
+							<p:tooltip id="toolTipTrack1" for="btnE"
+								value="Bot&oacute;n para observar la falta"	trackMouse="true" />
+						</p:commandButton>
+						<p:commandButton id="btnEliminar" icon="ui-icon-close"
+							action="#{faltoBean.abrirDialogFaltoEliminar(fal)}">
+							<p:tooltip id="toolTipTrack2" for="btnEliminar"
+								value="Bot&oacute;n para eliminar la falta" trackMouse="true" />
+						</p:commandButton>
+					</p:column>
+					<p:column filterBy="#{fal.faltoId}" filterMatchMode="contains"
+						headerText="ID" width="50">
+						<h:outputText value="#{fal.faltoId}"></h:outputText>
+					</p:column>
+					<p:column filterBy="#{fal.hgGuardia.guaApellido}"
+						filterMatchMode="contains" headerText="GUARDIA" width="100">
+						<h:outputText
+							value="#{fal.hgGuardia.guaNombre} #{fal.hgGuardia.guaApellido}"></h:outputText>
+					</p:column>
+					<p:column filterMatchMode="contains" headerText="FECHA" width="60">
+						<h:outputText value="#{fal.hgHorarioDet.hdetFechaInicio}"></h:outputText>
+					</p:column>
+					<p:column filterBy="#{fal.faltoDescripcion}"
+						filterMatchMode="contains" headerText="DESCRIPCIÓN" width="100">
+						<h:outputText value="#{fal.faltoDescripcion}"></h:outputText>
+					</p:column>
+					<p:column headerText="FECHA CREACIÓN" width="60">
+						<h:outputText value="#{fal.faltoFechaFalta}">
+						<f:convertDateTime pattern="yyyy/MM/dd HH:mm" timeZone="GMT-5" />
+						</h:outputText>
+					</p:column>
+				</p:dataTable>
+				<h3>Exportar Datos</h3>
+				<h:commandButton style="width:40px;height:40px" ajax="false"
+					image="/resources/img/excel.png">
+					<p:dataExporter type="xls" target="tbb" fileName="rptfaltos"
+						pageOnly="false" />
+				</h:commandButton>&nbsp;&nbsp;&nbsp;
+					<h:commandButton style="width:40px;height:40px" ajax="false"
+					image="/resources/img/pdf.png">
+					<p:dataExporter type="pdf" target="tbb" fileName="rptfalto"
+						pageOnly="false" />
+				</h:commandButton>&nbsp;&nbsp;&nbsp;
+					<h:commandButton style="width:40px;height:40px" ajax="falses"
+					image="/resources/img/csv.png">
+					<p:dataExporter type="csv" target="tbb" fileName="rptfaltos"
+						pageOnly="false" />
+				</h:commandButton>&nbsp;&nbsp;&nbsp;
+			</b:panel>
+		</h:form>
+		<p:confirmDialog header="Confirmación"
+			message="Está seguro de borrar la falta" closable="false"
+			showEffect="fade" hideEffect="explode" widgetVar="ef">
+			<h:form>
+				<p:commandButton value="Si" styleClass="ui-confirmdialog-yes"
+					icon="ui-icon-check" action="#{faltoBean.eliminarFalto()}"
+					oncomplete="PF('ef').hide();" update="frm frm:tbb" />
+				<p:commandButton value="No" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					onclick="PF('ef').hide();" />
+			</h:form>
+		</p:confirmDialog>
+	</ui:define>
+</ui:composition>
+</html>

@@ -1,7 +1,9 @@
 package hguardias.model.dao.entities;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
 import java.util.Date;
 import java.sql.Timestamp;
 import java.util.List;
@@ -48,12 +50,16 @@ public class HgHorarioCab implements Serializable {
 	private String hcabUsuario;
 
 	//bi-directional many-to-one association to HgHorarioDet
-	@OneToMany(mappedBy="hgHorarioCab")
+	@OneToMany(mappedBy="hgHorarioCab", cascade=CascadeType.ALL)
 	private List<HgHorarioDet> hgHorarioDets;
 
 	//bi-directional many-to-one association to HgLugaresTurnosVacio
 	@OneToMany(mappedBy="hgHorarioCab")
 	private List<HgLugaresTurnosVacio> hgLugaresTurnosVacios;
+
+	//bi-directional many-to-one association to HgHistorialMovimiento
+	@OneToMany(mappedBy="hgHorarioCab")
+	private List<HgHistorialMovimiento> hgHistorialMovimientos;
 
 	public HgHorarioCab() {
 	}
@@ -172,6 +178,28 @@ public class HgHorarioCab implements Serializable {
 		hgLugaresTurnosVacio.setHgHorarioCab(null);
 
 		return hgLugaresTurnosVacio;
+	}
+
+	public List<HgHistorialMovimiento> getHgHistorialMovimientos() {
+		return this.hgHistorialMovimientos;
+	}
+
+	public void setHgHistorialMovimientos(List<HgHistorialMovimiento> hgHistorialMovimientos) {
+		this.hgHistorialMovimientos = hgHistorialMovimientos;
+	}
+
+	public HgHistorialMovimiento addHgHistorialMovimiento(HgHistorialMovimiento hgHistorialMovimiento) {
+		getHgHistorialMovimientos().add(hgHistorialMovimiento);
+		hgHistorialMovimiento.setHgHorarioCab(this);
+
+		return hgHistorialMovimiento;
+	}
+
+	public HgHistorialMovimiento removeHgHistorialMovimiento(HgHistorialMovimiento hgHistorialMovimiento) {
+		getHgHistorialMovimientos().remove(hgHistorialMovimiento);
+		hgHistorialMovimiento.setHgHorarioCab(null);
+
+		return hgHistorialMovimiento;
 	}
 
 }

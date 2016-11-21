@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="titulo">
+            Faltos
+        </ui:define>
+	<ui:define name="contenido">
+		<h:form>
+			<p:remoteCommand name="onload"
+				actionListener="#{sesionBean.validaIndex()}" autoRun="true" />
+		</h:form>
+		<br />
+		<h:form id="frmfalto">
+			<p:growl id="messagesfalto" showDetail="false" />
+			<b:panel title="Registro de Faltos" look="primary">
+				<b:panel look="primary">
+					<b:row>
+						<b:column span="2">
+							<h:outputLabel value="Fecha de Falta *:" for="fechacamb" />
+						</b:column>
+						<b:column span="3">
+							<p:calendar required="true" navigator="true" disabled="#{faltoBean.edicion}"
+								requiredMessage="Requerido Fecha" id="fechacamb"
+								value="#{faltoBean.faltoFecha}" pattern="yyyy/MM/dd" mask="true">
+								<p:ajax event="dateSelect"
+									listener="#{faltoBean.obtenerGuardiaXFecha()}"
+									update="frmfalto messagesfalto gua1"></p:ajax>
+							</p:calendar>
+						</b:column>
+						<b:column span="2">
+							<h:outputLabel value="Descripción:* " for="des" />
+						</b:column>
+						<b:column span="4">
+							<p:inputTextarea id="des" value="#{faltoBean.falto_descripcion}" disabled="#{faltoBean.edicion}"
+								styleClass="form-control"
+								style="width:100%; margin-bottom:15px;" fieldSize="2" rows="2"
+								required="true" requiredMessage="Campo descripción requerido"
+								maxlength="255">
+							</p:inputTextarea>
+						</b:column>
+					</b:row>
+					<br />
+					<b:row>
+						<b:column span="2">
+							<h:outputLabel value="Seleccione el guardia: " for="gua1" />
+						</b:column>
+						<b:column span="4">
+							<h:panelGroup>
+								<p:selectOneMenu required="true" value="#{faltoBean.guardiaId1}" disabled="#{faltoBean.edicion}"
+									id="gua1" style="width:200px"
+									requiredMessage="Requerido guardia" filter="true"
+									filterMatchMode="contains">
+									<p:ajax listener="#{faltoBean.mostrara()}"
+										update="nombre1 apellido1 cab lug turn desc">
+									</p:ajax>
+									<f:selectItems value="#{faltoBean.lstGuardias}" />
+								</p:selectOneMenu>
+							</h:panelGroup>
+						</b:column>
+						<b:column span="4">
+							<h:outputLabel id="nombre1" value="#{faltoBean.nombreguardia1}" />&nbsp;
+						<h:outputLabel id="apellido1"
+								value="#{faltoBean.apellidoguardia1}" />
+						</b:column>
+					</b:row>
+					<br />
+					<b:row>
+						<b:column span="2">
+							<h:outputLabel value="Cabecera Nro.: " for="cab" />
+						</b:column>
+						<b:column span="4">
+							<h:outputLabel id="cab" value="#{faltoBean.hcab_id}">
+							</h:outputLabel>
+						</b:column>
+						<b:column span="2">
+							<h:outputLabel value="Horario: " for="desc" />
+						</b:column>
+						<b:column span="3">
+							<h:outputLabel id="desc" value="#{faltoBean.hcab_descripcion}">
+							</h:outputLabel>
+						</b:column>
+					</b:row>
+					<b:row>
+						<b:column span="2">
+							<h:outputLabel value="Lugar: " for="lug" />
+						</b:column>
+						<b:column span="4">
+							<h:outputLabel id="lug" value="#{faltoBean.hcab_lugar}">
+							</h:outputLabel>
+						</b:column>
+						<b:column span="2">
+							<h:outputLabel value="Turno: " for="turn" />
+						</b:column>
+						<b:column span="3">
+							<h:outputLabel id="turn" value="#{faltoBean.hcab_turno}">
+							</h:outputLabel>
+						</b:column>
+					</b:row>
+					<br />
+					<b:row>
+						<b:column span="5">
+							<b:commandButton value="Registrar falta" disabled="#{faltoBean.edicion}"
+								styleClass="btn btn-info" style="padding:7px;"
+								actionListener="#{faltoBean.abrirDialogConfirm()}"
+								update="frmfalto messagesfalto">
+							</b:commandButton>&nbsp;&nbsp;&nbsp;
+						<b:commandButton value="Volver" styleClass="btn btn-info"
+								style="padding:7px;" action="#{faltoBean.volverFalto()}"
+								update="frmfalto" look="info" process="@this">
+							</b:commandButton>&nbsp;&nbsp;&nbsp;
+						</b:column>
+					</b:row>
+					<br />
+				</b:panel>
+
+				<p:confirmDialog header="Confirmación"
+					message="Está seguro de guardar la falta?" closable="false"
+					showEffect="fade" hideEffect="explode" widgetVar="falto">
+					<h:form>
+						<p:commandButton value="Si" styleClass="ui-confirmdialog-yes"
+							icon="ui-icon-check" action="#{faltoBean.crearFalta()}"
+							oncomplete="PF('falto').hide();" update=":frmfalto:messagesfalto" />
+						<p:commandButton value="No" type="button"
+							styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+							onclick="PF('falto').hide();" />
+					</h:form>
+				</p:confirmDialog>
+			</b:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

@@ -17,8 +17,6 @@ public class HgTurno implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="HG_TURNO_TURID_GENERATOR", sequenceName="SEQ_HG_TURNO", allocationSize=1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="HG_TURNO_TURID_GENERATOR")
 	@Column(name="tur_id")
 	private Integer turId;
 
@@ -41,6 +39,10 @@ public class HgTurno implements Serializable {
 	//bi-directional many-to-one association to HgLugarTurno
 	@OneToMany(mappedBy="hgTurno")
 	private List<HgLugarTurno> hgLugarTurnos;
+
+	//bi-directional many-to-one association to HgLugaresTurnosVacio
+	@OneToMany(mappedBy="hgTurno")
+	private List<HgLugaresTurnosVacio> hgLugaresTurnosVacios;
 
 	public HgTurno() {
 	}
@@ -127,6 +129,28 @@ public class HgTurno implements Serializable {
 		hgLugarTurno.setHgTurno(null);
 
 		return hgLugarTurno;
+	}
+
+	public List<HgLugaresTurnosVacio> getHgLugaresTurnosVacios() {
+		return this.hgLugaresTurnosVacios;
+	}
+
+	public void setHgLugaresTurnosVacios(List<HgLugaresTurnosVacio> hgLugaresTurnosVacios) {
+		this.hgLugaresTurnosVacios = hgLugaresTurnosVacios;
+	}
+
+	public HgLugaresTurnosVacio addHgLugaresTurnosVacio(HgLugaresTurnosVacio hgLugaresTurnosVacio) {
+		getHgLugaresTurnosVacios().add(hgLugaresTurnosVacio);
+		hgLugaresTurnosVacio.setHgTurno(this);
+
+		return hgLugaresTurnosVacio;
+	}
+
+	public HgLugaresTurnosVacio removeHgLugaresTurnosVacio(HgLugaresTurnosVacio hgLugaresTurnosVacio) {
+		getHgLugaresTurnosVacios().remove(hgLugaresTurnosVacio);
+		hgLugaresTurnosVacio.setHgTurno(null);
+
+		return hgLugaresTurnosVacio;
 	}
 
 }

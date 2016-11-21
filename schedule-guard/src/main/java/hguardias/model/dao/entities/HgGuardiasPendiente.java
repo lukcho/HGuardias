@@ -16,250 +16,43 @@ public class HgGuardiasPendiente implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="gua_cedula", length=100)
-	private String guaCedula;
-
-	@Column(name="gua_apellido", length=100)
-	private String guaApellido;
-
-	@Column(name="gua_caso_estudio")
-	private Boolean guaCasoEstudio;
-
-	@Column(name="gua_caso_nocturno")
-	private Boolean guaCasoNocturno;
-
-	@Column(name="gua_caso_turno")
-	private Integer guaCasoTurno;
-
-	@Column(name="gua_cctv")
-	private Boolean guaCctv;
-
-	@Column(name="gua_celular", length=10)
-	private String guaCelular;
-
-	@Column(name="gua_chofer")
-	private Boolean guaChofer;
-
-	@Column(name="gua_ciudad", length=100)
-	private String guaCiudad;
-
-	@Column(name="gua_control_accesos")
-	private Boolean guaControlAccesos;
-
-	@Column(name="gua_correo", length=255)
-	private String guaCorreo;
-
-	@Column(name="gua_direccion", length=255)
-	private String guaDireccion;
-
-	@Column(name="gua_estado", columnDefinition="bpchar", length=1)
-	private String guaEstado;
-
-	@Column(name="gua_estado_civil", length=100)
-	private String guaEstadoCivil;
+	@Column(name="guapen_id")
+	private Integer guapenId;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="gua_fechanac")
-	private Date guaFechanac;
+	@Column(name="guapen_fecha")
+	private Date guapenFecha;
 
-	@Column(name="gua_motorizado")
-	private Boolean guaMotorizado;
-
-	@Column(name="gua_nombre", length=100)
-	private String guaNombre;
-
-	@Column(name="gua_sexo", columnDefinition="bpchar", length=1)
-	private String guaSexo;
-
-	@Column(name="gua_telefono", length=10)
-	private String guaTelefono;
-
-	@Column(name="gua_tipo_licencia_chofer", length=2)
-	private String guaTipoLicenciaChofer;
-
-	@Column(name="gua_tipo_licencia_motorizado", length=2)
-	private String guaTipoLicenciaMotorizado;
-
-	@Column(name="gua_tipo_sangre", length=100)
-	private String guaTipoSangre;
+	//bi-directional many-to-one association to HgGuardia
+	@ManyToOne
+	@JoinColumn(name="gua_cedula")
+	private HgGuardia hgGuardia;
 
 	public HgGuardiasPendiente() {
 	}
 
-	public String getGuaCedula() {
-		return this.guaCedula;
+	public Integer getGuapenId() {
+		return this.guapenId;
 	}
 
-	public void setGuaCedula(String guaCedula) {
-		this.guaCedula = guaCedula;
+	public void setGuapenId(Integer guapenId) {
+		this.guapenId = guapenId;
 	}
 
-	public String getGuaApellido() {
-		return this.guaApellido;
+	public Date getGuapenFecha() {
+		return this.guapenFecha;
 	}
 
-	public void setGuaApellido(String guaApellido) {
-		this.guaApellido = guaApellido;
+	public void setGuapenFecha(Date guapenFecha) {
+		this.guapenFecha = guapenFecha;
 	}
 
-	public Boolean getGuaCasoEstudio() {
-		return this.guaCasoEstudio;
+	public HgGuardia getHgGuardia() {
+		return this.hgGuardia;
 	}
 
-	public void setGuaCasoEstudio(Boolean guaCasoEstudio) {
-		this.guaCasoEstudio = guaCasoEstudio;
-	}
-
-	public Boolean getGuaCasoNocturno() {
-		return this.guaCasoNocturno;
-	}
-
-	public void setGuaCasoNocturno(Boolean guaCasoNocturno) {
-		this.guaCasoNocturno = guaCasoNocturno;
-	}
-
-	public Integer getGuaCasoTurno() {
-		return this.guaCasoTurno;
-	}
-
-	public void setGuaCasoTurno(Integer guaCasoTurno) {
-		this.guaCasoTurno = guaCasoTurno;
-	}
-
-	public Boolean getGuaCctv() {
-		return this.guaCctv;
-	}
-
-	public void setGuaCctv(Boolean guaCctv) {
-		this.guaCctv = guaCctv;
-	}
-
-	public String getGuaCelular() {
-		return this.guaCelular;
-	}
-
-	public void setGuaCelular(String guaCelular) {
-		this.guaCelular = guaCelular;
-	}
-
-	public Boolean getGuaChofer() {
-		return this.guaChofer;
-	}
-
-	public void setGuaChofer(Boolean guaChofer) {
-		this.guaChofer = guaChofer;
-	}
-
-	public String getGuaCiudad() {
-		return this.guaCiudad;
-	}
-
-	public void setGuaCiudad(String guaCiudad) {
-		this.guaCiudad = guaCiudad;
-	}
-
-	public Boolean getGuaControlAccesos() {
-		return this.guaControlAccesos;
-	}
-
-	public void setGuaControlAccesos(Boolean guaControlAccesos) {
-		this.guaControlAccesos = guaControlAccesos;
-	}
-
-	public String getGuaCorreo() {
-		return this.guaCorreo;
-	}
-
-	public void setGuaCorreo(String guaCorreo) {
-		this.guaCorreo = guaCorreo;
-	}
-
-	public String getGuaDireccion() {
-		return this.guaDireccion;
-	}
-
-	public void setGuaDireccion(String guaDireccion) {
-		this.guaDireccion = guaDireccion;
-	}
-
-	public String getGuaEstado() {
-		return this.guaEstado;
-	}
-
-	public void setGuaEstado(String guaEstado) {
-		this.guaEstado = guaEstado;
-	}
-
-	public String getGuaEstadoCivil() {
-		return this.guaEstadoCivil;
-	}
-
-	public void setGuaEstadoCivil(String guaEstadoCivil) {
-		this.guaEstadoCivil = guaEstadoCivil;
-	}
-
-	public Date getGuaFechanac() {
-		return this.guaFechanac;
-	}
-
-	public void setGuaFechanac(Date guaFechanac) {
-		this.guaFechanac = guaFechanac;
-	}
-
-	public Boolean getGuaMotorizado() {
-		return this.guaMotorizado;
-	}
-
-	public void setGuaMotorizado(Boolean guaMotorizado) {
-		this.guaMotorizado = guaMotorizado;
-	}
-
-	public String getGuaNombre() {
-		return this.guaNombre;
-	}
-
-	public void setGuaNombre(String guaNombre) {
-		this.guaNombre = guaNombre;
-	}
-
-	public String getGuaSexo() {
-		return this.guaSexo;
-	}
-
-	public void setGuaSexo(String guaSexo) {
-		this.guaSexo = guaSexo;
-	}
-
-	public String getGuaTelefono() {
-		return this.guaTelefono;
-	}
-
-	public void setGuaTelefono(String guaTelefono) {
-		this.guaTelefono = guaTelefono;
-	}
-
-	public String getGuaTipoLicenciaChofer() {
-		return this.guaTipoLicenciaChofer;
-	}
-
-	public void setGuaTipoLicenciaChofer(String guaTipoLicenciaChofer) {
-		this.guaTipoLicenciaChofer = guaTipoLicenciaChofer;
-	}
-
-	public String getGuaTipoLicenciaMotorizado() {
-		return this.guaTipoLicenciaMotorizado;
-	}
-
-	public void setGuaTipoLicenciaMotorizado(String guaTipoLicenciaMotorizado) {
-		this.guaTipoLicenciaMotorizado = guaTipoLicenciaMotorizado;
-	}
-
-	public String getGuaTipoSangre() {
-		return this.guaTipoSangre;
-	}
-
-	public void setGuaTipoSangre(String guaTipoSangre) {
-		this.guaTipoSangre = guaTipoSangre;
+	public void setHgGuardia(HgGuardia hgGuardia) {
+		this.hgGuardia = hgGuardia;
 	}
 
 }

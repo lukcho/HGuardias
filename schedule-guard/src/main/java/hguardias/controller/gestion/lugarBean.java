@@ -58,7 +58,8 @@ public class lugarBean implements Serializable {
 
 	private HgLugare lug;
 	private HgLugarTurno lug_turno;
-
+	
+	
 	private Integer lug_idTurno;
 	private String numeroGuardias;
 	private HgLugarTurno lugarTurnoElsita;
@@ -108,7 +109,7 @@ public class lugarBean implements Serializable {
 		mostrarlug_id = false;
 		numeroGuardias = "0";
 		guardado = false;
-		lugturn_id = 0;
+		lugturn_id = null;
 		lugturn_turno = 0;
 		lugturn_lugar = 0;
 		lugturn_nroGuardias = 0;
@@ -404,7 +405,7 @@ public class lugarBean implements Serializable {
 				Mensaje.crearMensajeINFO("Actualizado - Modificado");
 			} else {
 				prioridad = managergest.ultimoOrdenLugar();
-				managergest.insertarLugar(lug_nombre.trim(), lug_ciudad.trim(),
+				managergest.insertarLugar(lug_id,lug_nombre.trim(), lug_ciudad.trim(),
 						numguardia, lug_CCTV, lug_controlaccs, lug_lunes,
 						lug_martes, lug_miercoles, lug_jueves, lug_viernes,
 						lug_sabado, lug_domingo, lug_estado.trim(), prioridad);
@@ -532,6 +533,7 @@ public class lugarBean implements Serializable {
 	public String cargarLugar(HgLugare lug) {
 		try {
 			lug_id = lug.getLugId();
+			lugturn_id=managergest.ultimoOrdenCabeceraLugarTurno();
 			lug_nombre = lug.getLugNombre();
 			lug_ciudad = lug.getLugCiudad();
 			lug_nroguardias = lug.getLugNroGuardias().toString();
@@ -630,7 +632,8 @@ public class lugarBean implements Serializable {
 	 * @return
 	 */
 	public String nuevoLugar() {
-		lug_id = null;
+		lug_id = managergest.ultimoOrdenCabeceraLugar();
+		lugturn_id=managergest.ultimoOrdenCabeceraLugarTurno();
 		lug_nombre = null;
 		lug_ciudad = null;
 		lug_nroguardias = null;
@@ -679,6 +682,7 @@ public class lugarBean implements Serializable {
 		edicion = false;
 		guardado = false;
 		prioridad=null;
+		lugturn_id=null;
 		lug_idTurno = -1;
 		numeroGuardias = "0";
 		getListaLugares().clear();
@@ -697,7 +701,7 @@ public class lugarBean implements Serializable {
 	public void crearLugarTurno() {
 		try {
 			if (managergest.lugar_TurnoByID(lug_id) == 0) {
-				managergest.insertarTurnoLugar(numeroGuardias);
+				managergest.insertarTurnoLugar(lugturn_id,numeroGuardias);
 				lug_idTurno = -1;
 				numeroGuardias = "0";
 				getListaLugarTurno().clear();

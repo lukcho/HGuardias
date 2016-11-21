@@ -1,39 +1,3 @@
-CREATE SEQUENCE seq_hg_lugares
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 1
-  CACHE 1;
-ALTER TABLE seq_hg_lugares
-  OWNER TO postgres;
-
-CREATE SEQUENCE seq_hg_turno
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 1
-  CACHE 1;
-ALTER TABLE seq_hg_turno
-  OWNER TO postgres;
-
-CREATE SEQUENCE seq_hg_ausencias
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 1
-  CACHE 1;
-ALTER TABLE seq_hg_ausencias
-  OWNER TO postgres;
-
-CREATE SEQUENCE seq_hg_tipo_aus
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 1
-  CACHE 1;
-ALTER TABLE seq_hg_tipo_aus
-  OWNER TO postgres;  
-  
 CREATE SEQUENCE seq_hg_horario_det
   INCREMENT 1
   MINVALUE 1
@@ -43,23 +7,6 @@ CREATE SEQUENCE seq_hg_horario_det
 ALTER TABLE seq_hg_horario_det
   OWNER TO postgres;
 
-CREATE SEQUENCE seq_hg_lug_tur_vacios
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 1
-  CACHE 1;
-ALTER TABLE seq_hg_lug_tur_vacios
-  OWNER TO postgres;
-  
-CREATE SEQUENCE seq_hg_lug_tur
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 1
-  CACHE 1;
-ALTER TABLE seq_hg_lug_tur
-  OWNER TO postgres;
 
 /*==============================================================*/
 /* Table: HG_HORARIO_CAB                                        */
@@ -99,13 +46,25 @@ create table HG_HORARIO_DET (
 /* Table: HG_AUSENCIAS                                          */
 /*==============================================================*/
 create table HG_AUSENCIAS (
-   AUS_ID               INT4                 not null DEFAULT nextval('seq_hg_ausencias'::regclass),
+   AUS_ID               INT4                 not null,
    GUA_CEDULA           VARCHAR(100)         null,
    TIP_AUS_ID           INT4                 null,
    AUS_FECHA_INICIO     DATE                 null,
    AUS_FECHA_FIN        DATE                 null,
    AUS_DESCRIPCION      VARCHAR(255)         null,
    constraint PK_HG_AUSENCIAS primary key (AUS_ID)
+);
+
+/*==============================================================*/
+/* Table: HG_FALTOS                                             */
+/*==============================================================*/
+create table HG_FALTOS (
+   FALTO_ID             INT4                 not null,
+   HDET_ID              INT4                 null,
+   GUA_CEDULA           VARCHAR(100)         null,
+   FALTO_DESCRIPCION    VARCHAR(255)         null,
+   FALTO_FECHA_FALTA     TIMESTAMP            null,
+   constraint PK_HG_FALTOS primary key (FALTO_ID)
 );
 
 /*==============================================================*/
@@ -141,36 +100,32 @@ create table HG_GUARDIAS (
 /* Table: HG_GUARDIAS_PENDIENTE                                 */
 /*==============================================================*/
 create table HG_GUARDIAS_PENDIENTE (
-   GUA_CEDULA           VARCHAR(100)         not null,
-   GUA_NOMBRE           VARCHAR(100)         null,
-   GUA_APELLIDO         VARCHAR(100)         null,
-   GUA_FECHANAC         DATE                 null,
-   GUA_CIUDAD           VARCHAR(100)         null,
-   GUA_SEXO             CHAR(1)              null,
-   GUA_TELEFONO         VARCHAR(10)          null,
-   GUA_CELULAR          VARCHAR(10)          null,
-   GUA_CORREO           VARCHAR(255)         null,
-   GUA_TIPO_SANGRE      VARCHAR(100)         null,
-   GUA_ESTADO_CIVIL     VARCHAR(100)         null,
-   GUA_DIRECCION        VARCHAR(255)         null,
-   GUA_ESTADO           CHAR(1)              null,
-   GUA_CCTV             BOOL                 null,
-   GUA_MOTORIZADO       BOOL                 null,
-   GUA_CHOFER           BOOL                 null,
-   GUA_TIPO_LICENCIA_MOTORIZADO VARCHAR(2)   null,
-   GUA_TIPO_LICENCIA_CHOFER VARCHAR(2)       null,
-   GUA_CONTROL_ACCESOS  BOOL                 null,
-   GUA_CASO_TURNO       INT4                 null,
-   GUA_CASO_ESTUDIO     BOOL                 null,
-   GUA_CASO_NOCTURNO    BOOL                 null,
-   constraint PK_HG_GUARDIAS_PENDIENTE primary key (GUA_CEDULA)
+   GUAPEN_ID            INT4                 not null,
+   GUA_CEDULA           VARCHAR(100)         null,
+   GUAPEN_FECHA         DATE                 null,
+   constraint PK_HG_GUARDIAS_PENDIENTE primary key (GUAPEN_ID)
+);
+
+/*==============================================================*/
+/* Table: HG_HISTORIAL_MOVIMIENTOS                              */
+/*==============================================================*/
+create table HG_HISTORIAL_MOVIMIENTOS (
+   HISTO_ID             INT4                 not null,
+   HCAB_ID              INT4                 null,
+   HDET_FECHA           DATE                 null,
+   GUA_CEDULA_DESDE     VARCHAR(100)         null,
+   GUA_CEDULA_HACIA     VARCHAR(100)         null,
+   LUG_ID_DESDE         INT4                 null,
+   LUG_ID_HACIA         INT4                 null,
+   HISTO_FECHA_MOVIMIENTO TIMESTAMP          null,
+   constraint PK_HG_HISTORIAL_MOVIMIENTOS primary key (HISTO_ID)
 );
 
 /*==============================================================*/
 /* Table: HG_LUGARES                                            */
 /*==============================================================*/
 create table HG_LUGARES (
-   LUG_ID               INT4                 not null DEFAULT nextval('seq_hg_lugares'::regclass),
+   LUG_ID               INT4                 not null,
    LUG_NOMBRE           VARCHAR(50)          null,
    LUG_NRO_GUARDIAS     INT4                 null,
    LUG_CIUDAD           VARCHAR(50)          null,
@@ -192,7 +147,7 @@ create table HG_LUGARES (
 /* Table: HG_LUGARES_TURNOS_VACIOS                              */
 /*==============================================================*/
 create table HG_LUGARES_TURNOS_VACIOS (
-   HGLUGTUR_ID          INT4                 not null DEFAULT nextval('seq_hg_lug_tur_vacios'::regclass),
+   HGLUGTUR_ID          INT4                 not null,
    HCAB_ID              INT4                 null,
    LUG_ID               INT4                 null,
    TUR_ID               INT4                 null,
@@ -204,7 +159,7 @@ create table HG_LUGARES_TURNOS_VACIOS (
 /* Table: HG_TIPO_AUSENCIA                                      */
 /*==============================================================*/
 create table HG_TIPO_AUSENCIA (
-   TIP_AUS_ID           INT4                 not null DEFAULT nextval('seq_hg_tipo_aus'::regclass),
+   TIP_AUS_ID           INT4                 not null,
    TIP_AUS_NOMBRE       VARCHAR(100)         null,
    TIP_AUS_DESCRIPCION  VARCHAR(100)         null,
    constraint PK_HG_TIPO_AUSENCIA primary key (TIP_AUS_ID)
@@ -214,7 +169,7 @@ create table HG_TIPO_AUSENCIA (
 /* Table: HG_LUGAR_TURNO                                        */
 /*==============================================================*/
 create table HG_LUGAR_TURNO (
-   LUG_TUR              INT4                 not null DEFAULT nextval('seq_hg_lug_tur'::regclass),
+   LUG_TUR              INT4                 not null,
    LUG_ID               INT4                 null,
    TUR_ID               INT4                 null,
    LUG_TUR_NUMERO_GUARDIAS INT4              null,
@@ -235,7 +190,7 @@ create table HG_PARAMETROS (
 /* Table: HG_TURNO                                              */
 /*==============================================================*/
 create table HG_TURNO (
-   TUR_ID               INT4                 not null DEFAULT nextval('seq_hg_turno'::regclass),
+   TUR_ID               INT4                 not null,
    TUR_DESCRIPCION      VARCHAR(50)          null,
    TUR_HORA_INICIO      TIME                 null,
    TUR_HORA_FIN         TIME                 null,
@@ -252,6 +207,26 @@ alter table HG_AUSENCIAS
    add constraint FK_HG_AUSEN_REFERENCE_HG_GUARD foreign key (GUA_CEDULA)
       references HG_GUARDIAS (GUA_CEDULA)
       on delete restrict on update restrict;
+      
+alter table HG_FALTOS
+   add constraint FK_HG_FALTO_REFERENCE_HG_GUARD foreign key (GUA_CEDULA)
+      references HG_GUARDIAS (GUA_CEDULA)
+      on delete restrict on update restrict;
+
+alter table HG_FALTOS
+   add constraint FK_HG_FALTO_REFERENCE_HG_HORAR foreign key (HDET_ID)
+      references HG_HORARIO_DET (HDET_ID)
+      on delete restrict on update restrict;
+      
+alter table HG_GUARDIAS_PENDIENTE
+   add constraint FK_HG_GUARD_REFERENCE_HG_GUARD foreign key (GUA_CEDULA)
+      references HG_GUARDIAS (GUA_CEDULA)
+      on delete restrict on update restrict;      
+      
+alter table HG_HISTORIAL_MOVIMIENTOS
+   add constraint FK_HG_HISTO_REFERENCE_HG_HORAR foreign key (HCAB_ID)
+      references HG_HORARIO_CAB (HCAB_ID)
+      on delete restrict on update restrict;      
 
 alter table HG_HORARIO_DET
    add constraint FK_HG_HORAR_REFERENCE_HG_LUGAR foreign key (LUG_ID)

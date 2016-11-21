@@ -30,6 +30,22 @@ public class ManagerGestion {
 	}
 
 	// Turno
+	/**
+	 * Retorna el ultimo valor de id
+	 * @return
+	 */
+	public Integer ultimoOrdenCabeceraTurno() {
+		Integer orden = mDAO
+				.tomarValorIntJPQL("select max(o.turId) from HgTurno o");
+		if (orden == null) {
+			orden = 1;
+			System.out.println(orden);
+		} else {
+			orden += 1;
+			System.out.println(orden);
+		}
+		return orden;
+	}
 
 	/**
 	 * buscar todos turnos
@@ -70,9 +86,10 @@ public class ManagerGestion {
 	 * @param tur_hora_fin
 	 * @throws Exception
 	 */
-	public void insertarTurno(String tur_descripcion, Time tur_hora_inicio,
+	public void insertarTurno(Integer tur_id,String tur_descripcion, Time tur_hora_inicio,
 			Time tur_hora_fin) throws Exception {
 		HgTurno turno = new HgTurno();
+		turno.setTurId(tur_id);
 		turno.setTurDescripcion(tur_descripcion);
 		turno.setTurHoraInicio(tur_hora_inicio);
 		turno.setTurHoraFin(tur_hora_fin);
@@ -378,6 +395,24 @@ public class ManagerGestion {
 	}
 
 	// LUGARES
+
+	/**
+	 * Retorna el ultimo valor de id
+	 * @return
+	 */
+	public Integer ultimoOrdenCabeceraLugar() {
+		Integer orden = mDAO
+				.tomarValorIntJPQL("select max(o.lugId) from HgLugare o");
+		if (orden == null) {
+			orden = 1;
+			System.out.println(orden);
+		} else {
+			orden += 1;
+			System.out.println(orden);
+		}
+		return orden;
+	}
+
 	/**
 	 * listar todos los Lugares
 	 * 
@@ -430,12 +465,13 @@ public class ManagerGestion {
 	 * @param lug_controlaccs
 	 * @throws Exception
 	 */
-	public void insertarLugar(String lug_nombre, String lug_ciudad,Integer numeroguardia,
+	public void insertarLugar(Integer lug_id,String lug_nombre, String lug_ciudad,Integer numeroguardia,
 			boolean lug_CCTV, boolean lug_controlaccs,
 			boolean lunes, boolean martes, boolean miercoles, boolean jueves,
 			boolean viernes, boolean sabado, boolean domingo, String lug_estado,Integer prioridad)
 			throws Exception {
 		HgLugare lug = new HgLugare();
+		lug.setLugId(lug_id);
 		lug.setLugNombre(lug_nombre);
 		lug.setLugCiudad(lug_ciudad);
 		lug.setLugNroGuardias(numeroguardia);
@@ -542,6 +578,22 @@ public class ManagerGestion {
 
 	// Guardias Ausencia
 	/**
+	 * Retorna el ultimo valor de id
+	 * @return
+	 */
+	public Integer ultimoOrdenCabeceraAusencia() {
+		Integer orden = mDAO
+				.tomarValorIntJPQL("select max(o.ausId) from HgAusencia o");
+		if (orden == null) {
+			orden = 1;
+			System.out.println(orden);
+		} else {
+			orden += 1;
+			System.out.println(orden);
+		}
+		return orden;
+	}
+	/**
 	 * listar todos las Ausencias
 	 * 
 	 * @throws Exception
@@ -570,9 +622,10 @@ public class ManagerGestion {
 	 * @param aus_descripcion
 	 * @throws Exception
 	 */
-	public void insertarAusencia(Date aus_fecha_inicio, Date aus_fecha_fin,
+	public void insertarAusencia(Integer aus_id,Date aus_fecha_inicio, Date aus_fecha_fin,
 			String aus_descripcion) throws Exception {
 		HgAusencia aus = new HgAusencia();
+		aus.setAusId(aus_id);
 		aus.setHgGuardia(hg_gua);
 		aus.setHgTipoAusencia(hg_tipo_ausencia);
 		aus.setAusFechaInicio(aus_fecha_inicio);
@@ -679,7 +732,6 @@ public class ManagerGestion {
 
 
 	// asignaciones
-
 	/**
 	 * metodo para asignar el guardia
 	 * 
@@ -713,7 +765,7 @@ public class ManagerGestion {
 	}
 
 	/**
-	 * Método que permite asegurar obtener guardias que estaban libres los 2
+	 * Mï¿½todo que permite asegurar obtener guardias que estaban libres los 2
 	 * dias
 	 * 
 	 * @param fechainicial
@@ -755,23 +807,8 @@ public class ManagerGestion {
 		return li;
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<HgGuardia> findGuardiasDisponiblesotro(Date fechainicial) {
-		List<HgGuardia> l = new ArrayList<HgGuardia>();
-		Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(restDays(fechainicial)));
-		List<Object> lista = mDAO
-				.ejectNativeSQL3("select o.gua_cedula, o.gua_nombre, o.gua_apellido, o.gua_estado, "
-						+ "o.gua_cctv, o.gua_motorizado, o.gua_chofer, o.gua_control_accesos, "
-						+ "o.gua_caso_estudio, o.gua_caso_nocturno from hg_guardias o where "
-						+ "o.gua_estado='A' and o.gua_cedula  in "
-						+ "( select p.gua_cedula from hg_horario_det p where p.hdet_fecha_inicio = '"
-						+finicial+ "') order by o.gua_apellido");
-		l = ObjectToClass1(lista);
-		return l;
-	}
-
 	/**
-	 * Método que permite obtener guardias 2 dias libres
+	 * Mï¿½todo que permite obtener guardias 2 dias libres
 	 * 
 	 * @param fechainicial
 	 * @return
@@ -799,7 +836,29 @@ public class ManagerGestion {
 		l = ObjectToClass1(lista);
 		return l;
 	}
-
+	
+	/**
+	 * Mï¿½todo que permite obtener guardias 2 dias libres
+	 * 
+	 * @param fechainicial
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<HgGuardia> findGuardiasDisponiblesDiaAnterior(Date fechainicial) {
+		Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(restDays(fechainicial)));
+		List<HgGuardia> l = new ArrayList<HgGuardia>();
+		List<Object> lista = mDAO
+				.ejectNativeSQL3("select o.gua_cedula, o.gua_nombre, o.gua_apellido, o.gua_estado, o.gua_cctv, "
+						+ ""
+						+ " o.gua_motorizado, o.gua_chofer, o.gua_control_accesos, o.gua_caso_estudio,"
+						+ "  o.gua_caso_nocturno from hg_guardias o"
+						+ " where o.gua_cedula in (select p.gua_cedula "
+						+ "from hg_horario_det p where (p.hdet_fecha_inicio = '"+finicial+ "' "
+						+ " ) group by p.gua_cedula )");
+		l = ObjectToClass1(lista);
+		return l;
+	}
+	
 	/**
 	 * Metodo para reducir en un dia cada fecha
 	 * 
@@ -825,9 +884,9 @@ public class ManagerGestion {
 		cal.add(Calendar.DATE, -5); // minus number would decrement the days
 		return cal.getTime();
 	}
-
+	
 	/**
-	 * Método que permite obtener guardias que trabajaron el dia anterior
+	 * Mï¿½todo que permite obtener guardias que se encuentran libres el dia anterior
 	 * 
 	 * @param fechainicial
 	 * @return
@@ -847,7 +906,7 @@ public class ManagerGestion {
 		return l;
 	}
 	/**
-	 * Método que permite asegurar obtener guardias que estaban libres los 2
+	 * Mï¿½todo que permite asegurar obtener guardias que estaban libres los 2
 	 * dias
 	 * 
 	 * @param fechainicial
@@ -870,7 +929,23 @@ public class ManagerGestion {
 	}
 
 	// lugarturno
-
+	/**
+	 * Retorna el ultimo valor de id
+	 * @return
+	 */
+	public Integer ultimoOrdenCabeceraLugarTurno() {
+		Integer orden = mDAO
+				.tomarValorIntJPQL("select max(o.lugTur) from HgLugarTurno o");
+		if (orden == null) {
+			orden = 1;
+			System.out.println(orden);
+		} else {
+			orden += 1;
+			System.out.println(orden);
+		}
+		return orden;
+	}
+	
 	/**
 	 * buscar conductores por ID
 	 * 
@@ -969,8 +1044,9 @@ public class ManagerGestion {
 	 * @param valor
 	 * @throws Exception
 	 */
-	public void insertarTurnoLugar(String direccion) throws Exception {
+	public void insertarTurnoLugar(Integer turnlug_id,String direccion) throws Exception {
 		HgLugarTurno lugarTurno = new HgLugarTurno();
+		lugarTurno.setLugTur(turnlug_id);
 		lugarTurno.setHgLugare(hg_lugar);
 		lugarTurno.setHgTurno(hg_turno);
 		lugarTurno.setLugTurNumeroGuardias(Integer.parseInt(direccion));
@@ -998,7 +1074,7 @@ public class ManagerGestion {
 	}
 
 	/**
-	 * Método para buscar la imagen por Id del item
+	 * Mï¿½todo para buscar la imagen por Id del item
 	 * 
 	 * @param item_id
 	 * @return
@@ -1084,7 +1160,7 @@ public class ManagerGestion {
 	}
 	
 	/**
-	 * Método que permite asegurar obtener guardias que estaban libres los 2
+	 * Mï¿½todo que permite asegurar obtener guardias que estaban libres los 2
 	 * dias
 	 * 
 	 * @param fechainicial

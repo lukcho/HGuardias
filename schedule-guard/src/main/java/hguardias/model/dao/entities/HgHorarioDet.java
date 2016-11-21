@@ -1,9 +1,12 @@
 package hguardias.model.dao.entities;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
 import java.sql.Time;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -58,6 +61,10 @@ public class HgHorarioDet implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="tur_id")
 	private HgTurno hgTurno;
+	
+	//bi-directional many-to-one association to HgFalto
+	@OneToMany(mappedBy="hgHorarioDet")
+	private List<HgFalto> hgFaltos;
 
 	public HgHorarioDet() {
 	}
@@ -140,6 +147,28 @@ public class HgHorarioDet implements Serializable {
 
 	public void setHgTurno(HgTurno hgTurno) {
 		this.hgTurno = hgTurno;
+	}
+	
+	public List<HgFalto> getHgFaltos() {
+		return this.hgFaltos;
+	}
+
+	public void setHgFaltos(List<HgFalto> hgFaltos) {
+		this.hgFaltos = hgFaltos;
+	}
+
+	public HgFalto addHgFalto(HgFalto hgFalto) {
+		getHgFaltos().add(hgFalto);
+		hgFalto.setHgHorarioDet(this);
+
+		return hgFalto;
+	}
+
+	public HgFalto removeHgFalto(HgFalto hgFalto) {
+		getHgFaltos().remove(hgFalto);
+		hgFalto.setHgHorarioDet(null);
+
+		return hgFalto;
 	}
 
 }
