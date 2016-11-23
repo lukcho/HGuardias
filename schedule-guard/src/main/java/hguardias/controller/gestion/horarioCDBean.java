@@ -1,20 +1,33 @@
 package hguardias.controller.gestion;
 
+import java.io.File;
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
 
 import org.primefaces.context.RequestContext;
 
@@ -1153,4 +1166,45 @@ public class horarioCDBean implements Serializable {
 			e.printStackTrace();
 		}
 	}
+	
+	// Imprime un reporte de los datos de un contrato
+		public void imprimirRptDocumento(HgHorarioCab horcab) {
+				try {
+					ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+					String carpetaReportes = (String) servletContext.getRealPath(File.separatorChar + "reports");
+					String rutaReporte = carpetaReportes + File.separatorChar+ "ReportIngSalGuardias.jasper";
+//					Connection conexion = DriverManager.getConnection("jdbc:postgresql://10.1.0.158:5432/horario_guardias?user=adm_horario_guardias&password={Jt26qGTf#T");
+					Connection conexion = DriverManager.getConnection("jdbc:postgresql://localhost:5432/horario_guardias?user=postgres&password=root");
+					sqlfechai = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(horcab.getHcabFechaInicio()));
+					sqlfechaf = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(horcab.getHcabFechaFin()));
+					Map<String, Object> parametros = new HashMap<String, Object>();
+					System.out.println(carpetaReportes + File.separatorChar+ "yachay-logo1.png");
+					System.out.println(carpetaReportes + File.separatorChar+ "yachay-logo2.png");
+					System.out.println(horcab.getHcabId());
+					parametros.put("pIdhcab", horcab.getHcabId());
+					parametros.put("pImagen", carpetaReportes + File.separatorChar
+							+ "yachay-logo1.png");
+					parametros.put("pImagen2", carpetaReportes + File.separatorChar
+							+ "yachay-logo2.png");
+					parametros.put("pFechaInicial",sqlfechai);
+					parametros.put("pFechaFinal",sqlfechaf);
+					JasperPrint informe = JasperFillManager.fillReport(rutaReporte,
+							parametros, conexion);
+					HttpServletResponse response = (HttpServletResponse) FacesContext
+							.getCurrentInstance().getExternalContext()
+							.getResponse();
+					response.addHeader("Content-disposition",
+							"attachment; filename=jsfReporte.pdf");
+					ServletOutputStream stream = response.getOutputStream();
+					JasperExportManager.exportReportToPdfStream(informe, stream);
+					stream.flush();
+					stream.close();
+					FacesContext.getCurrentInstance().responseComplete();
+					Mensaje.crearMensajeINFO("Se imprimió correctamente");
+				} catch (Exception e) {
+					Mensaje.crearMensajeWARN("Error al imprimir");
+					e.printStackTrace();
+				}
+		}
+
 }

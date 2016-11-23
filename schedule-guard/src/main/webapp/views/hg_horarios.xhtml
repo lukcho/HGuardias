@@ -49,6 +49,11 @@
 							<p:tooltip id="toolTipTrack2" for="btnE"
 								value="Bot&oacute;n para eliminar el Horario" trackMouse="true" />
 						</p:commandButton>
+						<p:commandButton id="trackcer6" icon="ui-icon-print" ajax="false"
+							action="#{horarioCDBean.imprimirRptDocumento(horc)}" update=":frm">
+							<p:tooltip id="toolTipTrack9" for="trackcer6"
+								value="Imprimir el horario" trackMouse="true" />
+						</p:commandButton>
 					</p:column>
 					<p:column filterBy="#{horc.hcabId}" filterMatchMode="contains"
 						headerText="ID" width="50">

@@ -63,11 +63,9 @@ public class FaltoBean implements Serializable {
 	private Date falto_fecha_creacion;
 	private String falto_descripcion;
 	private List<HgGuardia> listaguardiasXFecha;
-	private HgGuardia guardia1;
 	private String guardiaId1;
 	private String nombreguardia1;
 	private String apellidoguardia1;
-	private HgHorarioDet detalle;
 	private List<SelectItem> lstGuardias;
 	private List<HgFalto> listaFaltos;
 	private HgFalto hfaltoElsita;
@@ -93,7 +91,6 @@ public class FaltoBean implements Serializable {
 		ediciontipo = false;
 		listaguardiasXFecha = new ArrayList<HgGuardia>();
 		listaFaltos = managerfalto.findAllFaltos();
-		guardia1 = new HgGuardia();
 		faltoFecha = null;
 		guardiaId1 = null;
 		nombreguardia1 = "";
@@ -320,7 +317,6 @@ public class FaltoBean implements Serializable {
 	 */
 	public String nuevoFalto() {
 		faltoId = null;
-		detalle = null;
 		guardiaId1 = null;
 		nombreguardia1 = null;
 		apellidoguardia1 =null;

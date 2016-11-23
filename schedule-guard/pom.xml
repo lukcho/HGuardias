@@ -83,8 +83,12 @@
 			<artifactId>watchmaker-framework</artifactId>
 			<version>0.7.0</version>
 		</dependency>
-
-
+	<!-- https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports -->
+	<dependency>
+		<groupId>net.sf.jasperreports</groupId>
+		<artifactId>jasperreports</artifactId>
+		<version>5.6.0</version>
+	</dependency>
 		<!-- DATA EXPORT -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
@@ -100,6 +104,12 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
+		</dependency>
+		<!-- EXCEL -->
+		<dependency>
+			<groupId>net.sourceforge.jexcelapi</groupId>
+			<artifactId>jxl</artifactId>
+			<version>2.6.12</version>
 		</dependency>
 	</dependencies>
 	<build>
