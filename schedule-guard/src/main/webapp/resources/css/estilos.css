@@ -1,3 +1,4 @@
+@CHARSET "ISO-8859-1";
 .color {
  	background: #337ab7;
 }
@@ -46,4 +47,20 @@
 	color: #2FA4E7;
 	line-height: 100px;
 	text-align: right;
+}
+
+.Verde{
+    background: #92d050 !important;
+    border-color: #92d050 !important;
+    color: Black !important;
+}
+.Amarillo{
+    background: #ffff00 !important;
+    border-color: #ffff00 !important;
+    color: Black !important;
+}
+.Tomate{
+    background: #ed7d31 !important;
+    border-color: #ed7d31 !important;
+    color: Black !important;
 }

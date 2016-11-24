@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui">
+
+<ui:composition template="templateCa.xhtml">
+	<ui:define name="titulo">
+            Calendario
+        </ui:define>
+	<ui:define name="contenido">
+		<h:form>
+			<p:remoteCommand name="onload"
+				actionListener="#{sesionBean.validaIndex()}" autoRun="true" />
+		</h:form>
+		<h:form>
+			<center>
+				<h1>Horario Generado</h1>
+			</center>
+			<b:row>
+				<b:column span="1">
+					<b:commandButton value="Volver" iconAwesome="angle-left"
+						action="hg_nhorario?faces-redirect=true" />
+				</b:column>
+			</b:row>
+		</h:form>
+		<br />
+		<h:form id="form">
+			<p:growl id="messages" showDetail="false" />
+			<h3 style="margin-top: 0">Calendario</h3>
+			<p:schedule id="schedule" value="#{horarioCDBean.eventModel}"
+				widgetVar="myschedule" locale="es" timeZone="GMT-5"
+				showHeader="true" draggable="false" resizable="false">
+				<p:ajax event="eventSelect"
+					listener="#{horarioCDBean.onEventSelect}"
+					update="dialog " oncomplete="PF('eventDialog').show();" />
+			</p:schedule>
+			<p:dialog id="dialog" widgetVar="eventDialog" closable="true"
+				positionType="center" responsive="true" width="800"
+				header="#{horarioCDBean.event.title}" height="200" draggable="true"
+				closeOnEscape="true" showEffect="clip" hideEffect="clip"
+				modal="true" dynamic="true" resizable="false">
+					<h:form>
+						<b:row>
+							<b:column span="3">
+								<b><h:outputLabel for="date" value="Fecha Inicio:" /></b>
+							</b:column>
+							<b:column span="4">
+								<h:outputText id="date" value="#{horarioCDBean.event.startDate}">
+									<f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-5" />
+								</h:outputText>
+							</b:column>
+						</b:row>
+						<b:row>
+							<b:column span="3">
+								<b><h:outputLabel for="tc" value="Ubicación:" /></b>
+							</b:column>
+							<b:column span="4">
+								<h:outputText id="tc"
+									value="#{horarioCDBean.event.data.hgLugare.lugNombre}" />
+							</b:column>
+						</b:row>
+						<b:row>
+							<b:column span="3">
+								<b><h:outputLabel for="ubi" value="Guardia: " /></b>
+							</b:column>
+							<b:column span="8">
+								<h:outputText id="ubi"
+									value="#{horarioCDBean.event.data.hgGuardia.guaApellido} #{horarioCDBean.event.data.hgGuardia.guaNombre}" />
+							</b:column>
+						</b:row>
+						<b:row>
+							<b:column span="3">
+								<b><h:outputLabel for="ca" value="Turno: " /></b>
+							</b:column>
+							<b:column span="4">
+								<h:outputText id="ca"
+									value="#{horarioCDBean.event.data.hgTurno.turDescripcion}" />
+							</b:column>
+						</b:row>
+						<b:row>
+							<b:column span="3">
+								<b><h:outputLabel for="co" value="Hora de Entrada:" /></b>
+							</b:column>
+							<b:column span="4">
+								<h:outputText id="co"
+									value="#{horarioCDBean.event.data.hdetHoraInicio}" />
+								<h:outputText value="" />
+							</b:column>
+						</b:row>
+					</h:form>
+			</p:dialog>
+		</h:form>
+		<script type="text/javascript">
+		PrimeFaces.locales['es'] = {
+			closeText : 'Cerrar',
+			prevText : 'Anterior',
+			nextText : 'Siguiente',
+			monthNames : [ 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo',
+					'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre',
+					'Noviembre', 'Diciembre' ],
+			monthNamesShort : [ 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
+					'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic' ],
+			dayNames : [ 'Domingo', 'Lunes', 'Martes', 'Mi&eacute;rcoles', 'Jueves',
+					'Viernes', 'SÃ¡bado' ],
+			dayNamesShort : [ 'Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab' ],
+			dayNamesMin : [ 'D', 'L', 'M', 'X', 'J', 'V', 'S' ],
+			weekHeader : 'Semana',
+			firstDay : 1,
+			isRTL : false,
+			showMonthAfterYear : false,
+			yearSuffix : '',
+			timeOnlyTitle : 'S&oacute;lo hora',
+			timeText : 'Tiempo',
+			hourText : 'Hora',
+			minuteText : 'Minuto',
+			secondText : 'Segundo',
+			currentText : 'Fecha actual',
+			ampm : true,
+			month : 'Mes',
+			week : 'Semana',
+			day : 'D&iacute;a',
+			allDayText : 'Todo el d&iacute;a'
+		};
+	</script>
+	</ui:define>
+</ui:composition>
+</html>

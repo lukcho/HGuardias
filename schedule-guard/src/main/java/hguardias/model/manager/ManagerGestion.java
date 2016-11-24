@@ -92,6 +92,7 @@ public class ManagerGestion {
 		turno.setTurId(tur_id);
 		turno.setTurDescripcion(tur_descripcion);
 		turno.setTurHoraInicio(tur_hora_inicio);
+		turno.setTurCodigoColor("008000");
 		turno.setTurHoraFin(tur_hora_fin);
 		turno.setTurEstado("A");
 

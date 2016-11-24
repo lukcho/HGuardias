@@ -194,6 +194,7 @@ create table HG_TURNO (
    TUR_DESCRIPCION      VARCHAR(50)          null,
    TUR_HORA_INICIO      TIME                 null,
    TUR_HORA_FIN         TIME                 null,
+   TUR_CODIGO_COLOR     VARCHAR(50)          null,
    TUR_ESTADO           CHAR(1)              null,
    constraint PK_HG_TURNO primary key (TUR_ID)
 );

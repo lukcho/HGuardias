@@ -30,6 +30,11 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.model.DefaultScheduleEvent;
+import org.primefaces.model.DefaultScheduleModel;
+import org.primefaces.model.ScheduleEvent;
+import org.primefaces.model.ScheduleModel;
 
 import hguardias.model.manager.ManagerBuscar;
 import hguardias.model.manager.ManagerHistorial;
@@ -57,7 +62,7 @@ public class horarioCDBean implements Serializable {
 
 	@EJB
 	private ManagerGestion managergest;
-	
+
 	@EJB
 	private ManagerHistorial managerhisto;
 
@@ -121,9 +126,12 @@ public class horarioCDBean implements Serializable {
 	private String apellidoguardia2;
 
 	private List<SelectItem> lstGuardias;
-	
+
 	private HgHorarioCab hcabElsita;
 
+	private ScheduleModel eventModel;
+	private ScheduleEvent event = new DefaultScheduleEvent();
+	private List<HgHorarioDet> listaHorarioDetByCabId;
 	@Inject
 	SesionBean ms;
 
@@ -134,6 +142,12 @@ public class horarioCDBean implements Serializable {
 	public void ini() {
 		usuario = ms.validarSesion("hg_horarios.xhtml");
 		BuscarPersona();
+		eventModel = new DefaultScheduleModel();
+		listaHorarioCab = managerhorario.findAllHorariosCab();
+		listaHorarioDet = managerhorario.findAllHorariosDet();
+		listaLugarTurnoVacio = new ArrayList<HgLugaresTurnosVacio>();
+		listaSinGuardias = new ArrayList<HorarioDet>();
+		eventModel = new DefaultScheduleModel();
 		horcab_id = null;
 		horcab_fechainicio = null;
 		horcab_fechafin = null;
@@ -146,10 +160,6 @@ public class horarioCDBean implements Serializable {
 		edicion = false;
 		ediciontipo = false;
 		usuariologeado = "";
-		listaHorarioCab = managerhorario.findAllHorariosCab();
-		listaHorarioDet = managerhorario.findAllHorariosDet();
-		listaLugarTurnoVacio = new ArrayList<HgLugaresTurnosVacio>();
-		listaSinGuardias = new ArrayList<HorarioDet>();
 		numeroLugaresVacios = 0;
 		numeroRegistrosCreados = 0;
 		numeroRegistrosTotal = 0;
@@ -273,6 +283,15 @@ public class horarioCDBean implements Serializable {
 
 	public void setListaHorarioDet(List<HgHorarioDet> listaHorarioDet) {
 		this.listaHorarioDet = listaHorarioDet;
+	}
+
+	public List<HgHorarioDet> getListaHorarioDetByCabId() {
+		return listaHorarioDetByCabId;
+	}
+
+	public void setListaHorarioDetByCabId(
+			List<HgHorarioDet> listaHorarioDetByCabId) {
+		this.listaHorarioDetByCabId = listaHorarioDetByCabId;
 	}
 
 	public List<HgLugaresTurnosVacio> getListaLugarTurnoVacio() {
@@ -419,13 +438,29 @@ public class horarioCDBean implements Serializable {
 	public void setLstGuardias(List<SelectItem> lstGuardias) {
 		this.lstGuardias = lstGuardias;
 	}
-	
+
 	public HgHorarioCab getHcabElsita() {
 		return hcabElsita;
 	}
-	
+
 	public void setHcabElsita(HgHorarioCab hcabElsita) {
 		this.hcabElsita = hcabElsita;
+	}
+
+	public ScheduleModel getEventModel() {
+		return eventModel;
+	}
+
+	public void setEventModel(ScheduleModel eventModel) {
+		this.eventModel = eventModel;
+	}
+
+	public ScheduleEvent getEvent() {
+		return event;
+	}
+
+	public void setEvent(ScheduleEvent event) {
+		this.event = event;
 	}
 
 	// horariocab
@@ -441,11 +476,17 @@ public class horarioCDBean implements Serializable {
 	public void crearHorarioCab() {
 		try {
 			fecha = new Date();
-			sqlfechai = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(horcab_fechainicio));
-			sqlfechaf = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(horcab_fechafin));
+			sqlfechai = java.sql.Date
+					.valueOf(new SimpleDateFormat("yyyy-MM-dd")
+							.format(horcab_fechainicio));
+			sqlfechaf = java.sql.Date
+					.valueOf(new SimpleDateFormat("yyyy-MM-dd")
+							.format(horcab_fechafin));
 			horcab_fecha_creacion = new Timestamp(fecha.getTime());
 			horcab_usuarioreg = usuariologeado.trim();
-			managerhorario.insertarHorarioCab(cab_id, sqlfechai, sqlfechaf,horcab_nombre.trim(), horcab_usuarioreg,horcab_fecha_creacion);
+			managerhorario.insertarHorarioCab(cab_id, sqlfechai, sqlfechaf,
+					horcab_nombre.trim(), horcab_usuarioreg,
+					horcab_fecha_creacion);
 			if (!managergest.findAllGuardias().isEmpty()) {
 				generacionFechaLugarTurnoGuardia(cab_id);
 				Mensaje.crearMensajeINFO("Se creó satisfactoriamente");
@@ -461,44 +502,74 @@ public class horarioCDBean implements Serializable {
 	public void generacionFechaLugarTurnoGuardia(Integer cab_id) {
 		List<HgLugare> lugares = managergest.findAllLugaresActivos();
 		try {
-			Date fechainicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(sqlfechai));
+			Date fechainicial = java.sql.Date.valueOf(new SimpleDateFormat(
+					"yyyy-MM-dd").format(sqlfechai));
 			Integer dias = diasXFi_Ff();
 			for (Integer numeroDia = 0; numeroDia <= dias; numeroDia++) {
 				for (HgLugare lugar : lugares) {
 					if (averiguarDia(lugar, fechainicial) == true) {
-						List<HgLugarTurno> lugarTurnos = managergest.findLugarByIdLugar(lugar.getLugId());
+						List<HgLugarTurno> lugarTurnos = managergest
+								.findLugarByIdLugar(lugar.getLugId());
 						for (HgLugarTurno lugarTurno : lugarTurnos) {
-							for (Integer numeroGuardias = 1; numeroGuardias <= lugarTurno.getLugTurNumeroGuardias(); numeroGuardias++) {
+							for (Integer numeroGuardias = 1; numeroGuardias <= lugarTurno
+									.getLugTurNumeroGuardias(); numeroGuardias++) {
 								HgGuardia guardiaAlmacenar = new HgGuardia();
 								boolean guardia = true;
-								boolean sinGuardia= true;
-								guardiaAlmacenar = obtenerGuardia(lugar,fechainicial, lugarTurno.getHgTurno(),numeroDia,sinGuardia);
+								boolean sinGuardia = true;
+								guardiaAlmacenar = obtenerGuardia(lugar,
+										fechainicial, lugarTurno.getHgTurno(),
+										numeroDia, sinGuardia);
 								if (guardiaAlmacenar.getGuaCedula() == null) {
 									sinGuardia = false;
-									guardiaAlmacenar = obtenerGuardia(lugar,fechainicial, lugarTurno.getHgTurno(),numeroDia,sinGuardia);
+									guardiaAlmacenar = obtenerGuardia(lugar,
+											fechainicial,
+											lugarTurno.getHgTurno(), numeroDia,
+											sinGuardia);
 								}
 								if (guardiaAlmacenar.getGuaCedula() == null) {
 									guardia = false;
-									managerhorario.insertarLugarTurnoVacio(cab_id, lugarTurno.getHgTurno(),lugar, fechainicial);
+									managerhorario.insertarLugarTurnoVacio(
+											cab_id, lugarTurno.getHgTurno(),
+											lugar, fechainicial);
 								}
 								if (guardia) {
-									if (numeroDia+1 == 6 ||numeroDia+1 == 12 || numeroDia+1 == 18 || numeroDia+1 == 24 || numeroDia+1 == 30) {
-										if(managerhorario.findNumDiasxGuardia(guardiaAlmacenar,restDays(fechainicial),rest5Days(restDays((fechainicial)))) == 5){
-											managerhorario.insertarGuardiaPendienteLibre(guardiaAlmacenar,fechainicial);
-											almacenarDetalles(guardiaAlmacenar,lugar, lugarTurno.getHgTurno(),fechainicial, null, cab_id);
-										}else{
-											almacenarDetalles(guardiaAlmacenar,lugar, lugarTurno.getHgTurno(),fechainicial, null, cab_id);
+									if (numeroDia + 1 == 6
+											|| numeroDia + 1 == 12
+											|| numeroDia + 1 == 18
+											|| numeroDia + 1 == 24
+											|| numeroDia + 1 == 30) {
+										if (managerhorario
+												.findNumDiasxGuardia(
+														guardiaAlmacenar,
+														restDays(fechainicial),
+														rest5Days(restDays((fechainicial)))) == 5) {
+											managerhorario
+													.insertarGuardiaPendienteLibre(
+															guardiaAlmacenar,
+															fechainicial);
+											almacenarDetalles(guardiaAlmacenar,
+													lugar,
+													lugarTurno.getHgTurno(),
+													fechainicial, null, cab_id);
+										} else {
+											almacenarDetalles(guardiaAlmacenar,
+													lugar,
+													lugarTurno.getHgTurno(),
+													fechainicial, null, cab_id);
 										}
-									} else{
-										almacenarDetalles(guardiaAlmacenar,lugar,lugarTurno.getHgTurno(),fechainicial, null, cab_id);
-										}
+									} else {
+										almacenarDetalles(guardiaAlmacenar,
+												lugar, lugarTurno.getHgTurno(),
+												fechainicial, null, cab_id);
 									}
 								}
 							}
 						}
 					}
+				}
 				fechainicial = addDays(fechainicial);
-				fechainicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechainicial));
+				fechainicial = java.sql.Date.valueOf(new SimpleDateFormat(
+						"yyyy-MM-dd").format(fechainicial));
 			}
 			numeroRegistrosCreados = managerhorario.findAllHorariosDetXIdCab(
 					cab_id).size();
@@ -520,36 +591,47 @@ public class horarioCDBean implements Serializable {
 			Integer numeroDias, boolean sinGuardia) {
 		HgGuardia guardiaelegido = new HgGuardia();
 		List<HgGuardia> guardiasDisponibles = new ArrayList<HgGuardia>();
-//		if (guardiaelegido.getGuaCedula() == null) {
-//			guardiasDisponibles = managergest.findGuardias7Dias(fecha);
-//			guardiaelegido = obtenerGuardiaCompatible(lugar, fecha, turno,guardiasDisponibles, numeroDias);
-//		}
+		// if (guardiaelegido.getGuaCedula() == null) {
+		// guardiasDisponibles = managergest.findGuardias7Dias(fecha);
+		// guardiaelegido = obtenerGuardiaCompatible(lugar, fecha,
+		// turno,guardiasDisponibles, numeroDias);
+		// }
 		if (numeroDias % 3 != 0) {
 			guardiasDisponibles = managergest.findGuardiasDisponibles(fecha);
-			guardiaelegido = obtenerGuardiaCompatible(lugar, fecha, turno,guardiasDisponibles, numeroDias, sinGuardia);
+			guardiaelegido = obtenerGuardiaCompatible(lugar, fecha, turno,
+					guardiasDisponibles, numeroDias, sinGuardia);
 		}
 		if (guardiaelegido.getGuaCedula() == null) {
-			guardiasDisponibles = managergest.findGuardiasDisponiblesSinLibres(fecha);
-			guardiaelegido = obtenerGuardiaCompatible(lugar, fecha, turno,guardiasDisponibles, numeroDias, sinGuardia);
+			guardiasDisponibles = managergest
+					.findGuardiasDisponiblesSinLibres(fecha);
+			guardiaelegido = obtenerGuardiaCompatible(lugar, fecha, turno,
+					guardiasDisponibles, numeroDias, sinGuardia);
 		}
 		if (guardiaelegido.getGuaCedula() == null) {
-			guardiasDisponibles = managergest.findGuardiasUltimosDosDiasLibres(fecha);
-			guardiaelegido = obtenerGuardiaCompatible(lugar, fecha, turno,guardiasDisponibles, numeroDias, sinGuardia);
+			guardiasDisponibles = managergest
+					.findGuardiasUltimosDosDiasLibres(fecha);
+			guardiaelegido = obtenerGuardiaCompatible(lugar, fecha, turno,
+					guardiasDisponibles, numeroDias, sinGuardia);
 		}
-		if (guardiaelegido.getGuaCedula() == null && (numeroDias+1 == 6 ||numeroDias+1 == 12 || numeroDias+1 == 18 || numeroDias+1 == 24)) {
-			guardiasDisponibles = managergest.findGuardiasDisponiblesDiaAnterior(fecha);
-			guardiaelegido = obtenerGuardiaCompatibleSexto(lugar,fecha, turno, guardiasDisponibles, numeroDias, sinGuardia);
+		if (guardiaelegido.getGuaCedula() == null
+				&& (numeroDias + 1 == 6 || numeroDias + 1 == 12
+						|| numeroDias + 1 == 18 || numeroDias + 1 == 24)) {
+			guardiasDisponibles = managergest
+					.findGuardiasDisponiblesDiaAnterior(fecha);
+			guardiaelegido = obtenerGuardiaCompatibleSexto(lugar, fecha, turno,
+					guardiasDisponibles, numeroDias, sinGuardia);
 		}
 		return guardiaelegido;
 	}
 
 	private HgGuardia obtenerGuardiaCompatible(HgLugare lugar,
 			Date fechainicial, HgTurno turno,
-			List<HgGuardia> guardiasDisponibles, Integer numeroDias, boolean sinGuardia) {
+			List<HgGuardia> guardiasDisponibles, Integer numeroDias,
+			boolean sinGuardia) {
 		HgGuardia guardiaelegido = new HgGuardia();
-		SimpleDateFormat df = new SimpleDateFormat( "dd/MM/yy" );
+		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy");
 		java.util.Date date = fechainicial;
-		df.applyPattern( "EEE" );
+		df.applyPattern("EEE");
 		for (HgGuardia guardia : guardiasDisponibles) {
 			Boolean guardiaAplica = true;
 			Integer vecestrabajo = 0;
@@ -570,34 +652,49 @@ public class horarioCDBean implements Serializable {
 								rest5Days(restDays(restDays(fechainicial))));
 					}
 					if (vecestrabajo < diasTrabajados) {
-//						if(managerhorario.trabajoSemanaAnteriorLugar(fechainicial, guardia.getGuaCedula(), lugar.getLugId()) == 0 )
-//							guardiaAplica = false;
-//						if(managerhorario.trabajoLugDiaAnterior(guardia,lugar,fechainicial)==1)
-//							guardiaAplica = false;
-//						if(managerhorario.trabajoLugDiaAnterior(guardia,lugar,restDays(fechainicial))==1)
-//							guardiaAplica = false;
-//						if(managerhorario.trabajoLugDiaAnterior(guardia,lugar,restDays(restDays(fechainicial)))==1)
-//							guardiaAplica = false;
-//						if(managerhorario.trabajoLugDiaAnterior(guardia,lugar,restDays(restDays(restDays(fechainicial))))==1)
-//							guardiaAplica = false;
-						if(sinGuardia == true){
-						if (managerhorario.existeGuardiaXturnoMNoc(cab_id,restDays(fechainicial), guardia.getGuaCedula()) == 1&& turno.getTurId() == 1)
-							guardiaAplica = false;
-						if (lugar.getLugCctv() == true && guardia.getGuaCctv() != true)
-							guardiaAplica = false;
-						if (lugar.getLugControlAccesos() == true && guardia.getGuaControlAccesos() != true)
-							guardiaAplica = false;
-						if (guardia.getGuaCasoEstudio() == true && (df.format(date).equals("dom")  || df.format(date).equals("sáb")))
-							guardiaAplica = false;
-						if (guardia.getGuaCasoNocturno() == true&& turno.getTurId() == 3)
-							guardiaAplica = false;
-						if ((lugar.getLugNombre() == "Instituto"|| lugar.getLugNombre() == "Centro de emprendimiento"
-								|| lugar.getLugNombre() == "San Eloy"|| lugar.getLugNombre() == "CCTV"
-								|| lugar.getLugNombre() == "Tanques de Agua" || lugar.getLugNombre() == "Control 1")
-								&& guardia.getGuaMotorizado() == true)
-							guardiaAplica = false;
-						}else {
-							if (managerhorario.existeGuardiaXturnoMNoc(cab_id,restDays(fechainicial), guardia.getGuaCedula()) == 1&& turno.getTurId() == 1)
+						// if(managerhorario.trabajoSemanaAnteriorLugar(fechainicial,
+						// guardia.getGuaCedula(), lugar.getLugId()) == 0 )
+						// guardiaAplica = false;
+						// if(managerhorario.trabajoLugDiaAnterior(guardia,lugar,fechainicial)==1)
+						// guardiaAplica = false;
+						// if(managerhorario.trabajoLugDiaAnterior(guardia,lugar,restDays(fechainicial))==1)
+						// guardiaAplica = false;
+						// if(managerhorario.trabajoLugDiaAnterior(guardia,lugar,restDays(restDays(fechainicial)))==1)
+						// guardiaAplica = false;
+						// if(managerhorario.trabajoLugDiaAnterior(guardia,lugar,restDays(restDays(restDays(fechainicial))))==1)
+						// guardiaAplica = false;
+						if (sinGuardia == true) {
+							if (managerhorario.existeGuardiaXturnoMNoc(cab_id,
+									restDays(fechainicial),
+									guardia.getGuaCedula()) == 1
+									&& turno.getTurId() == 1)
+								guardiaAplica = false;
+							if (lugar.getLugCctv() == true
+									&& guardia.getGuaCctv() != true)
+								guardiaAplica = false;
+							if (lugar.getLugControlAccesos() == true
+									&& guardia.getGuaControlAccesos() != true)
+								guardiaAplica = false;
+							if (guardia.getGuaCasoEstudio() == true
+									&& (df.format(date).equals("dom") || df
+											.format(date).equals("sáb")))
+								guardiaAplica = false;
+							if (guardia.getGuaCasoNocturno() == true
+									&& turno.getTurId() == 3)
+								guardiaAplica = false;
+							if ((lugar.getLugNombre() == "Instituto"
+									|| lugar.getLugNombre() == "Centro de emprendimiento"
+									|| lugar.getLugNombre() == "San Eloy"
+									|| lugar.getLugNombre() == "CCTV"
+									|| lugar.getLugNombre() == "Tanques de Agua" || lugar
+									.getLugNombre() == "Control 1")
+									&& guardia.getGuaMotorizado() == true)
+								guardiaAplica = false;
+						} else {
+							if (managerhorario.existeGuardiaXturnoMNoc(cab_id,
+									restDays(fechainicial),
+									guardia.getGuaCedula()) == 1
+									&& turno.getTurId() == 1)
 								guardiaAplica = false;
 						}
 						if (guardiaAplica) {
@@ -610,14 +707,15 @@ public class horarioCDBean implements Serializable {
 		}
 		return guardiaelegido;
 	}
-	
+
 	private HgGuardia obtenerGuardiaCompatibleSexto(HgLugare lugar,
 			Date fechainicial, HgTurno turno,
-			List<HgGuardia> guardiasDisponibles, Integer numeroDias, boolean sinGuardia) {
+			List<HgGuardia> guardiasDisponibles, Integer numeroDias,
+			boolean sinGuardia) {
 		HgGuardia guardiaelegido = new HgGuardia();
-		SimpleDateFormat df = new SimpleDateFormat( "dd/MM/yy" );
+		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy");
 		java.util.Date date = fechainicial;
-		df.applyPattern( "EEE" );
+		df.applyPattern("EEE");
 		for (HgGuardia guardia : guardiasDisponibles) {
 			Boolean guardiaAplica = true;
 			Integer vecestrabajo = 0;
@@ -638,19 +736,29 @@ public class horarioCDBean implements Serializable {
 								rest5Days(restDays(restDays(fechainicial))));
 					}
 					if (vecestrabajo < diasTrabajados) {
-						if (managerhorario.existeGuardiaXturnoMNoc(cab_id,restDays(fechainicial), guardia.getGuaCedula()) == 1&& turno.getTurId() == 1)
+						if (managerhorario.existeGuardiaXturnoMNoc(cab_id,
+								restDays(fechainicial), guardia.getGuaCedula()) == 1
+								&& turno.getTurId() == 1)
 							guardiaAplica = false;
-						if (lugar.getLugCctv() == true && guardia.getGuaCctv() != true)
+						if (lugar.getLugCctv() == true
+								&& guardia.getGuaCctv() != true)
 							guardiaAplica = false;
-						if (lugar.getLugControlAccesos() == true && guardia.getGuaControlAccesos() != true)
+						if (lugar.getLugControlAccesos() == true
+								&& guardia.getGuaControlAccesos() != true)
 							guardiaAplica = false;
-						if (guardia.getGuaCasoEstudio() == true && (df.format(date).equals("dom")  || df.format(date).equals("sáb")))
+						if (guardia.getGuaCasoEstudio() == true
+								&& (df.format(date).equals("dom") || df.format(
+										date).equals("sáb")))
 							guardiaAplica = false;
-						if (guardia.getGuaCasoNocturno() == true&& turno.getTurId() == 3)
+						if (guardia.getGuaCasoNocturno() == true
+								&& turno.getTurId() == 3)
 							guardiaAplica = false;
-						if ((lugar.getLugNombre() == "Instituto"|| lugar.getLugNombre() == "Centro de emprendimiento"
-								|| lugar.getLugNombre() == "San Eloy"|| lugar.getLugNombre() == "CCTV"
-								|| lugar.getLugNombre() == "Tanques de Agua" || lugar.getLugNombre() == "Control 1")
+						if ((lugar.getLugNombre() == "Instituto"
+								|| lugar.getLugNombre() == "Centro de emprendimiento"
+								|| lugar.getLugNombre() == "San Eloy"
+								|| lugar.getLugNombre() == "CCTV"
+								|| lugar.getLugNombre() == "Tanques de Agua" || lugar
+								.getLugNombre() == "Control 1")
 								&& guardia.getGuaMotorizado() == true)
 							guardiaAplica = false;
 						if (guardiaAplica) {
@@ -663,7 +771,7 @@ public class horarioCDBean implements Serializable {
 		}
 		return guardiaelegido;
 	}
-	
+
 	/**
 	 * Metodo para saber que dias se puede trabajar dependiendo del boolean y el
 	 * dia
@@ -671,15 +779,16 @@ public class horarioCDBean implements Serializable {
 	 * @param lugar
 	 * @param fechainicial
 	 * @return
-	 * @throws ParseException 
+	 * @throws ParseException
 	 */
-	public boolean averiguarDia(HgLugare lugar, Date fechainicial) throws ParseException {
+	public boolean averiguarDia(HgLugare lugar, Date fechainicial)
+			throws ParseException {
 		boolean resultado = true;
-		SimpleDateFormat df = new SimpleDateFormat( "dd/MM/yy" );
+		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy");
 		java.util.Date date = fechainicial;
-		df.applyPattern( "EEE" );
-		System.out.println( "Day of Week = " + df.format( date ) );
-		
+		df.applyPattern("EEE");
+		System.out.println("Day of Week = " + df.format(date));
+
 		if (lugar.getLugDomingo() == false && df.format(date).equals("dom")) {
 			resultado = false;
 		}
@@ -703,13 +812,13 @@ public class horarioCDBean implements Serializable {
 		}
 		return resultado;
 	}
-	
+
 	public Integer diasXFi_Ff() {
 		Long diff = sqlfechaf.getTime() - sqlfechai.getTime();
 		long dias = diff / (1000 * 60 * 60 * 24);
 		return (int) dias;
 	}
-	
+
 	/**
 	 * accion cerrar horario
 	 * 
@@ -874,6 +983,14 @@ public class horarioCDBean implements Serializable {
 			usuariologeado = horcab_usuarioreg;
 			edicion = true;
 			ediciontipo = false;
+			eventModel = new DefaultScheduleModel();
+			for (HgHorarioDet e : managerhorario.findAllHorariosDetXIdCab(cab_id)) {
+				String lugarguardia = e.getHgLugare().getLugNombre()+" "+e.getHgGuardia().getGuaApellido()+" "+e.getHgGuardia().getGuaNombre();
+				event = new DefaultScheduleEvent(lugarguardia,
+						e.getHdetFechaInicio(), e.getHdetFechaInicio(), e);
+						((DefaultScheduleEvent) event).setStyleClass(e.getHgTurno().getTurCodigoColor());
+				eventModel.addEvent(event);
+			}
 			getListaHorarioDet().clear();
 			getListaHorarioDet().addAll(
 					managerhorario.findAllHorariosDetXIdCab(cab_id));
@@ -886,7 +1003,7 @@ public class horarioCDBean implements Serializable {
 		}
 		return "";
 	}
-	
+
 	/**
 	 * eliminar lugturno abriendo el dialogo
 	 * 
@@ -897,7 +1014,7 @@ public class horarioCDBean implements Serializable {
 		setHcabElsita(item);
 		RequestContext.getCurrentInstance().execute("PF('ef').show();");
 	}
-	
+
 	/**
 	 * eliminar un fotoproducto
 	 * 
@@ -906,7 +1023,9 @@ public class horarioCDBean implements Serializable {
 	 */
 	public String eliminarHorarioCab() {
 		try {
-			managerhorario.eliminarHorarioCab(hcabElsita.getHcabId(),hcabElsita.getHcabFechaFin(),hcabElsita.getHcabFechaInicio());
+			managerhorario.eliminarHorarioCab(hcabElsita.getHcabId(),
+					hcabElsita.getHcabFechaFin(),
+					hcabElsita.getHcabFechaInicio());
 			getlistaHorarioCab().clear();
 			getlistaHorarioCab().addAll(managerhorario.findAllHorariosCab());
 			Mensaje.crearMensajeINFO("Horario eliminado");
@@ -950,6 +1069,15 @@ public class horarioCDBean implements Serializable {
 		numeroLugaresVacios = 0;
 		cab_id = managerhorario.ultimoOrdenCabecera();
 		return "hg_nhorario?faces-redirect=true";
+	}
+	
+	/**
+	 * Redirecciona a la pagina de creacion de hroairocab
+	 * 
+	 * @return
+	 */
+	public String verCalendario() {
+		return "hg_calendario?faces-redirect=true";
 	}
 
 	/**
@@ -1043,7 +1171,8 @@ public class horarioCDBean implements Serializable {
 	public void mostrara() {
 		HgGuardia gua;
 		try {
-			nombreguardia1 = "";apellidoguardia1 = "";
+			nombreguardia1 = "";
+			apellidoguardia1 = "";
 			gua = managergest.guardiaByID(guardiaId1);
 			nombreguardia1 = gua.getGuaNombre();
 			apellidoguardia1 = gua.getGuaApellido();
@@ -1060,7 +1189,8 @@ public class horarioCDBean implements Serializable {
 	public void mostrarb() {
 		HgGuardia gua;
 		try {
-			nombreguardia2 = "";apellidoguardia2 = "";
+			nombreguardia2 = "";
+			apellidoguardia2 = "";
 			gua = managergest.guardiaByID(guardiaId2);
 			nombreguardia2 = gua.getGuaNombre();
 			apellidoguardia2 = gua.getGuaApellido();
@@ -1096,42 +1226,58 @@ public class horarioCDBean implements Serializable {
 	}
 
 	/**
-	 * limpia la informacion de ausencia
+	 * limpia la informacion
 	 * 
 	 * @return
 	 * @throws Exception
 	 */
 	public String volverCambio() throws Exception {
-		cambio_fecha = null;guardiaId1 = null;
-		guardiaId2 = null;nombreguardia1 = "";
-		apellidoguardia1 = "";nombreguardia2 = "";
+		cambio_fecha = null;
+		guardiaId1 = null;
+		guardiaId2 = null;
+		nombreguardia1 = "";
+		apellidoguardia1 = "";
+		nombreguardia2 = "";
 		apellidoguardia2 = "";
 		listaguardiasXFecha.clear();
 		return "hg_nhorario?faces-redirect=true";
 	}
 
+	/**
+	 * CAMBIO DE GUARDIAS
+	 * 
+	 * @return
+	 */
 	public String cambioGuardias() {
 		try {
-			List<HgHorarioDet> horarioDetalleGuardia1 = managerhorario.horarioDetByCedulaFecha(guardiaId1, cambio_fecha);
-			List<HgHorarioDet> horarioDetalleGuardia2 = managerhorario.horarioDetByCedulaFecha(guardiaId2, cambio_fecha);
-
+			List<HgHorarioDet> horarioDetalleGuardia1 = managerhorario
+					.horarioDetByCedulaFecha(guardiaId1, cambio_fecha);
+			List<HgHorarioDet> horarioDetalleGuardia2 = managerhorario
+					.horarioDetByCedulaFecha(guardiaId2, cambio_fecha);
 			for (HgHorarioDet hordet1 : horarioDetalleGuardia1) {
 				for (HgHorarioDet hordet2 : horarioDetalleGuardia2) {
-					if (hordet1.getHgTurno().getTurId() == 1 || hordet2.getHgTurno().getTurId() == 1) {
-						if ((managerhorario.existeGuardiaXturnoMNoc(hordet2.getHgHorarioCab().getHcabId(),restDays(cambio_fecha), guardiaId1) == 1)
-								|| managerhorario.existeGuardiaXturnoMNoc(hordet1.getHgHorarioCab().getHcabId(),restDays(cambio_fecha), guardiaId2) == 1) {
+					if (hordet1.getHgTurno().getTurId() == 1
+							|| hordet2.getHgTurno().getTurId() == 1) {
+						if ((managerhorario.existeGuardiaXturnoMNoc(hordet2
+								.getHgHorarioCab().getHcabId(),
+								restDays(cambio_fecha), guardiaId1) == 1)
+								|| managerhorario.existeGuardiaXturnoMNoc(
+										hordet1.getHgHorarioCab().getHcabId(),
+										restDays(cambio_fecha), guardiaId2) == 1) {
 							Mensaje.crearMensajeWARN("El día anterior el guardia trabaja en turno nocturno, no se puede realizar esta acción");
 						} else {
 							moverGuardia(hordet2, hordet1);
 							guardarHistorial(hordet2, hordet1);
 							Mensaje.crearMensajeINFO("El cambio se realizó correctamente");
-							RequestContext.getCurrentInstance().execute("PF('cambio').hide();");
+							RequestContext.getCurrentInstance().execute(
+									"PF('cambio').hide();");
 						}
 					} else {
 						moverGuardia(hordet2, hordet1);
 						guardarHistorial(hordet2, hordet1);
 						Mensaje.crearMensajeINFO("El cambio se realizó correctamente");
-						RequestContext.getCurrentInstance().execute("PF('cambio').hide();");
+						RequestContext.getCurrentInstance().execute(
+								"PF('cambio').hide();");
 					}
 				}
 			}
@@ -1143,8 +1289,14 @@ public class horarioCDBean implements Serializable {
 				managerhorario.findAllHorariosDetXIdCab(cab_id));
 		return "";
 	}
-	
-	public void moverGuardia(HgHorarioDet hdet2, HgHorarioDet hdet1){
+
+	/**
+	 * MUEVE LOS GUARDIAS
+	 * 
+	 * @param hdet2
+	 * @param hdet1
+	 */
+	public void moverGuardia(HgHorarioDet hdet2, HgHorarioDet hdet1) {
 		try {
 			hdet2.setHgGuardia(guardia1);
 			hdet1.setHgGuardia(guardia2);
@@ -1154,57 +1306,84 @@ public class horarioCDBean implements Serializable {
 			e.printStackTrace();
 		}
 	}
-	
-	public void guardarHistorial(HgHorarioDet hdet2, HgHorarioDet hdet1){
+
+	/**
+	 * GUARDA EL HISTORIAL
+	 * 
+	 * @param hdet2
+	 * @param hdet1
+	 */
+	public void guardarHistorial(HgHorarioDet hdet2, HgHorarioDet hdet1) {
 		try {
 			Integer historialid = managerhisto.ultimoOrdenCabeceraHistorial();
 			Date fecha = new Date();
 			HgHorarioCab cab = managerhorario.horarioCabByID(cab_id);
 			Timestamp horaCreacionHistorial = new Timestamp(fecha.getTime());
-			managerhisto.insertarHistorial(historialid,cab,guardia1, guardia2, hdet2.getHgLugare().getLugId(),hdet1.getHgLugare().getLugId(),horaCreacionHistorial,hdet1.getHdetFechaInicio());
+			managerhisto.insertarHistorial(historialid, cab, guardia1,
+					guardia2, hdet2.getHgLugare().getLugId(), hdet1
+							.getHgLugare().getLugId(), horaCreacionHistorial,
+					hdet1.getHdetFechaInicio());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	// Imprime un reporte de los datos de un contrato
-		public void imprimirRptDocumento(HgHorarioCab horcab) {
-				try {
-					ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
-					String carpetaReportes = (String) servletContext.getRealPath(File.separatorChar + "reports");
-					String rutaReporte = carpetaReportes + File.separatorChar+ "ReportIngSalGuardias.jasper";
-//					Connection conexion = DriverManager.getConnection("jdbc:postgresql://10.1.0.158:5432/horario_guardias?user=adm_horario_guardias&password={Jt26qGTf#T");
-					Connection conexion = DriverManager.getConnection("jdbc:postgresql://localhost:5432/horario_guardias?user=postgres&password=root");
-					sqlfechai = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(horcab.getHcabFechaInicio()));
-					sqlfechaf = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(horcab.getHcabFechaFin()));
-					Map<String, Object> parametros = new HashMap<String, Object>();
-					System.out.println(carpetaReportes + File.separatorChar+ "yachay-logo1.png");
-					System.out.println(carpetaReportes + File.separatorChar+ "yachay-logo2.png");
-					System.out.println(horcab.getHcabId());
-					parametros.put("pIdhcab", horcab.getHcabId());
-					parametros.put("pImagen", carpetaReportes + File.separatorChar
-							+ "yachay-logo1.png");
-					parametros.put("pImagen2", carpetaReportes + File.separatorChar
-							+ "yachay-logo2.png");
-					parametros.put("pFechaInicial",sqlfechai);
-					parametros.put("pFechaFinal",sqlfechaf);
-					JasperPrint informe = JasperFillManager.fillReport(rutaReporte,
-							parametros, conexion);
-					HttpServletResponse response = (HttpServletResponse) FacesContext
-							.getCurrentInstance().getExternalContext()
-							.getResponse();
-					response.addHeader("Content-disposition",
-							"attachment; filename=jsfReporte.pdf");
-					ServletOutputStream stream = response.getOutputStream();
-					JasperExportManager.exportReportToPdfStream(informe, stream);
-					stream.flush();
-					stream.close();
-					FacesContext.getCurrentInstance().responseComplete();
-					Mensaje.crearMensajeINFO("Se imprimió correctamente");
-				} catch (Exception e) {
-					Mensaje.crearMensajeWARN("Error al imprimir");
-					e.printStackTrace();
-				}
+
+	/**
+	 * Imprime un reporte de los datos de un contrato
+	 * 
+	 * @param horcab
+	 */
+	public void imprimirRptDocumento(HgHorarioCab horcab) {
+		try {
+			ServletContext servletContext = (ServletContext) FacesContext
+					.getCurrentInstance().getExternalContext().getContext();
+			String carpetaReportes = (String) servletContext
+					.getRealPath(File.separatorChar + "reports");
+			String rutaReporte = carpetaReportes + File.separatorChar
+					+ "ReportIngSalGuardias.jasper";
+			// Connection conexion =
+			// DriverManager.getConnection("jdbc:postgresql://10.1.0.158:5432/horario_guardias?user=adm_horario_guardias&password={Jt26qGTf#T");
+			Connection conexion = DriverManager
+					.getConnection("jdbc:postgresql://localhost:5432/horario_guardias?user=postgres&password=root");
+			sqlfechai = java.sql.Date
+					.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(horcab
+							.getHcabFechaInicio()));
+			sqlfechaf = java.sql.Date
+					.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(horcab
+							.getHcabFechaFin()));
+			Map<String, Object> parametros = new HashMap<String, Object>();
+			System.out.println(carpetaReportes + File.separatorChar
+					+ "yachay-logo1.png");
+			System.out.println(carpetaReportes + File.separatorChar
+					+ "yachay-logo2.png");
+			System.out.println(horcab.getHcabId());
+			parametros.put("pIdhcab", horcab.getHcabId());
+			parametros.put("pImagen", carpetaReportes + File.separatorChar
+					+ "yachay-logo1.png");
+			parametros.put("pImagen2", carpetaReportes + File.separatorChar
+					+ "yachay-logo2.png");
+			parametros.put("pFechaInicial", sqlfechai);
+			parametros.put("pFechaFinal", sqlfechaf);
+			JasperPrint informe = JasperFillManager.fillReport(rutaReporte,
+					parametros, conexion);
+			HttpServletResponse response = (HttpServletResponse) FacesContext
+					.getCurrentInstance().getExternalContext().getResponse();
+			response.addHeader("Content-disposition",
+					"attachment; filename=jsfReporte.pdf");
+			ServletOutputStream stream = response.getOutputStream();
+			JasperExportManager.exportReportToPdfStream(informe, stream);
+			stream.flush();
+			stream.close();
+			FacesContext.getCurrentInstance().responseComplete();
+			Mensaje.crearMensajeINFO("Se imprimió correctamente");
+		} catch (Exception e) {
+			Mensaje.crearMensajeWARN("Error al imprimir");
+			e.printStackTrace();
 		}
+	}
+
+	public void onEventSelect(SelectEvent selectEvent) {
+		event = (ScheduleEvent) selectEvent.getObject();
+	}
 
 }

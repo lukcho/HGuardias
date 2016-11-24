@@ -11,7 +11,7 @@
             Turnos
         </ui:define>
 	<ui:define name="contenido">
-	<h:form>
+		<h:form>
 			<p:remoteCommand name="onload"
 				actionListener="#{sesionBean.validaIndex()}" autoRun="true" />
 		</h:form>
@@ -35,15 +35,14 @@
 		<h:form id="frm">
 			<p:growl id="messages" showDetail="true" />
 			<b:panel title="Listado de Turnos" look="primary">
-				<p:dataTable id="tbb" value="#{turnoBean.listaTurnos}"
-					reflow="true" var="tur" rows="8" emptyMessage="Sin Datos"
-					paginator="true"
+				<p:dataTable id="tbb" value="#{turnoBean.listaTurnos}" reflow="true"
+					var="tur" rows="8" emptyMessage="Sin Datos" paginator="true"
 					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
-					<p:column headerText="OPCIONES" width="50">
+					<p:column headerText="OPCIONES" width="50" exportable="false">
 						<p:commandButton id="btnE" icon="ui-icon-pencil"
 							action="#{turnoBean.cargarTurno(tur)}">
 							<p:tooltip id="toolTipTrack1" for="btnE"
-								value="Bot&oacute;n para modificar el lugar" trackMouse="true" />
+								value="Bot&oacute;n para modificar el turno" trackMouse="true" />
 						</p:commandButton>
 							&nbsp;&nbsp;&nbsp;
 					</p:column>
@@ -51,13 +50,17 @@
 						headerText="ID" width="50">
 						<h:outputText value="#{tur.turId}"></h:outputText>
 					</p:column>
-					<p:column filterBy="#{tur.turDescripcion}" filterMatchMode="contains"
-						headerText="DESCRIPCIÓN" width="50">
+					<p:column filterBy="#{tur.turDescripcion}"
+						filterMatchMode="contains" headerText="DESCRIPCIÓN" width="50">
 						<h:outputText value="#{tur.turDescripcion}"></h:outputText>
 					</p:column>
 					<p:column headerText="HORA INICIO/FIN" width="50">
 						<h:outputText value="#{tur.turHoraInicio} - #{tur.turHoraFin}">
 						</h:outputText>
+					</p:column>
+					<p:column headerText="Color" width="30">
+						<h:outputText value="Color"
+							style="color: \##{tur.turCodigoColor}"></h:outputText>
 					</p:column>
 					<p:column filterBy="#{tur.turEstado}" filterMatchMode="contains"
 						headerText="ESTADO" width="40">

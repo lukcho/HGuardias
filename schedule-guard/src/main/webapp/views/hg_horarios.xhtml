@@ -38,21 +38,24 @@
 					reflow="true" var="horc" rows="10" emptyMessage="Sin Datos"
 					paginator="true"
 					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
-					<p:column headerText="OPCIONES" width="45">
+					<p:column headerText="OPCIONES" width="40" exportable="false">
 						<p:commandButton id="btnE" icon="ui-icon-pencil"
 							action="#{horarioCDBean.cargarHorarioCab(horc)}">
 							<p:tooltip id="toolTipTrack1" for="btnE"
-								value="Bot&oacute;n para modificar el Horario" trackMouse="true" />
+								value="Bot&oacute;n para observar el horario" trackMouse="true" />
 						</p:commandButton>
 						<p:commandButton id="btnEliminar" icon="ui-icon-close"
 							action="#{horarioCDBean.abrirDialogHorarioEliminar(horc)}">
-							<p:tooltip id="toolTipTrack2" for="btnE"
+							<p:tooltip id="toolTipTrack2" for="btnEliminar"
 								value="Bot&oacute;n para eliminar el Horario" trackMouse="true" />
 						</p:commandButton>
+					</p:column>
+					<p:column headerText="IMPRESIÓN" width="40" exportable="false">
 						<p:commandButton id="trackcer6" icon="ui-icon-print" ajax="false"
-							action="#{horarioCDBean.imprimirRptDocumento(horc)}" update=":frm">
+							action="#{horarioCDBean.imprimirRptDocumento(horc)}"
+							update=":frm">
 							<p:tooltip id="toolTipTrack9" for="trackcer6"
-								value="Imprimir el horario" trackMouse="true" />
+								value="Horario diario Ingreso/Salidas" trackMouse="true" />
 						</p:commandButton>
 					</p:column>
 					<p:column filterBy="#{horc.hcabId}" filterMatchMode="contains"
@@ -82,7 +85,7 @@
 		</h:form>
 
 		<p:confirmDialog header="Confirmación"
-			message="Está seguro de borrar el horario" closable="false"
+			message="¿Está seguro de borrar el horario?" closable="false"
 			showEffect="fade" hideEffect="explode" widgetVar="ef">
 			<h:form>
 				<p:commandButton value="Si" styleClass="ui-confirmdialog-yes"

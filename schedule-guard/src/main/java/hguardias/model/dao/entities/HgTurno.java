@@ -19,6 +19,9 @@ public class HgTurno implements Serializable {
 	@Id
 	@Column(name="tur_id")
 	private Integer turId;
+	
+	@Column(name="tur_codigo_color")
+	private String turCodigoColor;
 
 	@Column(name="tur_descripcion", length=50)
 	private String turDescripcion;
@@ -53,6 +56,14 @@ public class HgTurno implements Serializable {
 
 	public void setTurId(Integer turId) {
 		this.turId = turId;
+	}
+	
+	public String getTurCodigoColor() {
+		return this.turCodigoColor;
+	}
+
+	public void setTurCodigoColor(String turCodigoColor) {
+		this.turCodigoColor = turCodigoColor;
 	}
 
 	public String getTurDescripcion() {

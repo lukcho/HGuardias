@@ -76,7 +76,7 @@
 				</b:row>
 				<br />
 				<b:row>
-					<b:column span="5">
+					<b:column span="7">
 						<p:commandButton value="Generar" styleClass="btn btn-info"
 							style="padding:7px;" disabled="#{horarioCDBean.edicion}"
 							actionListener="#{horarioCDBean.abrirDialog()}"
@@ -96,6 +96,10 @@
 							actionListener="#{horarioCDBean.abrirDialog2()}"
 							update="frm messages">
 						</p:commandButton>&nbsp;&nbsp;&nbsp;
+						<b:commandButton value="Calendario"
+							action="#{horarioCDBean.verCalendario()}" rendered="#{horarioCDBean.edicion}" update="frm"
+							look="info" process="@this">
+						</b:commandButton>&nbsp;&nbsp;&nbsp;
 					</b:column>
 				</b:row>
 				<br />
@@ -176,11 +180,11 @@
 			</h:form>
 		</p:dialog>
 
-		<p:dialog positionType="center" responsive="true" width="800" height="600"
-			header="Información del horario generado" draggable="true"
-			closable="false" closeOnEscape="false" showEffect="fade"
-			hideEffect="explode" widgetVar="dlgInfo" modal="true" dynamic="true"
-			id="dlgInformacion" resizable="false">
+		<p:dialog positionType="center" responsive="true" width="800"
+			height="600" header="Información del horario generado"
+			draggable="true" closable="false" closeOnEscape="false"
+			showEffect="fade" hideEffect="explode" widgetVar="dlgInfo"
+			modal="true" dynamic="true" id="dlgInformacion" resizable="false">
 			<h:form>
 				<b:row>
 					<b:column span="3">
@@ -229,8 +233,9 @@
 					<b:column span="11">
 						<b:panel title="Turnos no asignados" look="primary">
 							<p:dataTable var="lista"
-								value="#{horarioCDBean.listaLugarTurnoVacio}" reflow="true" emptyMessage="Todos los lugares asignados"
-								scrollable="true" scrollHeight="150" id="tbb2">
+								value="#{horarioCDBean.listaLugarTurnoVacio}" reflow="true"
+								emptyMessage="Todos los lugares asignados" scrollable="true"
+								scrollHeight="150" id="tbb2">
 								<p:column headerText="LUGAR" width="70">
 									<h:outputText value="#{lista.hgLugare.lugNombre}" />
 								</p:column>
@@ -262,11 +267,11 @@
 				</b:column>
 					<br />
 				</b:row>
-				<br/>
+				<br />
 				<b:row>
 					<b:column span="1">
 						<b:commandButton value="Volver" styleClass="btn btn-info"
-								style="padding:7px;" process="@this" look="info"
+							style="padding:7px;" process="@this" look="info"
 							action="#{horarioCDBean.cerrarHorarioCab()}"
 							onclick="PF('dlgInfo').close();"
 							oncomplete="PF('dlgInfo').close();" update="frm" />
@@ -277,9 +282,9 @@
 
 		<p:dialog positionType="center" responsive="true" widgetVar="info"
 			header="Información del horario" modal="true" draggable="true"
-			width="800" height="600" dynamic="true" closable="true" emptyMessage="Todos los lugares asignados"
-			closeOnEscape="true" id="info" resizable="false" showEffect="fade"
-			hideEffect="explode">
+			width="800" height="600" dynamic="true" closable="true"
+			emptyMessage="Todos los lugares asignados" closeOnEscape="true"
+			id="info" resizable="false" showEffect="fade" hideEffect="explode">
 			<h:form>
 				<b:row>
 					<b:column span="3">
@@ -364,8 +369,7 @@
 				<b:row>
 					<b:column span="1">
 						<b:commandButton value="Volver" styleClass="btn btn-info"
-								style="padding:7px;"
-							onclick="PF('info').close();"
+							style="padding:7px;" onclick="PF('info').close();"
 							process="@this" oncomplete="PF('info').close();" update="frm" />
 					</b:column>
 				</b:row>
@@ -374,8 +378,8 @@
 
 		<p:dialog positionType="center" responsive="true"
 			widgetVar="cambioturno" header="Cambio de Turno" modal="true"
-			draggable="true" dynamic="true" closable="true" width="780" height="300"
-			closeOnEscape="true" id="cambioturno" resizable="false"
+			draggable="true" dynamic="true" closable="true" width="780"
+			height="300" closeOnEscape="true" id="cambioturno" resizable="false"
 			showEffect="fade" hideEffect="explode">
 			<h:form id="frmcambio">
 				<p:growl id="messagescambio" showDetail="false" />

@@ -40,6 +40,7 @@ public class turnoBean implements Serializable {
 	private String turno_hora_inicio;
 	private String turno_hora_fin;
 	private String turno_estado;
+	private String color;
 
 	// fechas
 	private Time horainiciotiemp;
@@ -253,7 +254,7 @@ public class turnoBean implements Serializable {
 	public String cambiarEstadoTurno() {
 		try {
 			FacesContext context = FacesContext.getCurrentInstance();
-			context.addMessage(null, new FacesMessage("INFORMACIÓN",
+			context.addMessage(null, new FacesMessage("INFORMACIï¿½N",
 					managergest.cambioEstadoTurno(getTurno().getTurId())));
 			getListaTurnos().clear();
 			getListaTurnos().addAll(managergest.findAllTurnos());
@@ -287,7 +288,7 @@ public class turnoBean implements Serializable {
 			if (y.getTurId().equals(turno_id)) {
 				t = 1;
 				r = true;
-				Mensaje.crearMensajeWARN("El código del lugar existe");
+				Mensaje.crearMensajeWARN("El cï¿½digo del lugar existe");
 			}
 		}
 		if (t == 0) {

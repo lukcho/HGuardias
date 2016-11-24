@@ -21,10 +21,14 @@ public class ManagerHorario {
 	@EJB
 	private ManagerGestion mGes;
 
+	@EJB
+	private ManagerHorario mHor;
+	
 	private static HgGuardia hg_gua;
 	private static HgLugare hg_lug;
 	private static HgTurno hg_turno;
 	private static HgHorarioCab hg_hcab;
+	private static HgHorarioDet hg_hdet;
 
 	String h = "";
 
@@ -839,10 +843,14 @@ public class ManagerHorario {
 				.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechaFinal));
 		Date finicial = java.sql.Date
 				.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechaInicial));
-		mDAO.ejectJPQL("delete from HgHorarioDet where hgHorarioCab.hcabId = "+hcab_id+"  ");
+		List<HgHorarioDet> det = mHor.findAllHorariosDetXIdCab(hcab_id);
+		for(HgHorarioDet detalle : det){
+			mDAO.ejectJPQL("delete from HgFalto where hgHorarioDet.hdetId = "+detalle.getHdetId()+" ");
+		}
 		mDAO.ejectJPQL("delete from HgGuardiasPendiente where guapenFecha <= '"+ffinal+"' and guapenFecha >= '"+finicial+"' ");
 		mDAO.ejectJPQL("delete from HgHistorialMovimiento where hgHorarioCab.hcabId = "+hcab_id+"  ");
 		mDAO.ejectJPQL("delete from HgLugaresTurnosVacio where hgHorarioCab.hcabId = "+hcab_id+"  ");
+		mDAO.ejectJPQL("delete from HgHorarioDet where hgHorarioCab.hcabId = "+hcab_id+"  ");
 		mDAO.ejectJPQL("delete from HgHorarioCab where hcabId  = "+hcab_id+" ");
 	}
 }
