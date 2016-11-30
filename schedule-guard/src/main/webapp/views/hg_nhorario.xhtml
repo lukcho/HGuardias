@@ -77,28 +77,29 @@
 				<br />
 				<b:row>
 					<b:column span="7">
-						<p:commandButton value="Generar" styleClass="btn btn-info"
-							style="padding:7px;" disabled="#{horarioCDBean.edicion}"
+						<b:commandButton value="Generar" look="info"
+							disabled="#{horarioCDBean.edicion}"
 							actionListener="#{horarioCDBean.abrirDialog()}"
 							update="frm messages">
-						</p:commandButton>&nbsp;&nbsp;&nbsp;
+						</b:commandButton>&nbsp;&nbsp;&nbsp;
 						<b:commandButton value="Volver"
 							action="#{horarioCDBean.volverHorarioCab()}" update="frm"
 							look="info" process="@this">
 						</b:commandButton>&nbsp;&nbsp;&nbsp;
-						<p:commandButton value="Información" styleClass="btn btn-info"
-							style="padding:7px;" rendered="#{horarioCDBean.edicion}"
+						<b:commandButton value="Información" look="info"
+							rendered="#{horarioCDBean.edicion}"
 							actionListener="#{horarioCDBean.abrirDialog1()}"
 							update="frm messages">
-						</p:commandButton>&nbsp;&nbsp;&nbsp;
-						<p:commandButton value="Cambio de Turno" styleClass="btn btn-info"
-							style="padding:7px;" rendered="#{horarioCDBean.edicion}"
+						</b:commandButton>&nbsp;&nbsp;&nbsp;
+						<b:commandButton value="Cambio de Turno" look="info"
+							rendered="#{horarioCDBean.edicion}"
 							actionListener="#{horarioCDBean.abrirDialog2()}"
 							update="frm messages">
-						</p:commandButton>&nbsp;&nbsp;&nbsp;
+						</b:commandButton>&nbsp;&nbsp;&nbsp;
 						<b:commandButton value="Calendario"
-							action="#{horarioCDBean.verCalendario()}" rendered="#{horarioCDBean.edicion}" update="frm"
-							look="info" process="@this">
+							action="#{horarioCDBean.verCalendario()}"
+							rendered="#{horarioCDBean.edicion}" update="frm" look="info"
+							process="@this">
 						</b:commandButton>&nbsp;&nbsp;&nbsp;
 					</b:column>
 				</b:row>
@@ -283,8 +284,8 @@
 		<p:dialog positionType="center" responsive="true" widgetVar="info"
 			header="Información del horario" modal="true" draggable="true"
 			width="800" height="600" dynamic="true" closable="true"
-			emptyMessage="Todos los lugares asignados" closeOnEscape="true"
-			id="info" resizable="false" showEffect="fade" hideEffect="explode">
+			closeOnEscape="true" id="info" resizable="false" showEffect="fade"
+			hideEffect="explode">
 			<h:form>
 				<b:row>
 					<b:column span="3">
@@ -332,17 +333,25 @@
 				<b:row>
 					<b:column span="11">
 						<b:panel title="Turnos no asignados" look="primary">
-							<p:dataTable var="lista"
+							<p:dataTable var="lugturnva"
+								emptyMessage="Todos los lugares asignados"
 								value="#{horarioCDBean.listaLugarTurnoVacio}" reflow="true"
 								scrollable="true" scrollHeight="150" id="tbb1">
+								<p:column headerText="OPCIONES" width="30" exportable="false">
+									<p:commandButton id="btnE" icon="ui-icon-pencil"
+										action="#{horarioCDBean.cargarLugarTurnoVacio(lugturnva)}">
+										<p:tooltip id="toolTipTrack1" for="btnE"
+											value="Bot&oacute;n para agregar guardia" trackMouse="true" />
+									</p:commandButton>
+								</p:column>
 								<p:column headerText="LUGAR" width="70">
-									<h:outputText value="#{lista.hgLugare.lugNombre}" />
+									<h:outputText value="#{lugturnva.hgLugare.lugNombre}" />
 								</p:column>
 								<p:column headerText="TURNO" width="70">
-									<h:outputText value="#{lista.hgTurno.turDescripcion}" />
+									<h:outputText value="#{lugturnva.hgTurno.turDescripcion}" />
 								</p:column>
 								<p:column headerText="FECHA" width="70">
-									<h:outputText value="#{lista.hglugturFechaInicio}" />
+									<h:outputText value="#{lugturnva.hglugturFechaInicio}" />
 								</p:column>
 							</p:dataTable>
 						</b:panel>
@@ -378,7 +387,7 @@
 
 		<p:dialog positionType="center" responsive="true"
 			widgetVar="cambioturno" header="Cambio de Turno" modal="true"
-			draggable="true" dynamic="true" closable="true" width="780"
+			draggable="true" dynamic="true" closable="true" width="850"
 			height="300" closeOnEscape="true" id="cambioturno" resizable="false"
 			showEffect="fade" hideEffect="explode">
 			<h:form id="frmcambio">
@@ -390,6 +399,8 @@
 						</b:column>
 						<b:column span="4">
 							<p:calendar required="true" navigator="true"
+								mindate="#{horarioCDBean.horcab_fechainicio}"
+								maxdate="#{horarioCDBean.horcab_fechafin}"
 								requiredMessage="Requerido Fecha" id="fechacamb"
 								value="#{horarioCDBean.cambio_fecha}" pattern="yyyy/MM/dd"
 								mask="true">
@@ -410,7 +421,7 @@
 									value="#{horarioCDBean.guardiaId1}" id="gua1"
 									style="width:200px" requiredMessage="Requerido guardia"
 									filter="true" filterMatchMode="contains">
-									<p:ajax listener="#{horarioCDBean.mostrara()}"
+									<p:ajax listener="#{horarioCDBean.mostrarGuardia1()}"
 										update="nombre1 apellido1">
 									</p:ajax>
 									<f:selectItems value="#{horarioCDBean.lstGuardias}" />
@@ -437,7 +448,7 @@
 									value="#{horarioCDBean.guardiaId2}" id="gua2"
 									style="width:200px" requiredMessage="Requerido guardia"
 									filter="true" filterMatchMode="contains">
-									<p:ajax listener="#{horarioCDBean.mostrarb()}"
+									<p:ajax listener="#{horarioCDBean.mostrarGuardia2()}"
 										update="nombre2 apellido2">
 									</p:ajax>
 									<f:selectItems value="#{horarioCDBean.lstGuardias}" />
@@ -485,6 +496,135 @@
 			</h:form>
 		</p:confirmDialog>
 
+		<p:dialog positionType="center" responsive="true"
+			widgetVar="lugarturno" header="Gestión cambios de turnos vacios "
+			modal="true" draggable="true" width="800" height="600" dynamic="true"
+			closable="true" closeOnEscape="true" id="lugarturno"
+			resizable="false" showEffect="fade" hideEffect="explode">
+			<h:form id="cambiolugturn1">
+			<p:growl id="messagescambiolugturn" showDetail="false" />
+				<b:row>
+					<b:column span="3">
+						<h:outputLabel value="Nro. horario: " />
+					</b:column>
+					<b:column span="2">
+						<h:outputLabel value="#{horarioCDBean.cab_id}" />
+					</b:column>
+					<b:column span="3">
+						<h:outputLabel value="Descripción: " />
+					</b:column>
+					<b:column span="2">
+						<h:outputLabel value="#{horarioCDBean.horcab_nombre}" />
+					</b:column>
+				</b:row>
+				<b:row>
+					<b:column span="3">
+						<h:outputLabel value="Fecha inicio/fin: " />&nbsp;
+				</b:column>
+					<b:column span="4">
+						<h:outputLabel
+							value="#{horarioCDBean.horcab_fechainicio} al #{horarioCDBean.horcab_fechafin}" />
+					</b:column>
+				</b:row>
+				<b:row>
+					<b:column span="3">
+						<h:outputLabel value="Lugar: " />
+					</b:column>
+					<b:column span="2">
+						<h:outputLabel value="#{horarioCDBean.nombreLugarTurno}" />
+					</b:column>
+					<b:column span="3">
+						<h:outputLabel value="Turno: " />
+					</b:column>
+					<b:column span="2">
+						<h:outputLabel value="#{horarioCDBean.turnoLugarTurno}" />
+					</b:column>
+				</b:row>
+				<b:row>
+					<b:column span="3">
+						<h:outputLabel value="Fecha: " />
+					</b:column>
+					<b:column span="2">
+						<h:outputLabel value="#{horarioCDBean.fechaLugarTurno}" />
+					</b:column>
+				</b:row>
+				<br />
+				<b:row>
+					<b:column span="3">
+						<h:outputLabel value="Seleccione el guardia: " for="gua1" />
+					</b:column>
+					<b:column span="4">
+						<h:panelGroup>
+							<p:selectOneMenu 
+								value="#{horarioCDBean.guardiaLugTurnVacio}" id="gualugturn"
+								style="width:200px"
+								filter="true" filterMatchMode="contains">
+								<p:ajax
+									listener="#{horarioCDBean.mostrarGuardiaLugarTurnoVacio()}"
+									update="nombreLugTurn apellidoLugTurn lug turn">
+								</p:ajax>
+								<f:selectItems value="#{horarioCDBean.lstGuardias}" />
+								<p:ajax listener="#{horarioCDBean.asignarGuardiaLugarTurno()}">
+								</p:ajax>
+							</p:selectOneMenu>
+						</h:panelGroup>
+					</b:column>
+					<b:column span="5">
+						<h:outputLabel id="nombreLugTurn"
+							value="#{horarioCDBean.nombreguardiaLugTurnVacio}" />&nbsp;
+						<h:outputLabel id="apellidoLugTurn"
+							value="#{horarioCDBean.apellidoguardiaLugTurnVacio}" />
+					</b:column>
+				</b:row>
+				<br />
+				<b:row>
+					<b:column span="2">
+						<h:outputLabel value="Lugar Actual: " for="lug" />
+					</b:column>
+					<b:column span="2">
+						<h:outputLabel id="lug" value="#{horarioCDBean.hcab_lugar}">
+						</h:outputLabel>
+					</b:column>
+					<b:column span="2">
+						<h:outputLabel value="Turno Actual: " for="turn" />
+					</b:column>
+					<b:column span="3">
+						<h:outputLabel id="turn" value="#{horarioCDBean.hcab_turno}">
+						</h:outputLabel>
+					</b:column>
+				</b:row>
+				<br />
+				<b:row>
+				<b:column span="2">
+				<b:commandButton value="Mover Guardias" styleClass="btn btn-info"
+								style="padding:7px;"
+								actionListener="#{horarioCDBean.abrirDialogConfirmLugTurn()}"
+								update=":cambiolugturn1:messagescambiolugturn">
+							</b:commandButton>&nbsp;&nbsp;&nbsp;
+					</b:column>&nbsp;&nbsp;&nbsp;
+					<b:column span="1">
+						<b:commandButton value="Volver" styleClass="btn btn-info"
+							style="padding:7px;" onclick="PF('lugarturno').close();"
+							action="#{horarioCDBean.volverCambioLugarTurno()}"
+							process="@this" oncomplete="PF('lugarturno').close();"
+							update="frm" />
+					</b:column>
+				</b:row>
+			</h:form>
+		</p:dialog>
+		<p:confirmDialog header="Confirmación"
+			message="Está seguro de mover al guardia?" closable="false"
+			showEffect="fade" hideEffect="explode" widgetVar="cambiolugturn">
+			<h:form>
+				<p:commandButton value="Si" styleClass="ui-confirmdialog-yes"
+					icon="ui-icon-check" action="#{horarioCDBean.cambioLugarTurno()}"
+					oncomplete="PF('cambiolugturn').hide();PF('lugarturno').hide();"
+					update=":cambiolugturn1:messagescambiolugturn info" />
+				<p:commandButton value="No" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					onclick="PF('cambiolugturn').hide();"/>
+			</h:form>
+		</p:confirmDialog>
 	</ui:define>
 </ui:composition>
 </html>

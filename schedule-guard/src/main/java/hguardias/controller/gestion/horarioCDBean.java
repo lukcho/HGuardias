@@ -132,6 +132,30 @@ public class horarioCDBean implements Serializable {
 	private ScheduleModel eventModel;
 	private ScheduleEvent event = new DefaultScheduleEvent();
 	private List<HgHorarioDet> listaHorarioDetByCabId;
+
+	private String guardiaBuscar;
+	private Integer lugarBuscar;
+	
+	//cambiolugarturno
+	private Integer lugarTurnoVacioId; 
+	private String cedulaguardiaLugTurnVacio;
+	private HgTurno turnoVacio; 
+	private String nombreLugarTurno;
+	private HgLugare lugarVacio;
+	private String turnoLugarTurno;
+	private Date fechaLugarTurno;
+	private String nombreguardiaLugTurnVacio;
+	private String apellidoguardiaLugTurnVacio;
+	private String guardiaLugTurnVacio;
+	private HgGuardia guardiaLugarTurno;
+	private List<HgHorarioDet> horarioDet;
+	private Integer hcab_id;
+	private String hcab_descripcion;
+	private HgTurno hcab_turnoId;
+	private String hcab_turno;
+	private HgLugare hcab_lugarId;
+	private String hcab_lugar;
+	
 	@Inject
 	SesionBean ms;
 
@@ -173,15 +197,28 @@ public class horarioCDBean implements Serializable {
 		apellidoguardia1 = "";
 		nombreguardia2 = "";
 		apellidoguardia2 = "";
+		nombreLugarTurno=null;
+		turnoLugarTurno=null;
+		fechaLugarTurno = null;
+		nombreguardiaLugTurnVacio =null;
+		apellidoguardiaLugTurnVacio =null;
+		guardiaLugTurnVacio =null;
+		hcab_turnoId=null;
+		hcab_lugarId = null;
+		lugarTurnoVacioId =null;
 		lstGuardias = new ArrayList<SelectItem>();
 	}
 
-	public java.sql.Date getSqlfechai() {
-		return sqlfechai;
+	public String getGuardiaBuscar() {
+		return guardiaBuscar;
 	}
 
-	public void setSqlfechai(java.sql.Date sqlfechai) {
-		this.sqlfechai = sqlfechai;
+	public Integer getLugarBuscar() {
+		return lugarBuscar;
+	}
+	
+	public java.sql.Date getSqlfechai() {
+		return sqlfechai;
 	}
 
 	public java.sql.Date getSqlfechaf() {
@@ -192,14 +229,6 @@ public class horarioCDBean implements Serializable {
 		return cab_id;
 	}
 
-	public void setCab_id(Integer cab_id) {
-		this.cab_id = cab_id;
-	}
-
-	public void setSqlfechaf(java.sql.Date sqlfechaf) {
-		this.sqlfechaf = sqlfechaf;
-	}
-
 	public String getCedula() {
 		return cedula;
 	}
@@ -208,20 +237,8 @@ public class horarioCDBean implements Serializable {
 		return horcab_fecha_creacion;
 	}
 
-	public void setHorcab_fecha_creacion(Timestamp horcab_fecha_creacion) {
-		this.horcab_fecha_creacion = horcab_fecha_creacion;
-	}
-
-	public void setCedula(String cedula) {
-		this.cedula = cedula;
-	}
-
 	public String getHorcab_usuarioreg() {
 		return horcab_usuarioreg;
-	}
-
-	public void setHorcab_usuarioreg(String horcab_usuarioreg) {
-		this.horcab_usuarioreg = horcab_usuarioreg;
 	}
 
 	public Date getDate() {
@@ -229,158 +246,76 @@ public class horarioCDBean implements Serializable {
 		return date;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
-	}
-
 	public String getUsuario() {
 		return usuario;
-	}
-
-	public Integer gethorcab_id() {
-		return horcab_id;
-	}
-
-	public void sethorcab_id(Integer horcab_id) {
-		this.horcab_id = horcab_id;
 	}
 
 	public Date gethorcab_fechainicio() {
 		return horcab_fechainicio;
 	}
 
-	public void sethorcab_fechainicio(Date horcab_fechainicio) {
-		this.horcab_fechainicio = horcab_fechainicio;
-	}
-
 	public Date gethorcab_fechafin() {
 		return horcab_fechafin;
-	}
-
-	public void sethorcab_fechafin(Date horcab_fechafin) {
-		this.horcab_fechafin = horcab_fechafin;
 	}
 
 	public String gethorcab_nombre() {
 		return horcab_nombre;
 	}
 
-	public void sethorcab_nombre(String horcab_nombre) {
-		this.horcab_nombre = horcab_nombre;
-	}
-
 	public List<HgHorarioCab> getlistaHorarioCab() {
 		return listaHorarioCab;
-	}
-
-	public void setlistaHorarioCab(List<HgHorarioCab> listaHorarioCab) {
-		this.listaHorarioCab = listaHorarioCab;
 	}
 
 	public List<HgHorarioDet> getListaHorarioDet() {
 		return listaHorarioDet;
 	}
 
-	public void setListaHorarioDet(List<HgHorarioDet> listaHorarioDet) {
-		this.listaHorarioDet = listaHorarioDet;
-	}
-
 	public List<HgHorarioDet> getListaHorarioDetByCabId() {
 		return listaHorarioDetByCabId;
-	}
-
-	public void setListaHorarioDetByCabId(
-			List<HgHorarioDet> listaHorarioDetByCabId) {
-		this.listaHorarioDetByCabId = listaHorarioDetByCabId;
 	}
 
 	public List<HgLugaresTurnosVacio> getListaLugarTurnoVacio() {
 		return listaLugarTurnoVacio;
 	}
 
-	public void setListaLugarTurnoVacio(
-			List<HgLugaresTurnosVacio> listaLugarTurnoVacio) {
-		this.listaLugarTurnoVacio = listaLugarTurnoVacio;
-	}
-
 	public boolean isEdicion() {
 		return edicion;
-	}
-
-	public void setEdicion(boolean edicion) {
-		this.edicion = edicion;
 	}
 
 	public boolean isEdiciontipo() {
 		return ediciontipo;
 	}
 
-	public void setEdiciontipo(boolean ediciontipo) {
-		this.ediciontipo = ediciontipo;
-	}
-
 	public String getusuariologeado() {
 		return usuariologeado;
-	}
-
-	public void setusuariologeado(String usuariologeado) {
-		this.usuariologeado = usuariologeado;
 	}
 
 	public Date getFecha() {
 		return fecha;
 	}
 
-	public void setFecha(Date fecha) {
-		this.fecha = fecha;
-	}
-
 	public List<HorarioDet> getListaSinGuardias() {
 		return listaSinGuardias;
-	}
-
-	public void setListaSinGuardias(List<HorarioDet> listaSinGuardias) {
-		this.listaSinGuardias = listaSinGuardias;
 	}
 
 	public Integer getNumeroLugaresVacios() {
 		return numeroLugaresVacios;
 	}
 
-	public void setNumeroLugaresVacios(Integer numeroLugaresVacios) {
-		this.numeroLugaresVacios = numeroLugaresVacios;
-	}
-
 	public Integer getNumeroRegistrosCreadoss() {
 		return numeroRegistrosCreados;
-	}
-
-	public void setNumeroRegistrosCreadoss(Integer numeroRegistrosCreadoss) {
-		this.numeroRegistrosCreados = numeroRegistrosCreadoss;
 	}
 
 	public Integer getNumeroRegistrosTotal() {
 		return numeroRegistrosTotal;
 	}
 
-	public void setNumeroRegistrosTotal(Integer numeroRegistrosTotal) {
-		this.numeroRegistrosTotal = numeroRegistrosTotal;
-	}
-
 	public Date getCambio_fecha() {
 		return cambio_fecha;
 	}
 
-	public void setCambio_fecha(Date cambio_fecha) {
-		this.cambio_fecha = cambio_fecha;
-	}
-
 	public List<HgGuardia> getListaguardiasXFecha() {
 		return listaguardiasXFecha;
-	}
-
-	public void setListaguardiasXFecha(List<HgGuardia> listaguardiasXFecha) {
-		this.listaguardiasXFecha = listaguardiasXFecha;
 	}
 
 	public String getGuardiaId1() {
@@ -389,14 +324,6 @@ public class horarioCDBean implements Serializable {
 
 	public String getGuardiaId2() {
 		return guardiaId2;
-	}
-
-	public void setGuardiaId1(String guardiaId1) {
-		this.guardiaId1 = guardiaId1;
-	}
-
-	public void setGuardiaId2(String guardiaId2) {
-		this.guardiaId2 = guardiaId2;
 	}
 
 	public String getNombreguardia1() {
@@ -415,28 +342,8 @@ public class horarioCDBean implements Serializable {
 		return nombreguardia2;
 	}
 
-	public void setNombreguardia1(String nombreguardia1) {
-		this.nombreguardia1 = nombreguardia1;
-	}
-
-	public void setNombreguardia2(String nombreguardia2) {
-		this.nombreguardia2 = nombreguardia2;
-	}
-
-	public void setApellidoguardia1(String apellidoguardia1) {
-		this.apellidoguardia1 = apellidoguardia1;
-	}
-
-	public void setApellidoguardia2(String apellidoguardia2) {
-		this.apellidoguardia2 = apellidoguardia2;
-	}
-
 	public List<SelectItem> getLstGuardias() {
 		return lstGuardias;
-	}
-
-	public void setLstGuardias(List<SelectItem> lstGuardias) {
-		this.lstGuardias = lstGuardias;
 	}
 
 	public HgHorarioCab getHcabElsita() {
@@ -451,28 +358,195 @@ public class horarioCDBean implements Serializable {
 		return eventModel;
 	}
 
-	public void setEventModel(ScheduleModel eventModel) {
-		this.eventModel = eventModel;
-	}
-
 	public ScheduleEvent getEvent() {
 		return event;
 	}
-
-	public void setEvent(ScheduleEvent event) {
-		this.event = event;
+	
+	public String getNombreLugarTurno() {
+		return nombreLugarTurno;
+	}
+	
+	public String getTurnoLugarTurno() {
+		return turnoLugarTurno;
 	}
 
-	// horariocab
-	/**
-	 * accion para invocar el manager y crear horario
-	 * 
-	 * @param horcab_id
-	 * @param sqlfechai
-	 * @param sqlfechaf
-	 * @param horcab_nombre
-	 * @throws Exception
-	 */
+	public Date getFechaLugarTurno() {
+		return fechaLugarTurno;
+	}
+	
+	public void setCambio_fecha(Date cambio_fecha) {
+		this.cambio_fecha = cambio_fecha;
+	}
+	
+	public void setGuardia1(HgGuardia guardia1) {
+		this.guardia1 = guardia1;
+	}
+	
+	public void setGuardia2(HgGuardia guardia2) {
+		this.guardia2 = guardia2;
+	}
+	
+	public void setApellidoguardia1(String apellidoguardia1) {
+		this.apellidoguardia1 = apellidoguardia1;
+	}
+	
+	public void setApellidoguardia2(String apellidoguardia2) {
+		this.apellidoguardia2 = apellidoguardia2;
+	}
+	
+	public void setGuardiaId1(String guardiaId1) {
+		this.guardiaId1 = guardiaId1;
+	}
+	
+	public void setGuardiaId2(String guardiaId2) {
+		this.guardiaId2 = guardiaId2;
+	}
+	
+	public void setGuardiaBuscar(String guardiaBuscar) {
+		this.guardiaBuscar = guardiaBuscar;
+	}
+	
+	public void setCab_id(Integer cab_id) {
+		this.cab_id = cab_id;
+	}
+	
+	public void setCedula(String cedula) {
+		this.cedula = cedula;
+	}
+	
+	public void setFecha(Date fecha) {
+		this.fecha = fecha;
+	}
+	
+	public void setFechaLugarTurno(Date fechaLugarTurno) {
+		this.fechaLugarTurno = fechaLugarTurno;
+	}
+	
+	public void setHorcab_fecha_creacion(Timestamp horcab_fecha_creacion) {
+		this.horcab_fecha_creacion = horcab_fecha_creacion;
+	}
+	
+	public void setHorcab_fechafin(Date horcab_fechafin) {
+		this.horcab_fechafin = horcab_fechafin;
+	}
+	
+	public void setHorcab_fechainicio(Date horcab_fechainicio) {
+		this.horcab_fechainicio = horcab_fechainicio;
+	}
+	
+	public void setHorcab_id(Integer horcab_id) {
+		this.horcab_id = horcab_id;
+	}
+	
+	public void setLugarBuscar(Integer lugarBuscar) {
+		this.lugarBuscar = lugarBuscar;
+	}
+	
+	public void setHorcab_nombre(String horcab_nombre) {
+		this.horcab_nombre = horcab_nombre;
+	}
+	
+	public void setHorcab_usuarioreg(String horcab_usuarioreg) {
+		this.horcab_usuarioreg = horcab_usuarioreg;
+	}
+	
+	public void setNombreguardia1(String nombreguardia1) {
+		this.nombreguardia1 = nombreguardia1;
+	}
+	
+	public void setNombreguardia2(String nombreguardia2) {
+		this.nombreguardia2 = nombreguardia2;
+	}
+	
+	public void setNombreLugarTurno(String nombreLugarTurno) {
+		this.nombreLugarTurno = nombreLugarTurno;
+	}
+	
+	public void setNumeroLugaresVacios(Integer numeroLugaresVacios) {
+		this.numeroLugaresVacios = numeroLugaresVacios;
+	}
+	
+	public void setNumeroRegistrosCreados(Integer numeroRegistrosCreados) {
+		this.numeroRegistrosCreados = numeroRegistrosCreados;
+	}
+	
+	public void setNumeroRegistrosTotal(Integer numeroRegistrosTotal) {
+		this.numeroRegistrosTotal = numeroRegistrosTotal;
+	}
+	
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
+	}
+	
+	public void setUsuariologeado(String usuariologeado) {
+		this.usuariologeado = usuariologeado;
+	}
+	
+	public void setTurnoLugarTurno(String turnoLugarTurno) {
+		this.turnoLugarTurno = turnoLugarTurno;
+	}
+	
+	public void setSqlfechaf(java.sql.Date sqlfechaf) {
+		this.sqlfechaf = sqlfechaf;
+	}
+	
+	public void setSqlfechai(java.sql.Date sqlfechai) {
+		this.sqlfechai = sqlfechai;
+	}
+	
+	public String getNombreguardiaLugTurnVacio() {
+		return nombreguardiaLugTurnVacio;
+	}
+	
+	public String getApellidoguardiaLugTurnVacio() {
+		return apellidoguardiaLugTurnVacio;
+	}
+	
+	public String getGuardiaLugTurnVacio() {
+		return guardiaLugTurnVacio;
+	}
+	
+	public void setNombreguardiaLugTurnVacio(String nombreguardiaLugTurnVacio) {
+		this.nombreguardiaLugTurnVacio = nombreguardiaLugTurnVacio;
+	}
+	
+	public void setAg(algoritmoGenetico ag) {
+		this.ag = ag;
+	}
+	
+	public void setGuardiaLugTurnVacio(String guardiaLugTurnVacio) {
+		this.guardiaLugTurnVacio = guardiaLugTurnVacio;
+	}
+	
+	public String getCedulaguardiaLugTurnVacio() {
+		return cedulaguardiaLugTurnVacio;
+	}
+	
+	public void setCedulaguardiaLugTurnVacio(String cedulaguardiaLugTurnVacio) {
+		this.cedulaguardiaLugTurnVacio = cedulaguardiaLugTurnVacio;
+	}
+	
+	public Integer getHcab_id() {
+		return hcab_id;
+	}
+
+	public String getHcab_lugar() {
+		return hcab_lugar;
+	}
+
+	public String getHcab_turno() {
+		return hcab_turno;
+	}
+
+	public List<HgHorarioDet> getHorarioDet() {
+		return horarioDet;
+	}
+
+	public String getHcab_descripcion() {
+		return hcab_descripcion;
+	}
+	
+	//horario cabecera
 	public void crearHorarioCab() {
 		try {
 			fecha = new Date();
@@ -511,56 +585,31 @@ public class horarioCDBean implements Serializable {
 						List<HgLugarTurno> lugarTurnos = managergest
 								.findLugarByIdLugar(lugar.getLugId());
 						for (HgLugarTurno lugarTurno : lugarTurnos) {
-							for (Integer numeroGuardias = 1; numeroGuardias <= lugarTurno
-									.getLugTurNumeroGuardias(); numeroGuardias++) {
+							for (Integer numeroGuardias = 1; numeroGuardias <= lugarTurno.getLugTurNumeroGuardias(); numeroGuardias++) {
 								HgGuardia guardiaAlmacenar = new HgGuardia();
 								boolean guardia = true;
 								boolean sinGuardia = true;
-								guardiaAlmacenar = obtenerGuardia(lugar,
-										fechainicial, lugarTurno.getHgTurno(),
-										numeroDia, sinGuardia);
+								guardiaAlmacenar = obtenerGuardia(lugar,fechainicial, lugarTurno.getHgTurno(),numeroDia, sinGuardia);
 								if (guardiaAlmacenar.getGuaCedula() == null) {
 									sinGuardia = false;
-									guardiaAlmacenar = obtenerGuardia(lugar,
-											fechainicial,
-											lugarTurno.getHgTurno(), numeroDia,
-											sinGuardia);
+									guardiaAlmacenar = obtenerGuardia(lugar,fechainicial,lugarTurno.getHgTurno(), numeroDia,sinGuardia);
 								}
 								if (guardiaAlmacenar.getGuaCedula() == null) {
 									guardia = false;
-									managerhorario.insertarLugarTurnoVacio(
-											cab_id, lugarTurno.getHgTurno(),
-											lugar, fechainicial);
+									managerhorario.insertarLugarTurnoVacio(cab_id, lugarTurno.getHgTurno(),lugar, fechainicial);
 								}
 								if (guardia) {
-									if (numeroDia + 1 == 6
-											|| numeroDia + 1 == 12
-											|| numeroDia + 1 == 18
-											|| numeroDia + 1 == 24
-											|| numeroDia + 1 == 30) {
+									if (numeroDia + 1 == 6 || numeroDia + 1 == 12|| numeroDia + 1 == 18
+											|| numeroDia + 1 == 24 || numeroDia + 1 == 30) {
 										if (managerhorario
-												.findNumDiasxGuardia(
-														guardiaAlmacenar,
-														restDays(fechainicial),
-														rest5Days(restDays((fechainicial)))) == 5) {
-											managerhorario
-													.insertarGuardiaPendienteLibre(
-															guardiaAlmacenar,
-															fechainicial);
-											almacenarDetalles(guardiaAlmacenar,
-													lugar,
-													lugarTurno.getHgTurno(),
-													fechainicial, null, cab_id);
+												.findNumDiasxGuardia(guardiaAlmacenar,restDays(fechainicial),rest5Days(restDays((fechainicial)))) == 5) {
+											managerhorario.insertarGuardiaPendienteLibre(guardiaAlmacenar,fechainicial);
+											almacenarDetalles(guardiaAlmacenar,lugar,lugarTurno.getHgTurno(),fechainicial, null, cab_id);
 										} else {
-											almacenarDetalles(guardiaAlmacenar,
-													lugar,
-													lugarTurno.getHgTurno(),
-													fechainicial, null, cab_id);
+											almacenarDetalles(guardiaAlmacenar,lugar,lugarTurno.getHgTurno(),fechainicial, null, cab_id);
 										}
 									} else {
-										almacenarDetalles(guardiaAlmacenar,
-												lugar, lugarTurno.getHgTurno(),
-												fechainicial, null, cab_id);
+										almacenarDetalles(guardiaAlmacenar,lugar, lugarTurno.getHgTurno(),fechainicial, null, cab_id);
 									}
 								}
 							}
@@ -772,15 +821,6 @@ public class horarioCDBean implements Serializable {
 		return guardiaelegido;
 	}
 
-	/**
-	 * Metodo para saber que dias se puede trabajar dependiendo del boolean y el
-	 * dia
-	 * 
-	 * @param lugar
-	 * @param fechainicial
-	 * @return
-	 * @throws ParseException
-	 */
 	public boolean averiguarDia(HgLugare lugar, Date fechainicial)
 			throws ParseException {
 		boolean resultado = true;
@@ -819,10 +859,6 @@ public class horarioCDBean implements Serializable {
 		return (int) dias;
 	}
 
-	/**
-	 * accion cerrar horario
-	 * 
-	 */
 	public String cerrarHorarioCab() {
 		numeroLugaresVacios = 0;
 		numeroRegistrosCreados = 0;
@@ -837,16 +873,15 @@ public class horarioCDBean implements Serializable {
 		horcab_fecha_creacion = null;
 		cab_id = null;
 		date = null;
+		nombreLugarTurno=null;
+		turnoLugarTurno = null;
+		fechaLugarTurno = null;
 		getListaSinGuardias().clear();
 		getlistaHorarioCab().clear();
 		getlistaHorarioCab().addAll(managerhorario.findAllHorariosCab());
 		return "hg_horarios?faces-redirect=true";
 	}
 
-	/**
-	 * metodo para almacenar detalle
-	 * 
-	 */
 	public HgHorarioDet almacenarDetalles(HgGuardia g, HgLugare l, HgTurno t,
 			Date fechainicial1, Date fechaFinal, Integer cab_id) {
 		HgHorarioDet hghorariodetalle = new HgHorarioDet();
@@ -870,15 +905,6 @@ public class horarioCDBean implements Serializable {
 		return hghorariodetalle;
 	}
 
-	/**
-	 * Metodo para almacenar los guardias
-	 * 
-	 * @param g
-	 * @param fechainicial1
-	 * @param fechaFinal
-	 * @param cab_id
-	 * @return
-	 */
 	public HgHorarioDet almacenarDetallesLibre(HgGuardia g, Date fechainicial1,
 			Date fechaFinal, Integer cab_id) {
 		HgHorarioDet hghorariodetalle = new HgHorarioDet();
@@ -894,12 +920,6 @@ public class horarioCDBean implements Serializable {
 		return hghorariodetalle;
 	}
 
-	/**
-	 * Metodo para aumentar en un dia cada fecha
-	 * 
-	 * @param date
-	 * @return
-	 */
 	public static Date addDays(Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
@@ -907,12 +927,6 @@ public class horarioCDBean implements Serializable {
 		return cal.getTime();
 	}
 
-	/**
-	 * Metodo para reducir en un dia cada fecha
-	 * 
-	 * @param date
-	 * @return
-	 */
 	public static Date restDays(Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
@@ -920,12 +934,6 @@ public class horarioCDBean implements Serializable {
 		return cal.getTime();
 	}
 
-	/**
-	 * Metodo para reducir en 5 dias cada fecha
-	 * 
-	 * @param date
-	 * @return
-	 */
 	public static Date rest5Days(Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
@@ -933,10 +941,6 @@ public class horarioCDBean implements Serializable {
 		return cal.getTime();
 	}
 
-	/**
-	 * accion para abrir el dialogo
-	 * 
-	 */
 	public void abrirDialog() {
 		if (horcab_fechainicio.after(horcab_fechafin)) {
 			Mensaje.crearMensajeWARN("Fecha inicio debe ser menor que la Fecha Fin");
@@ -944,31 +948,17 @@ public class horarioCDBean implements Serializable {
 			RequestContext.getCurrentInstance().execute("PF('gu').show();");
 	}
 
-	/**
-	 * accion para abrir el dialogo
-	 * 
-	 */
 	public void abrirDialog1() {
 		getListaLugarTurnoVacio().clear();
 		getListaLugarTurnoVacio().addAll(managergest.allLugarTurnoByID(cab_id));
 		RequestContext.getCurrentInstance().execute("PF('info').show();");
 	}
 
-	/**
-	 * accion para abrir el dialogo
-	 * 
-	 */
 	public void abrirDialog2() {
 		RequestContext.getCurrentInstance()
 				.execute("PF('cambioturno').show();");
 	}
 
-	/**
-	 * accion para cargar los datos en el formulario
-	 * 
-	 * @param horcab
-	 * @throws Exception
-	 */
 	public String cargarHorarioCab(HgHorarioCab horcab) {
 		try {
 			horcab_id = horcab.getHcabId();
@@ -984,11 +974,15 @@ public class horarioCDBean implements Serializable {
 			edicion = true;
 			ediciontipo = false;
 			eventModel = new DefaultScheduleModel();
-			for (HgHorarioDet e : managerhorario.findAllHorariosDetXIdCab(cab_id)) {
-				String lugarguardia = e.getHgLugare().getLugNombre()+" "+e.getHgGuardia().getGuaApellido()+" "+e.getHgGuardia().getGuaNombre();
+			for (HgHorarioDet e : managerhorario
+					.findAllHorariosDetXIdCab(cab_id)) {
+				String lugarguardia = e.getHgLugare().getLugNombre() + " - "
+						+ e.getHgGuardia().getGuaApellido() + " "
+						+ e.getHgGuardia().getGuaNombre();
 				event = new DefaultScheduleEvent(lugarguardia,
 						e.getHdetFechaInicio(), e.getHdetFechaInicio(), e);
-						((DefaultScheduleEvent) event).setStyleClass(e.getHgTurno().getTurCodigoColor());
+				((DefaultScheduleEvent) event).setStyleClass(e.getHgTurno()
+						.getTurCodigoColor());
 				eventModel.addEvent(event);
 			}
 			getListaHorarioDet().clear();
@@ -1004,24 +998,12 @@ public class horarioCDBean implements Serializable {
 		return "";
 	}
 
-	/**
-	 * eliminar lugturno abriendo el dialogo
-	 * 
-	 * @param pro_id
-	 * @throws Exception
-	 */
 	public void abrirDialogHorarioEliminar(HgHorarioCab item) {
 		setHcabElsita(item);
 		RequestContext.getCurrentInstance().execute("PF('ef').show();");
 	}
 
-	/**
-	 * eliminar un fotoproducto
-	 * 
-	 * @param pro_id
-	 * @throws Exception
-	 */
-	public String eliminarHorarioCab() {
+	public void eliminarHorarioCab() {
 		try {
 			managerhorario.eliminarHorarioCab(hcabElsita.getHcabId(),
 					hcabElsita.getHcabFechaFin(),
@@ -1033,14 +1015,8 @@ public class horarioCDBean implements Serializable {
 			Mensaje.crearMensajeWARN("No se eliminó el horario");
 			e.printStackTrace();
 		}
-		return "";
 	}
 
-	/**
-	 * Lista de estados
-	 * 
-	 * @return lista de items de estados
-	 */
 	public List<SelectItem> getlistEstados() {
 		List<SelectItem> lista = new ArrayList<SelectItem>();
 		lista.add(new SelectItem(Funciones.estadoActivo, Funciones.estadoActivo
@@ -1051,11 +1027,6 @@ public class horarioCDBean implements Serializable {
 		return lista;
 	}
 
-	/**
-	 * Redirecciona a la pagina de creacion de hroairocab
-	 * 
-	 * @return
-	 */
 	public String nuevoHorarioCab() {
 		BuscarPersona();
 		horcab_id = null;
@@ -1070,22 +1041,11 @@ public class horarioCDBean implements Serializable {
 		cab_id = managerhorario.ultimoOrdenCabecera();
 		return "hg_nhorario?faces-redirect=true";
 	}
-	
-	/**
-	 * Redirecciona a la pagina de creacion de hroairocab
-	 * 
-	 * @return
-	 */
+
 	public String verCalendario() {
 		return "hg_calendario?faces-redirect=true";
 	}
 
-	/**
-	 * limpia la informacion de ausencia
-	 * 
-	 * @return
-	 * @throws Exception
-	 */
 	public String volverHorarioCab() throws Exception {
 		horcab_id = null;
 		horcab_fechainicio = null;
@@ -1098,15 +1058,14 @@ public class horarioCDBean implements Serializable {
 		numeroRegistrosCreados = 0;
 		numeroLugaresVacios = 0;
 		cab_id = null;
+		nombreLugarTurno=null;
+		turnoLugarTurno = null;
+		fechaLugarTurno = null;
 		getlistaHorarioCab().clear();
 		getlistaHorarioCab().addAll(managerhorario.findAllHorariosCab());
 		return "hg_horarios?faces-redirect=true";
 	}
 
-	/**
-	 * metodo para mostrar los guardias
-	 * 
-	 */
 	public List<SelectItem> getListaGuardias() {
 		List<SelectItem> listadoSI = new ArrayList<SelectItem>();
 		for (HgGuardia t : managergest.findAllGuardias()) {
@@ -1118,11 +1077,6 @@ public class horarioCDBean implements Serializable {
 		return listadoSI;
 	}
 
-	/**
-	 * Metodo para buscar persona logeada
-	 * 
-	 * @throws Exception
-	 */
 	public void BuscarPersona() {
 		try {
 			cedula = ManagerCarga.consultaSQL(usuario);
@@ -1163,12 +1117,7 @@ public class horarioCDBean implements Serializable {
 		}
 	}
 
-	/**
-	 * Mestodo q carga datos del guardia
-	 * 
-	 * @return guardia
-	 */
-	public void mostrara() {
+	public void mostrarGuardia1() {
 		HgGuardia gua;
 		try {
 			nombreguardia1 = "";
@@ -1181,12 +1130,7 @@ public class horarioCDBean implements Serializable {
 		}
 	}
 
-	/**
-	 * Mestodo q carga datos del guardia
-	 * 
-	 * @return guardia
-	 */
-	public void mostrarb() {
+	public void mostrarGuardia2() {
 		HgGuardia gua;
 		try {
 			nombreguardia2 = "";
@@ -1199,38 +1143,18 @@ public class horarioCDBean implements Serializable {
 		}
 	}
 
-	/**
-	 * metodo para asignar el guardia
-	 * 
-	 */
-	public String asignarGuardia1() {
+	public void asignarGuardia1() {
 		guardia1 = managergest.asignarGuardia(guardiaId1);
-		return "";
 	}
 
-	/**
-	 * metodo para asignar el guardia
-	 * 
-	 */
-	public String asignarGuardia2() {
+	public void asignarGuardia2() {
 		guardia2 = managergest.asignarGuardia(guardiaId2);
-		return "";
 	}
 
-	/**
-	 * accion para abrir el dialogo
-	 * 
-	 */
 	public void abrirDialogConfirm() {
 		RequestContext.getCurrentInstance().execute("PF('cambio').show();");
 	}
 
-	/**
-	 * limpia la informacion
-	 * 
-	 * @return
-	 * @throws Exception
-	 */
 	public String volverCambio() throws Exception {
 		cambio_fecha = null;
 		guardiaId1 = null;
@@ -1239,16 +1163,14 @@ public class horarioCDBean implements Serializable {
 		apellidoguardia1 = "";
 		nombreguardia2 = "";
 		apellidoguardia2 = "";
+		nombreLugarTurno=null;
+		turnoLugarTurno = null;
+		fechaLugarTurno = null;
 		listaguardiasXFecha.clear();
 		return "hg_nhorario?faces-redirect=true";
 	}
 
-	/**
-	 * CAMBIO DE GUARDIAS
-	 * 
-	 * @return
-	 */
-	public String cambioGuardias() {
+	public void cambioGuardias() {
 		try {
 			List<HgHorarioDet> horarioDetalleGuardia1 = managerhorario
 					.horarioDetByCedulaFecha(guardiaId1, cambio_fecha);
@@ -1256,8 +1178,7 @@ public class horarioCDBean implements Serializable {
 					.horarioDetByCedulaFecha(guardiaId2, cambio_fecha);
 			for (HgHorarioDet hordet1 : horarioDetalleGuardia1) {
 				for (HgHorarioDet hordet2 : horarioDetalleGuardia2) {
-					if (hordet1.getHgTurno().getTurId() == 1
-							|| hordet2.getHgTurno().getTurId() == 1) {
+					if (hordet1.getHgTurno().getTurId() == 1 || hordet2.getHgTurno().getTurId() == 1) {
 						if ((managerhorario.existeGuardiaXturnoMNoc(hordet2
 								.getHgHorarioCab().getHcabId(),
 								restDays(cambio_fecha), guardiaId1) == 1)
@@ -1269,15 +1190,13 @@ public class horarioCDBean implements Serializable {
 							moverGuardia(hordet2, hordet1);
 							guardarHistorial(hordet2, hordet1);
 							Mensaje.crearMensajeINFO("El cambio se realizó correctamente");
-							RequestContext.getCurrentInstance().execute(
-									"PF('cambio').hide();");
+							RequestContext.getCurrentInstance().execute("PF('cambio').hide();");
 						}
 					} else {
 						moverGuardia(hordet2, hordet1);
 						guardarHistorial(hordet2, hordet1);
 						Mensaje.crearMensajeINFO("El cambio se realizó correctamente");
-						RequestContext.getCurrentInstance().execute(
-								"PF('cambio').hide();");
+						RequestContext.getCurrentInstance().execute("PF('cambio').hide();");
 					}
 				}
 			}
@@ -1285,17 +1204,9 @@ public class horarioCDBean implements Serializable {
 			e.printStackTrace();
 		}
 		getListaHorarioDet().clear();
-		getListaHorarioDet().addAll(
-				managerhorario.findAllHorariosDetXIdCab(cab_id));
-		return "";
+		getListaHorarioDet().addAll(managerhorario.findAllHorariosDetXIdCab(cab_id));
 	}
 
-	/**
-	 * MUEVE LOS GUARDIAS
-	 * 
-	 * @param hdet2
-	 * @param hdet1
-	 */
 	public void moverGuardia(HgHorarioDet hdet2, HgHorarioDet hdet1) {
 		try {
 			hdet2.setHgGuardia(guardia1);
@@ -1307,12 +1218,6 @@ public class horarioCDBean implements Serializable {
 		}
 	}
 
-	/**
-	 * GUARDA EL HISTORIAL
-	 * 
-	 * @param hdet2
-	 * @param hdet1
-	 */
 	public void guardarHistorial(HgHorarioDet hdet2, HgHorarioDet hdet1) {
 		try {
 			Integer historialid = managerhisto.ultimoOrdenCabeceraHistorial();
@@ -1328,11 +1233,6 @@ public class horarioCDBean implements Serializable {
 		}
 	}
 
-	/**
-	 * Imprime un reporte de los datos de un contrato
-	 * 
-	 * @param horcab
-	 */
 	public void imprimirRptDocumento(HgHorarioCab horcab) {
 		try {
 			ServletContext servletContext = (ServletContext) FacesContext
@@ -1341,10 +1241,10 @@ public class horarioCDBean implements Serializable {
 					.getRealPath(File.separatorChar + "reports");
 			String rutaReporte = carpetaReportes + File.separatorChar
 					+ "ReportIngSalGuardias.jasper";
-			// Connection conexion =
-			// DriverManager.getConnection("jdbc:postgresql://10.1.0.158:5432/horario_guardias?user=adm_horario_guardias&password={Jt26qGTf#T");
-			Connection conexion = DriverManager
-					.getConnection("jdbc:postgresql://localhost:5432/horario_guardias?user=postgres&password=root");
+			 Connection conexion =
+			 DriverManager.getConnection("jdbc:postgresql://10.1.0.158:5432/horario_guardias?user=adm_horario_guardias&password={Jt26qGTf#T");
+//			Connection conexion = DriverManager
+//					.getConnection("jdbc:postgresql://localhost:5432/horario_guardias?user=postgres&password=root");
 			sqlfechai = java.sql.Date
 					.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(horcab
 							.getHcabFechaInicio()));
@@ -1381,9 +1281,208 @@ public class horarioCDBean implements Serializable {
 			e.printStackTrace();
 		}
 	}
+	
+	//calendario
 
 	public void onEventSelect(SelectEvent selectEvent) {
 		event = (ScheduleEvent) selectEvent.getObject();
 	}
 
+	public List<SelectItem> cargarGuardiasTodos() {
+		List<SelectItem> listadoGuardias = new ArrayList<SelectItem>();
+		listadoGuardias.add(new SelectItem("vacio", " --Seleccione el guardia-- "));
+		for (HgGuardia i : managergest.findAllGuardias()) {
+			listadoGuardias.add(new SelectItem(i.getGuaCedula(), i.getGuaCedula() + " | "
+							+ i.getGuaApellido() + " " + i.getGuaNombre()));
+		}
+		return listadoGuardias;
+	}
+
+	public List<SelectItem> cargarLugaresTodos() {
+		List<SelectItem> listadoLugares= new ArrayList<SelectItem>();
+		listadoLugares.add(new SelectItem(0, " --Seleccione el lugar-- "));
+		for (HgLugare i : managergest.findAllLugaresActivos()) {
+			listadoLugares.add(new SelectItem(i.getLugId(), i.getLugNombre()));
+		}
+		return listadoLugares;
+	}
+	
+	public void asignarGuardiaBuscar() {
+		eventModel = new DefaultScheduleModel();
+		for (HgHorarioDet e : managerhorario.findAllHorariosDetXIdCab(cab_id)) {
+			if (e.getHgGuardia().getGuaCedula().equals(guardiaBuscar)) {
+				String lugarguardia = e.getHgLugare().getLugNombre() + " - "
+						+ e.getHgGuardia().getGuaApellido() + " "
+						+ e.getHgGuardia().getGuaNombre();
+				event = new DefaultScheduleEvent(lugarguardia,
+						e.getHdetFechaInicio(), e.getHdetFechaInicio(), e);
+				((DefaultScheduleEvent) event).setStyleClass(e.getHgTurno()
+						.getTurCodigoColor());
+				eventModel.addEvent(event);
+			} else if (guardiaBuscar.equals("vacio")) {
+				refresh();
+			}
+		}
+		Mensaje.crearMensajeINFO("Calendario Actualizado");
+	}
+
+	public void asignarLugarBuscar() {
+		eventModel = new DefaultScheduleModel();
+		for (HgHorarioDet e : managerhorario.findAllHorariosDetXIdCab(cab_id)) {
+			if (e.getHgLugare().getLugId() == lugarBuscar) {
+				String lugarguardia = e.getHgLugare().getLugNombre() + " - "
+						+ e.getHgGuardia().getGuaApellido() + " "
+						+ e.getHgGuardia().getGuaNombre();
+				event = new DefaultScheduleEvent(lugarguardia,
+						e.getHdetFechaInicio(), e.getHdetFechaInicio(), e);
+				((DefaultScheduleEvent) event).setStyleClass(e.getHgTurno()
+						.getTurCodigoColor());
+				eventModel.addEvent(event);
+			} else if (lugarBuscar == 0) {
+				refresh();
+			}
+		}
+		Mensaje.crearMensajeINFO("Calendario Actualizado");
+	}
+	
+	public String refresh() {
+		eventModel = new DefaultScheduleModel();
+		for (HgHorarioDet e : managerhorario
+				.findAllHorariosDetXIdCab(cab_id)) {
+			String lugarguardia = e.getHgLugare().getLugNombre() + " - "
+					+ e.getHgGuardia().getGuaApellido() + " "
+					+ e.getHgGuardia().getGuaNombre();
+			event = new DefaultScheduleEvent(lugarguardia,
+					e.getHdetFechaInicio(), e.getHdetFechaInicio(), e);
+			((DefaultScheduleEvent) event).setStyleClass(e.getHgTurno()
+					.getTurCodigoColor());
+			eventModel.addEvent(event);
+		}
+		return "hg_calendario?faces-redirect=true";
+	}
+
+	//mover guardias
+	public void cargarLugarTurnoVacio(HgLugaresTurnosVacio lugturnvacio){
+		lugarTurnoVacioId = lugturnvacio.getHglugturId();
+		nombreLugarTurno = lugturnvacio.getHgLugare().getLugNombre();
+		turnoVacio = lugturnvacio.getHgTurno();
+		lugarVacio = lugturnvacio.getHgLugare();		
+		turnoLugarTurno = lugturnvacio.getHgTurno().getTurDescripcion();
+		fechaLugarTurno = lugturnvacio.getHglugturFechaInicio();
+		obtenerGuardiaXFechaLugarTurno();
+		RequestContext.getCurrentInstance().execute("PF('lugarturno').show();");
+	}
+	
+	public void mostrarGuardiaLugarTurnoVacio() {
+		try {
+			nombreguardiaLugTurnVacio = "";
+			apellidoguardiaLugTurnVacio = "";
+			guardiaLugarTurno = managergest.guardiaByID(guardiaLugTurnVacio);
+			nombreguardiaLugTurnVacio = guardiaLugarTurno.getGuaNombre();
+			apellidoguardiaLugTurnVacio = guardiaLugarTurno.getGuaApellido();
+			horarioDet = managerhorario.horarioDetByCedulaFecha(guardiaLugarTurno.getGuaCedula(), fechaLugarTurno);
+			for (HgHorarioDet hordet : horarioDet) {
+				hcab_id = hordet.getHgHorarioCab().getHcabId();
+				hcab_descripcion = hordet.getHgHorarioCab().getHcabNombre();
+				hcab_turnoId=hordet.getHgTurno();
+				hcab_turno = hordet.getHgTurno().getTurDescripcion();
+				hcab_lugarId = hordet.getHgLugare();
+				hcab_lugar = hordet.getHgLugare().getLugNombre();
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void obtenerGuardiaXFechaLugarTurno() {
+		Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechaLugarTurno));
+		cargarGuardias(finicial);
+	}
+	
+	public void asignarGuardiaLugarTurno() {
+		guardiaLugarTurno = managergest.asignarGuardia(guardiaLugTurnVacio);
+	}
+	
+	public String volverCambioLugarTurno() throws Exception {
+		guardiaLugTurnVacio = null;
+		horarioDet = null;
+		hcab_id = null;
+		hcab_descripcion = null;
+		hcab_turno = null;
+		hcab_lugar = null;
+		nombreguardiaLugTurnVacio="";
+		apellidoguardiaLugTurnVacio ="";
+		lstGuardias.clear();
+		listaguardiasXFecha.clear();
+		return "hg_nhorario?faces-redirect=true";
+	}
+	
+	public void cambioLugarTurno(){
+		try {
+				if (hcab_turnoId.getTurId() == 1) {
+					if ((managerhorario.existeGuardiaXturnoMNoc(hcab_id,restDays(fechaLugarTurno), guardiaLugarTurno.getGuaCedula()) == 1)){
+						Mensaje.crearMensajeWARN("El día anterior el guardia trabaja en turno nocturno, no se puede realizar esta acción");
+						
+					}else{
+						almacenarDetalles(guardiaLugarTurno,lugarVacio , turnoVacio, fechaLugarTurno, null, hcab_id);
+						managerhorario.insertarLugarTurnoVacio(hcab_id,hcab_turnoId ,hcab_lugarId, fechaLugarTurno);
+						managerhorario.eliminarLugarVacio(lugarTurnoVacioId);
+						managerhorario.eliminarHorarioDetalle(hcab_id, hcab_lugarId, hcab_turnoId, fechaLugarTurno, guardiaLugarTurno);
+						getListaLugarTurnoVacio().clear();
+						getListaLugarTurnoVacio().addAll(managergest.allLugarTurnoByID(cab_id));
+						lstGuardias.clear();
+						listaguardiasXFecha.clear();
+						limpiarCampos();
+						Mensaje.crearMensajeINFO("El cambio se realizó correctamente");
+					}
+				}else{
+				almacenarDetalles(guardiaLugarTurno,lugarVacio , turnoVacio, fechaLugarTurno, null, hcab_id);
+				managerhorario.insertarLugarTurnoVacio(hcab_id,hcab_turnoId ,hcab_lugarId, fechaLugarTurno);
+				managerhorario.eliminarLugarVacio(lugarTurnoVacioId);
+				managerhorario.eliminarHorarioDetalle(hcab_id, hcab_lugarId, hcab_turnoId, fechaLugarTurno, guardiaLugarTurno);
+				lstGuardias.clear();
+				listaguardiasXFecha.clear();
+				getListaLugarTurnoVacio().clear();
+				getListaLugarTurnoVacio().addAll(managergest.allLugarTurnoByID(cab_id));
+				limpiarCampos();
+				Mensaje.crearMensajeINFO("El cambio se realizó correctamente");
+				}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void abrirDialogConfirmLugTurn() {
+		RequestContext.getCurrentInstance().execute("PF('cambiolugturn').show();");
+	}
+	
+	public void limpiarCampos(){
+		guardiaLugTurnVacio = null;
+		horarioDet = null;
+		hcab_id = null;
+		hcab_descripcion = null;
+		hcab_turno = null;
+		hcab_lugar = null;
+		nombreguardiaLugTurnVacio="";
+		apellidoguardiaLugTurnVacio ="";
+		nombreguardiaLugTurnVacio = "";
+		apellidoguardiaLugTurnVacio = "";
+		guardiaLugarTurno = null;
+		nombreguardiaLugTurnVacio = null;
+		apellidoguardiaLugTurnVacio = null;
+		horarioDet =  null;
+		hcab_id =  null;
+		hcab_descripcion = null;
+		hcab_turnoId = null;
+		hcab_turno = null;
+		hcab_lugarId = null;
+		hcab_lugar = null;
+		lugarTurnoVacioId = null;
+		nombreLugarTurno = null;
+		turnoVacio = null;
+		lugarVacio = null;		
+		turnoLugarTurno = null;
+		fechaLugarTurno = null;
+	}
 }

@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="titulo">
+            Pendiente
+        </ui:define>
+	<ui:define name="contenido">
+		<h:form>
+			<p:remoteCommand name="onload"
+				actionListener="#{sesionBean.validaIndex()}" autoRun="true" />
+		</h:form>
+		<br />
+		<h:form id="frmfalto">
+			<p:growl id="messagesfalto" showDetail="false" />
+			<b:panel title="Información de pendientes" look="primary">
+				<b:panel look="primary">
+					<b:row>
+						<b:column span="2">
+							<h:outputLabel value="Guardia: " for="gua1" />
+						</b:column>
+						<b:column span="4">
+							<h:outputLabel id="nombre1"
+								value="#{pendienteBean.nombreguardia1}" />&nbsp;
+						<h:outputLabel id="apellido1"
+								value="#{pendienteBean.apellidoguardia1}" />
+						</b:column>
+					</b:row>
+					<b:row>
+						<b:column span="2">
+							<h:outputLabel value="Cabecera número: " for="cab" />
+						</b:column>
+						<b:column span="4">
+							<h:outputLabel id="cab" value="#{pendienteBean.hcab_id}">
+							</h:outputLabel>
+						</b:column>
+						<b:column span="2">
+							<h:outputLabel value="Horario: " for="desc" />
+						</b:column>
+						<b:column span="3">
+							<h:outputLabel id="desc"
+								value="#{pendienteBean.hcab_descripcion}">
+							</h:outputLabel>
+						</b:column>
+					</b:row>
+					<b:row>
+						<b:column span="2">
+							<h:outputLabel value="Lugar: " for="lug" />
+						</b:column>
+						<b:column span="4">
+							<h:outputLabel id="lug" value="#{pendienteBean.hcab_lugar}">
+							</h:outputLabel>
+						</b:column>
+						<b:column span="2">
+							<h:outputLabel value="Turno: " for="turn" />
+						</b:column>
+						<b:column span="3">
+							<h:outputLabel id="turn" value="#{pendienteBean.hcab_turno}">
+							</h:outputLabel>
+						</b:column>
+					</b:row>
+					<b:row>
+					<b:column span="2">
+							<h:outputLabel value="Fecha: " for="fech" />
+						</b:column>
+						<b:column span="4">
+							<h:outputLabel id="fech" value="#{pendienteBean.pendiente_fecha}">
+							</h:outputLabel>
+						</b:column>
+					</b:row>	
+					<br />
+					<b:row>
+						<b:column span="5">
+							<b:commandButton value="Volver" styleClass="btn btn-info"
+								style="padding:7px;" action="#{pendienteBean.volverPendiente()}"
+								update="frmfalto" look="info" process="@this">
+							</b:commandButton>&nbsp;&nbsp;&nbsp;
+						</b:column>
+					</b:row>
+					<br />
+				</b:panel>
+			</b:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

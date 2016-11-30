@@ -28,7 +28,7 @@ import hguardias.model.manager.ManagerGestion;
 
 @SessionScoped
 @ManagedBean
-public class FaltoBean implements Serializable {
+public class faltoBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -80,7 +80,7 @@ public class FaltoBean implements Serializable {
 	@Inject
 	SesionBean ms;
 
-	public FaltoBean() {
+	public faltoBean() {
 	}
 
 	@PostConstruct

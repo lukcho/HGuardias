@@ -1192,10 +1192,29 @@ public class ManagerGestion {
 	public Integer ausenciaXFecha(Date fechainicial,Date fechafinal,String gua_id){
 		Date finicial = java.sql.Date
 				.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechainicial));
-		Date ffinal = java.sql.Date
-				.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechafinal));
 		return mDAO.findWhere(HgAusencia.class," o.hgGuardia.guaCedula = '" + gua_id + "' "+ " and (o.ausFechaInicio <= '" + fechainicial
 						+ "' and o.ausFechaFin >= '" + finicial + "' or o.ausFechaInicio <= '" + fechafinal+"' "
 						+ " and o.ausFechaFin >= '" + fechafinal+"' ) ", null).size();
 	}
+	
+	// Guardias Pendientes
+		/**
+		 * listar todos los guardiasp
+		 * 
+		 * @throws Exception
+		 */
+		@SuppressWarnings("unchecked")
+		public List<HgGuardiasPendiente> findAllGuardiasPendientes() {
+			return mDAO.findAll(HgGuardiasPendiente.class, " o.guapenFecha asc ");
+		}
+
+		/**
+		 * buscar guardias por ID
+		 * 
+		 * @param con_id
+		 * @throws Exception
+		 */
+		public HgGuardiasPendiente guardiaPendienteByID(String guapen_id) throws Exception {
+			return (HgGuardiasPendiente) mDAO.findById(HgGuardiasPendiente.class, guapen_id);
+		}
 }

@@ -90,12 +90,19 @@
 			<h:form>
 				<p:commandButton value="Si" styleClass="ui-confirmdialog-yes"
 					icon="ui-icon-check" action="#{horarioCDBean.eliminarHorarioCab()}"
-					oncomplete="PF('ef').hide();" update="frm frm:tbb" />
+					onclick="PF('dlgLoad').show();"
+					oncomplete="PF('dlgLoad').hide();PF('ef').hide();" update="frm frm:tbb" />
 				<p:commandButton value="No" type="button"
 					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
 					onclick="PF('ef').hide();" />
 			</h:form>
 		</p:confirmDialog>
+		<p:dialog widgetVar="dlgLoad" modal="true" draggable="false"
+			closable="false" resizable="false" showHeader="false">
+			<h:form>
+				<p:graphicImage value="/resources/img/loader.gif" />
+			</h:form>
+		</p:dialog>
 	</ui:define>
 </ui:composition>
 </html>

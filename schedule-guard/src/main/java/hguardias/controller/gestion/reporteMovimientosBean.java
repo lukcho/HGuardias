@@ -11,7 +11,6 @@ import javax.faces.bean.SessionScoped;
 import javax.inject.Inject;
 
 import hguardias.controller.access.SesionBean;
-import hguardias.model.dao.entities.HgGuardia;
 import hguardias.model.dao.entities.HgHistorialMovimiento;
 import hguardias.model.manager.ManagerBuscar;
 import hguardias.model.manager.ManagerGestion;
@@ -45,8 +44,6 @@ public class reporteMovimientosBean implements Serializable {
 	private Integer lugardesde;
 	private Integer lugarhacia;
 	private Date fechacraeacion;
-
-	private HgHistorialMovimiento movimientos;
 
 	private List<HgHistorialMovimiento> listamovimientos;
 

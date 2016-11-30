@@ -22,8 +22,9 @@
 			</center>
 			<b:row>
 				<b:column span="1">
-					<b:commandButton value="Volver" iconAwesome="angle-left"
-						action="hg_nhorario?faces-redirect=true" />
+					<b:commandButton value="Volver"
+						action="hg_nhorario?faces-redirect=true" look="info"
+						process="@this"></b:commandButton>
 				</b:column>
 			</b:row>
 		</h:form>
@@ -31,67 +32,88 @@
 		<h:form id="form">
 			<p:growl id="messages" showDetail="false" />
 			<h3 style="margin-top: 0">Calendario</h3>
+			<div align="right">
+				<h:outputLabel value="Seleccione el guardia: " for="gua1" />
+				<h:panelGroup>&nbsp;&nbsp;
+					<p:selectOneMenu value="#{horarioCDBean.guardiaBuscar}" id="gua1"
+						style="width:400px" filter="true" filterMatchMode="contains">
+						<f:selectItems value="#{horarioCDBean.cargarGuardiasTodos()}" />
+						<p:ajax listener="#{horarioCDBean.asignarGuardiaBuscar()}"
+							update="form"></p:ajax>
+					</p:selectOneMenu>
+				</h:panelGroup>
+				&nbsp; &nbsp;
+				<h:outputLabel value="Seleccione el lugar: " for="lug" />
+				<h:panelGroup>&nbsp;&nbsp;
+					<p:selectOneMenu value="#{horarioCDBean.lugarBuscar}" id="lug"
+						style="width:200px" filter="true" filterMatchMode="contains">
+						<f:selectItems value="#{horarioCDBean.cargarLugaresTodos()}" />
+						<p:ajax listener="#{horarioCDBean.asignarLugarBuscar()}"
+							update="form"></p:ajax>
+					</p:selectOneMenu>
+				</h:panelGroup>
+			</div>
 			<p:schedule id="schedule" value="#{horarioCDBean.eventModel}"
 				widgetVar="myschedule" locale="es" timeZone="GMT-5"
 				showHeader="true" draggable="false" resizable="false">
 				<p:ajax event="eventSelect"
-					listener="#{horarioCDBean.onEventSelect}"
-					update="dialog " oncomplete="PF('eventDialog').show();" />
+					listener="#{horarioCDBean.onEventSelect}" update="dialog "
+					oncomplete="PF('eventDialog').show();" />
 			</p:schedule>
 			<p:dialog id="dialog" widgetVar="eventDialog" closable="true"
-				positionType="center" responsive="true" width="800"
-				header="#{horarioCDBean.event.title}" height="200" draggable="true"
+				positionType="center" responsive="true" width="820"
+				header="#{horarioCDBean.event.title}" height="140" draggable="true"
 				closeOnEscape="true" showEffect="clip" hideEffect="clip"
 				modal="true" dynamic="true" resizable="false">
-					<h:form>
-						<b:row>
-							<b:column span="3">
-								<b><h:outputLabel for="date" value="Fecha Inicio:" /></b>
-							</b:column>
-							<b:column span="4">
-								<h:outputText id="date" value="#{horarioCDBean.event.startDate}">
-									<f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-5" />
-								</h:outputText>
-							</b:column>
-						</b:row>
-						<b:row>
-							<b:column span="3">
-								<b><h:outputLabel for="tc" value="Ubicación:" /></b>
-							</b:column>
-							<b:column span="4">
-								<h:outputText id="tc"
-									value="#{horarioCDBean.event.data.hgLugare.lugNombre}" />
-							</b:column>
-						</b:row>
-						<b:row>
-							<b:column span="3">
-								<b><h:outputLabel for="ubi" value="Guardia: " /></b>
-							</b:column>
-							<b:column span="8">
-								<h:outputText id="ubi"
-									value="#{horarioCDBean.event.data.hgGuardia.guaApellido} #{horarioCDBean.event.data.hgGuardia.guaNombre}" />
-							</b:column>
-						</b:row>
-						<b:row>
-							<b:column span="3">
-								<b><h:outputLabel for="ca" value="Turno: " /></b>
-							</b:column>
-							<b:column span="4">
-								<h:outputText id="ca"
-									value="#{horarioCDBean.event.data.hgTurno.turDescripcion}" />
-							</b:column>
-						</b:row>
-						<b:row>
-							<b:column span="3">
-								<b><h:outputLabel for="co" value="Hora de Entrada:" /></b>
-							</b:column>
-							<b:column span="4">
-								<h:outputText id="co"
-									value="#{horarioCDBean.event.data.hdetHoraInicio}" />
-								<h:outputText value="" />
-							</b:column>
-						</b:row>
-					</h:form>
+				<h:form>
+					<b:row>
+						<b:column span="3">
+							<b><h:outputLabel for="date" value="Fecha Inicio:" /></b>
+						</b:column>
+						<b:column span="4">
+							<h:outputText id="date" value="#{horarioCDBean.event.startDate}">
+								<f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-5" />
+							</h:outputText>
+						</b:column>
+					</b:row>
+					<b:row>
+						<b:column span="3">
+							<b><h:outputLabel for="tc" value="Ubicación:" /></b>
+						</b:column>
+						<b:column span="4">
+							<h:outputText id="tc"
+								value="#{horarioCDBean.event.data.hgLugare.lugNombre}" />
+						</b:column>
+					</b:row>
+					<b:row>
+						<b:column span="3">
+							<b><h:outputLabel for="ubi" value="Guardia: " /></b>
+						</b:column>
+						<b:column span="8">
+							<h:outputText id="ubi"
+								value="#{horarioCDBean.event.data.hgGuardia.guaApellido} #{horarioCDBean.event.data.hgGuardia.guaNombre}" />
+						</b:column>
+					</b:row>
+					<b:row>
+						<b:column span="3">
+							<b><h:outputLabel for="ca" value="Turno: " /></b>
+						</b:column>
+						<b:column span="4">
+							<h:outputText id="ca"
+								value="#{horarioCDBean.event.data.hgTurno.turDescripcion}" />
+						</b:column>
+					</b:row>
+					<b:row>
+						<b:column span="3">
+							<b><h:outputLabel for="co" value="Hora de Entrada/Salida:" /></b>
+						</b:column>
+						<b:column span="4">
+							<h:outputText id="co"
+								value="#{horarioCDBean.event.data.hdetHoraInicio} - #{horarioCDBean.event.data.hdetHoraFin}" />
+							<h:outputText value="" />
+						</b:column>
+					</b:row>
+				</h:form>
 			</p:dialog>
 		</h:form>
 		<script type="text/javascript">

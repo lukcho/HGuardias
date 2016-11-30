@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="titulo">
+            Pendientes
+        </ui:define>
+	<ui:define name="contenido">
+		<h:form>
+			<p:remoteCommand name="onload"
+				actionListener="#{sesionBean.validaIndex()}" autoRun="true" />
+		</h:form>
+		<br />
+		<h:form>
+			<center>
+				<h1>Gesti&oacute;n de Guardias Pendientes</h1>
+			</center>
+			<b:row>
+				<b:column span="1">
+					<b:commandButton value="Volver" iconAwesome="angle-left"
+						action="index?faces-redirect=true" />
+				</b:column>
+			</b:row>
+		</h:form>
+		<br />
+		<h:form id="frm">
+			<p:growl id="messages" showDetail="false" />
+			<b:panel title="Listado de Guardias Pendientes" look="primary">
+				<p:dataTable id="tbb"
+					value="#{pendienteBean.listaGuardiasPendientes}" reflow="true"
+					var="pen" rows="20" emptyMessage="Sin Datos" paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+					<p:column headerText="OPCIONES" width="30" exportable="false">
+						<p:commandButton id="btnE" icon="ui-icon-pencil"
+							action="#{pendienteBean.cargarPendiente(pen)}">
+							<p:tooltip id="toolTipTrack1" for="btnE"
+								value="Bot&oacute;n para observar el guardia pendiente"
+								trackMouse="true" />
+						</p:commandButton>
+					</p:column>
+					<p:column filterBy="#{pen.guapenId}" filterMatchMode="contains"
+						headerText="ID" width="50">
+						<h:outputText value="#{pen.guapenId}"></h:outputText>
+					</p:column>
+					<p:column filterBy="#{pen.hgGuardia.guaApellido}"
+						filterMatchMode="contains" headerText="GUARDIA" width="100">
+						<h:outputText
+							value="#{pen.hgGuardia.guaNombre} #{pen.hgGuardia.guaApellido}"></h:outputText>
+					</p:column>
+					<p:column filterMatchMode="contains" headerText="FECHA DE TRABAJO" width="60">
+						<h:outputText value="#{pen.guapenFecha}"></h:outputText>
+					</p:column>
+				</p:dataTable>
+				<h3>Exportar Datos</h3>
+				<h:commandButton style="width:40px;height:40px" ajax="false"
+					image="/resources/img/excel.png">
+					<p:dataExporter type="xls" target="tbb" fileName="rptpendientes"
+						pageOnly="false" />
+				</h:commandButton>&nbsp;&nbsp;&nbsp;
+					<h:commandButton style="width:40px;height:40px" ajax="false"
+					image="/resources/img/pdf.png">
+					<p:dataExporter type="pdf" target="tbb" fileName="rptpendientes"
+						pageOnly="false" />
+				</h:commandButton>&nbsp;&nbsp;&nbsp;
+					<h:commandButton style="width:40px;height:40px" ajax="falses"
+					image="/resources/img/csv.png">
+					<p:dataExporter type="csv" target="tbb" fileName="rptpendientes"
+						pageOnly="false" />
+				</h:commandButton>&nbsp;&nbsp;&nbsp;
+			</b:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

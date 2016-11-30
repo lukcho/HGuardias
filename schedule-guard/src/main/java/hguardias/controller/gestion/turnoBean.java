@@ -40,7 +40,6 @@ public class turnoBean implements Serializable {
 	private String turno_hora_inicio;
 	private String turno_hora_fin;
 	private String turno_estado;
-	private String color;
 
 	// fechas
 	private Time horainiciotiemp;

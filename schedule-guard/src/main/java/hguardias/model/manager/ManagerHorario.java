@@ -28,7 +28,6 @@ public class ManagerHorario {
 	private static HgLugare hg_lug;
 	private static HgTurno hg_turno;
 	private static HgHorarioCab hg_hcab;
-	private static HgHorarioDet hg_hdet;
 
 	String h = "";
 
@@ -405,13 +404,9 @@ public class ManagerHorario {
 
 	public Integer existeGuardiaXturnoMNoc(Integer cab_id, Date fechaant,
 			String cedula) {
-		Date fantes = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd")
-				.format(fechaant));
+		Date fantes = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechaant));
 		return mDAO.findWhere(
-				HgHorarioDet.class,
-				" o.hdetFechaInicio = '" + fantes + "' "
-						+ " and o.hgGuardia.guaCedula = '" + cedula
-						+ "' and o.hgTurno.turId= 3 ", null).size();
+				HgHorarioDet.class," o.hdetFechaInicio = '" + fantes + "' "+ " and o.hgGuardia.guaCedula = '" + cedula+ "' and o.hgTurno.turId= 3 ", null).size();
 	}
 
 	public Integer trabajoSemanaAnteriorLugar(Date fecha7dias, String cedula,
@@ -852,5 +847,26 @@ public class ManagerHorario {
 		mDAO.ejectJPQL("delete from HgLugaresTurnosVacio where hgHorarioCab.hcabId = "+hcab_id+"  ");
 		mDAO.ejectJPQL("delete from HgHorarioDet where hgHorarioCab.hcabId = "+hcab_id+"  ");
 		mDAO.ejectJPQL("delete from HgHorarioCab where hcabId  = "+hcab_id+" ");
+	}
+	
+	/**
+	 * M�todo que permite asegurar obtener guardias que estaban libres los 2
+	 * dias
+	 * 
+	 * @param fechainicial
+	 * @return
+	 */ 
+	public void eliminarHorarioDetalle(Integer hcab_id, HgLugare l,HgTurno t,Date fechaInicial, HgGuardia g) {
+		Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechaInicial));
+		mDAO.ejectJPQL("delete from HgHorarioDet where hgTurno.turId = "+t.getTurId()+" and hgLugare.lugId = "+l.getLugId()+" and hgGuardia.guaCedula = "
+				+ "'"+g.getGuaCedula()+"' and hdetFechaInicio = '"+finicial+"' ");
+	}
+	
+	public void eliminarLugarVacio(Integer lugarTurnoVacioId){
+		try {
+			mDAO.eliminar(HgLugaresTurnosVacio.class, lugarTurnoVacioId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
