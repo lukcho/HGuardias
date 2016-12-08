@@ -1,9 +1,7 @@
 package hguardias.model.dao.entities;
 
 import java.io.Serializable;
-
 import javax.persistence.*;
-
 import java.util.Date;
 import java.util.List;
 
@@ -39,6 +37,9 @@ public class HgGuardia implements Serializable {
 
 	@Column(name="gua_celular", length=10)
 	private String guaCelular;
+
+	@Column(name="gua_centro_emprendimiento")
+	private Boolean guaCentroEmprendimiento;
 
 	@Column(name="gua_chofer")
 	private Boolean guaChofer;
@@ -90,6 +91,10 @@ public class HgGuardia implements Serializable {
 	@OneToMany(mappedBy="hgGuardia")
 	private List<HgAusencia> hgAusencias;
 
+	//bi-directional many-to-one association to HgFalto
+	@OneToMany(mappedBy="hgGuardia")
+	private List<HgFalto> hgFaltos;
+
 	//bi-directional many-to-one association to HgGuardiasPendiente
 	@OneToMany(mappedBy="hgGuardia")
 	private List<HgGuardiasPendiente> hgGuardiasPendientes;
@@ -97,11 +102,11 @@ public class HgGuardia implements Serializable {
 	//bi-directional many-to-one association to HgHorarioDet
 	@OneToMany(mappedBy="hgGuardia")
 	private List<HgHorarioDet> hgHorarioDets;
-	
-	//bi-directional many-to-one association to HgFalto
+
+	//bi-directional many-to-one association to HgGuardiasDiasNoTrabajo
 	@OneToMany(mappedBy="hgGuardia")
-	private List<HgFalto> hgFaltos;
-		
+	private List<HgGuardiasDiasNoTrabajo> hgGuardiasDiasNoTrabajos;
+
 	public HgGuardia() {
 	}
 
@@ -159,6 +164,14 @@ public class HgGuardia implements Serializable {
 
 	public void setGuaCelular(String guaCelular) {
 		this.guaCelular = guaCelular;
+	}
+
+	public Boolean getGuaCentroEmprendimiento() {
+		return this.guaCentroEmprendimiento;
+	}
+
+	public void setGuaCentroEmprendimiento(Boolean guaCentroEmprendimiento) {
+		this.guaCentroEmprendimiento = guaCentroEmprendimiento;
 	}
 
 	public Boolean getGuaChofer() {
@@ -303,6 +316,28 @@ public class HgGuardia implements Serializable {
 		return hgAusencia;
 	}
 
+	public List<HgFalto> getHgFaltos() {
+		return this.hgFaltos;
+	}
+
+	public void setHgFaltos(List<HgFalto> hgFaltos) {
+		this.hgFaltos = hgFaltos;
+	}
+
+	public HgFalto addHgFalto(HgFalto hgFalto) {
+		getHgFaltos().add(hgFalto);
+		hgFalto.setHgGuardia(this);
+
+		return hgFalto;
+	}
+
+	public HgFalto removeHgFalto(HgFalto hgFalto) {
+		getHgFaltos().remove(hgFalto);
+		hgFalto.setHgGuardia(null);
+
+		return hgFalto;
+	}
+
 	public List<HgGuardiasPendiente> getHgGuardiasPendientes() {
 		return this.hgGuardiasPendientes;
 	}
@@ -346,26 +381,27 @@ public class HgGuardia implements Serializable {
 
 		return hgHorarioDet;
 	}
-	
-	public List<HgFalto> getHgFaltos() {
-		return this.hgFaltos;
+
+	public List<HgGuardiasDiasNoTrabajo> getHgGuardiasDiasNoTrabajos() {
+		return this.hgGuardiasDiasNoTrabajos;
 	}
 
-	public void setHgFaltos(List<HgFalto> hgFaltos) {
-		this.hgFaltos = hgFaltos;
+	public void setHgGuardiasDiasNoTrabajos(List<HgGuardiasDiasNoTrabajo> hgGuardiasDiasNoTrabajos) {
+		this.hgGuardiasDiasNoTrabajos = hgGuardiasDiasNoTrabajos;
 	}
 
-	public HgFalto addHgFalto(HgFalto hgFalto) {
-		getHgFaltos().add(hgFalto);
-		hgFalto.setHgGuardia(this);
+	public HgGuardiasDiasNoTrabajo addHgGuardiasDiasNoTrabajo(HgGuardiasDiasNoTrabajo hgGuardiasDiasNoTrabajo) {
+		getHgGuardiasDiasNoTrabajos().add(hgGuardiasDiasNoTrabajo);
+		hgGuardiasDiasNoTrabajo.setHgGuardia(this);
 
-		return hgFalto;
+		return hgGuardiasDiasNoTrabajo;
 	}
 
-	public HgFalto removeHgFalto(HgFalto hgFalto) {
-		getHgFaltos().remove(hgFalto);
-		hgFalto.setHgGuardia(null);
+	public HgGuardiasDiasNoTrabajo removeHgGuardiasDiasNoTrabajo(HgGuardiasDiasNoTrabajo hgGuardiasDiasNoTrabajo) {
+		getHgGuardiasDiasNoTrabajos().remove(hgGuardiasDiasNoTrabajo);
+		hgGuardiasDiasNoTrabajo.setHgGuardia(null);
 
-		return hgFalto;
+		return hgGuardiasDiasNoTrabajo;
 	}
+
 }

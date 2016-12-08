@@ -36,6 +36,7 @@ public class turnoBean implements Serializable {
 	private static String Activo = "A";
 	// Turnos
 	private Integer turno_id;
+	private String turno_color;
 	private String turno_descripcion;
 	private String turno_hora_inicio;
 	private String turno_hora_fin;
@@ -70,6 +71,7 @@ public class turnoBean implements Serializable {
 		edicion = false;
 		turno_hora_inicio = null;
 		turno_hora_fin = null;
+		turno_color = null;
 		ediciontipo = false;
 		mostrarturno_id = false;
 		listaTurnos = managergest.findAllTurnos();
@@ -159,6 +161,14 @@ public class turnoBean implements Serializable {
 	public void setTurno_hora_fin(String turno_hora_fin) {
 		this.turno_hora_fin = turno_hora_fin;
 	}
+	
+	public String getTurno_color() {
+		return turno_color;
+	}
+	
+	public void setTurno_color(String turno_color) {
+		this.turno_color = turno_color;
+	}
 
 	// turnos
 	/**
@@ -205,6 +215,7 @@ public class turnoBean implements Serializable {
 		turno_id = null;
 		turno_descripcion = null;
 		turno_estado = "A";
+		turno_color=null;
 		turno_hora_inicio = null;
 		turno_hora_fin = null;
 		horainiciotiemp = null;
@@ -236,6 +247,7 @@ public class turnoBean implements Serializable {
 			turno_estado = turno.getTurEstado();
 			turno_hora_inicio = turno.getTurHoraInicio().toString();
 			turno_hora_fin = turno.getTurHoraFin().toString();
+			turno_color = turno.getTurCodigoColor();
 			edicion = true;
 			ediciontipo = false;
 			return "hg_nturno?faces-redirect=true";
@@ -324,6 +336,7 @@ public class turnoBean implements Serializable {
 		turno_hora_fin = null;
 		horainiciotiemp = null;
 		horafintiemp = null;
+		turno_color = null;
 		mostrarturno_id = false;
 		edicion = false;
 		return "hg_nturno?faces-redirect=true";
@@ -342,6 +355,7 @@ public class turnoBean implements Serializable {
 		turno_hora_inicio = null;
 		turno_hora_fin = null;
 		horainiciotiemp = null;
+		turno_color = null;
 		horafintiemp = null;
 		mostrarturno_id = false;
 		edicion = false;

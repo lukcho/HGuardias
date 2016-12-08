@@ -79,7 +79,19 @@
 				</b:row>
 				<br />
 				<b:row>
-					<b:column span="2">
+					<b:column span="3">
+						<h:outputLabel value="Contiene Centro de Emprendimiento:* " for="centroemp" />
+					</b:column>
+					<b:column span="4" id="centroemp" style="margin-bottom:10px">
+						<p:selectOneRadio value="#{lugarBean.lug_CentroEmprendimiento}"
+							style="margin-top:10px">
+							<f:selectItem itemLabel=" SI" itemValue="true" />
+							<f:selectItem itemLabel=" NO" itemValue="false" />
+						</p:selectOneRadio>
+					</b:column>
+				</b:row>
+				<b:row>
+				<b:column span="2">
 						<h:outputLabel value="Días de trabajo:* " for="trabaja" />
 					</b:column>
 					<b:column span="10" id="trabaja" style="margin-bottom:10px">

@@ -1,4 +1,0 @@
-<jboss-web>
-    <virtual-host>horarioguardias.yachay.gob.ec</virtual-host>
-    <context-root>/</context-root>
-</jboss-web>

@@ -18,6 +18,7 @@ import org.primefaces.context.RequestContext;
 import hguardias.controller.access.SesionBean;
 import hguardias.model.generic.Funciones;
 import hguardias.model.dao.entities.HgGuardia;
+import hguardias.model.dao.entities.HgGuardiasDiasNoTrabajo;
 import hguardias.model.dao.entities.HgTurno;
 import hguardias.model.dao.entities.Persona;
 import hguardias.model.generic.Mensaje;
@@ -53,6 +54,7 @@ public class GuardiaBean implements Serializable {
 	private String guardia_tipoSangre;
 	private String guardia_estado;
 	private boolean guardia_CCTV;
+	private boolean guardia_CentroEmprendimiento;
 	private boolean guardia_motorizado;
 	private String guardia_licencia_motorizado;
 	private boolean guardia_chofer;
@@ -75,6 +77,17 @@ public class GuardiaBean implements Serializable {
 	private boolean ediciontipo;
 
 	private List<HgGuardia> listaguardias;
+	
+	//notrabaja
+	private boolean lug_lunes;
+	private boolean lug_martes;
+	private boolean lug_miercoles;
+	private boolean lug_jueves;
+	private boolean lug_viernes;
+	private boolean lug_sabado;
+	private boolean lug_domingo;
+	private HgGuardiasDiasNoTrabajo guardiaNoTrabajaElsita;
+	private List<HgGuardiasDiasNoTrabajo> listaGuardiaNoTrabaja;
 
 	private String usuario;
 
@@ -86,11 +99,19 @@ public class GuardiaBean implements Serializable {
 
 	@PostConstruct
 	public void ini() {
+		lug_lunes = false;
+		lug_martes = false;
+		lug_miercoles = false;
+		lug_jueves = false;
+		lug_viernes = false;
+		lug_sabado = false;
+		lug_domingo = false;
 		guardia_estado = "A";
+		listaGuardiaNoTrabaja = new ArrayList<HgGuardiasDiasNoTrabajo>();
 		listaguardias = managergest.findAllGuardias();
 		usuario = ms.validarSesion("hg_guardias.xhtml");
 	}
-
+	
 	public String getDniBuscar() {
 		return dniBuscar;
 	}
@@ -334,6 +355,89 @@ public class GuardiaBean implements Serializable {
 			String guardia_licencia_motorizado) {
 		this.guardia_licencia_motorizado = guardia_licencia_motorizado;
 	}
+	
+	public boolean isLug_lunes() {
+		return lug_lunes;
+	}
+
+	public void setLug_lunes(boolean lug_lunes) {
+		this.lug_lunes = lug_lunes;
+	}
+
+	public boolean isLug_martes() {
+		return lug_martes;
+	}
+
+	public void setLug_martes(boolean lug_martes) {
+		this.lug_martes = lug_martes;
+	}
+
+	public boolean isLug_miercoles() {
+		return lug_miercoles;
+	}
+
+	public void setLug_miercoles(boolean lug_miercoles) {
+		this.lug_miercoles = lug_miercoles;
+	}
+
+	public boolean isLug_jueves() {
+		return lug_jueves;
+	}
+
+	public void setLug_jueves(boolean lug_jueves) {
+		this.lug_jueves = lug_jueves;
+	}
+
+	public boolean isLug_viernes() {
+		return lug_viernes;
+	}
+
+	public void setLug_viernes(boolean lug_viernes) {
+		this.lug_viernes = lug_viernes;
+	}
+
+	public boolean isLug_sabado() {
+		return lug_sabado;
+	}
+
+	public void setLug_sabado(boolean lug_sabado) {
+		this.lug_sabado = lug_sabado;
+	}
+
+	public boolean isLug_domingo() {
+		return lug_domingo;
+	}
+
+	public void setLug_domingo(boolean lug_domingo) {
+		this.lug_domingo = lug_domingo;
+	}
+	
+	public List<HgGuardiasDiasNoTrabajo> getListaGuardiaNoTrabaja() {
+		return listaGuardiaNoTrabaja;
+	}
+	
+	public void setListaGuardiaNoTrabaja(
+			List<HgGuardiasDiasNoTrabajo> listaGuardiaNoTrabaja) {
+		this.listaGuardiaNoTrabaja = listaGuardiaNoTrabaja;
+	}
+	
+	public HgGuardiasDiasNoTrabajo getGuardiaNoTrabajaElsita() {
+		return guardiaNoTrabajaElsita;
+	}
+	
+	public void setGuardiaNoTrabajaElsita(
+			HgGuardiasDiasNoTrabajo guardiaNoTrabajaElsita) {
+		this.guardiaNoTrabajaElsita = guardiaNoTrabajaElsita;
+	}
+	
+	public boolean isGuardia_CentroEmprendimiento() {
+		return guardia_CentroEmprendimiento;
+	}
+	
+	public void setGuardia_CentroEmprendimiento(
+			boolean guardia_CentroEmprendimiento) {
+		this.guardia_CentroEmprendimiento = guardia_CentroEmprendimiento;
+	}
 
 	// guardias
 	/**
@@ -358,7 +462,7 @@ public class GuardiaBean implements Serializable {
 						sqlfechai, guardia_ciudad.trim(), guardia_sexo.trim(),
 						guardia_telefono.trim(), guardia_celular.trim(),
 						guardia_correo.trim(), guardia_direccion.trim(),
-						guardia_CCTV, guardia_motorizado, guardia_chofer,guardia_licencia_chofer,
+						guardia_CCTV,guardia_CentroEmprendimiento, guardia_motorizado, guardia_chofer,guardia_licencia_chofer,
 						guardia_controlaccesos, guardia_casoturno,
 						guardia_casoestudio, guardia_casonocturno,
 						guardia_estadoCivil, guardia_tipoSangre,
@@ -372,14 +476,14 @@ public class GuardiaBean implements Serializable {
 				if (this.ccorreo(guardia_correo)) {
 					Mensaje.crearMensajeWARN("Correo Repetido..!!! El correo ya esta siendo utilizado");
 				} else if (this.ccedula(guardia_id)) {
-					Mensaje.crearMensajeWARN("Cédula Repetida..!!! La cédula ya esta siendo utilizada");
+					Mensaje.crearMensajeWARN("CÃ©dula Repetida..!!! La cï¿½dula ya esta siendo utilizada");
 				} else {
 					managergest.insertarGuardia(guardia_id.trim(),
 							guardia_nombre.trim(), guardia_apellido.trim(),
 							sqlfechai, guardia_ciudad.trim(),
 							guardia_sexo.trim(), guardia_telefono.trim(),
 							guardia_celular.trim(), guardia_correo.trim(),
-							guardia_direccion.trim(), guardia_CCTV,
+							guardia_direccion.trim(), guardia_CCTV,guardia_CentroEmprendimiento,
 							guardia_motorizado, guardia_chofer,guardia_licencia_chofer,
 							guardia_controlaccesos, guardia_casoturno,
 							guardia_casoestudio, guardia_casonocturno,
@@ -415,6 +519,7 @@ public class GuardiaBean implements Serializable {
 		guardia_tipoSangre = null;
 		guardia_direccion = null;
 		guardia_CCTV = false;
+		guardia_CentroEmprendimiento = false;
 		guardia_motorizado = false;
 		guardia_chofer = false;
 		guardia_licencia_chofer=null;
@@ -422,6 +527,14 @@ public class GuardiaBean implements Serializable {
 		guardia_casoturno = null;
 		guardia_casoestudio = false;
 		guardia_casonocturno = false;
+		lug_lunes = false;
+		lug_martes = false;
+		lug_miercoles = false;
+		lug_jueves = false;
+		lug_viernes = false;
+		lug_sabado = false;
+		lug_domingo = false;
+		getListaGuardiaNoTrabaja().clear();
 		edicion = true;
 	}
 
@@ -433,7 +546,7 @@ public class GuardiaBean implements Serializable {
 		if (valida(guardia_id) == true) {
 			RequestContext.getCurrentInstance().execute("PF('gu').show();");
 		} else {
-			Mensaje.crearMensajeWARN("Cédula Incorrecta");
+			Mensaje.crearMensajeWARN("Cï¿½dula Incorrecta");
 		}
 	}
 
@@ -463,6 +576,7 @@ public class GuardiaBean implements Serializable {
 			guardia_estadoCivil = guardia.getGuaEstadoCivil();
 			guardia_tipoSangre = guardia.getGuaTipoSangre();
 			guardia_CCTV = guardia.getGuaCctv();
+			guardia_CentroEmprendimiento = guardia.getGuaCentroEmprendimiento();
 			guardia_motorizado = guardia.getGuaMotorizado();
 			guardia_licencia_motorizado = guardia.getGuaTipoLicenciaMotorizado();
 			guardia_chofer = guardia.getGuaChofer();
@@ -471,6 +585,7 @@ public class GuardiaBean implements Serializable {
 			guardia_casoturno = guardia.getGuaCasoTurno();
 			guardia_casoestudio = guardia.getGuaCasoEstudio();
 			guardia_casonocturno = guardia.getGuaCasoNocturno();
+			listaGuardiaNoTrabaja=managergest.findGuardiaByIdGuardiaNT(guardia_id);
 			edicion = true;
 			ediciontipo = false;
 			edicionbuscar = false;
@@ -527,7 +642,7 @@ public class GuardiaBean implements Serializable {
 			if (y.getGuaCedula().equals(guardia_id)) {
 				t = 1;
 				r = true;
-				Mensaje.crearMensajeWARN("El código del lugar existe");
+				Mensaje.crearMensajeWARN("El cï¿½digo del lugar existe");
 			}
 		}
 		if (t == 0) {
@@ -623,6 +738,7 @@ public class GuardiaBean implements Serializable {
 		guardia_estadoCivil = null;
 		guardia_tipoSangre = null;
 		guardia_CCTV = false;
+		guardia_CentroEmprendimiento = false;
 		guardia_motorizado = false;
 		guardia_chofer = false;
 		guardia_licencia_chofer="";
@@ -632,8 +748,16 @@ public class GuardiaBean implements Serializable {
 		guardia_casonocturno = false;
 		mostrarguardia_id = false;
 		edicion = false;
+		lug_lunes = false;
+		lug_martes = false;
+		lug_miercoles = false;
+		lug_jueves = false;
+		lug_viernes = false;
+		lug_sabado = false;
+		lug_domingo = false;
 		guardia_chofer_si=true;
 		edicionbuscar = true;
+		getListaGuardiaNoTrabaja().clear();
 		return "hg_nguardia?faces-redirect=true";
 	}
 
@@ -659,6 +783,7 @@ public class GuardiaBean implements Serializable {
 		guardia_estadoCivil = null;
 		guardia_tipoSangre = null;
 		guardia_CCTV = false;
+		guardia_CentroEmprendimiento = false;
 		guardia_motorizado = false;
 		guardia_chofer = false;
 		guardia_licencia_chofer="";
@@ -667,16 +792,24 @@ public class GuardiaBean implements Serializable {
 		guardia_casoestudio = false;
 		guardia_casonocturno = false;
 		mostrarguardia_id = false;
+		lug_lunes = false;
+		lug_martes = false;
+		lug_miercoles = false;
+		lug_jueves = false;
+		lug_viernes = false;
+		lug_sabado = false;
+		lug_domingo = false;
 		edicion = false;
 		edicionbuscar = true;
 		guardia_chofer_si=true;
+		getListaGuardiaNoTrabaja().clear();
 		getListaguardias().clear();
 		getListaguardias().addAll(managergest.findAllGuardias());
 		return "hg_guardias?faces-redirect=true";
 	}
 
 	/**
-	 * Método para comprobar la cedula
+	 * Mï¿½todo para comprobar la cedula
 	 * 
 	 * @param cedula
 	 * @return boolean
@@ -708,7 +841,7 @@ public class GuardiaBean implements Serializable {
 	}
 
 	/**
-	 * Método para validar la cedula
+	 * Mï¿½todo para validar la cedula
 	 * 
 	 * @param x
 	 */
@@ -755,13 +888,13 @@ public class GuardiaBean implements Serializable {
 		try {
 			if (getDniBuscar() != null) {
 				if (this.ccedula(dniBuscar)) {
-					Mensaje.crearMensajeWARN("Cédula Repetida..!!! La cédula ya esta siendo utilizada");
+					Mensaje.crearMensajeWARN("Cï¿½dula Repetida..!!! La cï¿½dula ya esta siendo utilizada");
 				} else if (Funciones.validacionCedula(getDniBuscar().trim())) {
 					Persona per = managerBuscar
 							.buscarPersonaWSReg(getDniBuscar().trim());
 					mostrarCamposPersona(per);
 				} else
-					Mensaje.crearMensajeWARN("La cédula es incorrecta.");
+					Mensaje.crearMensajeWARN("La cï¿½dula es incorrecta.");
 			}
 		} catch (Exception e) {
 			Mensaje.crearMensajeINFO("Error: " + e.getMessage());
@@ -809,5 +942,47 @@ public class GuardiaBean implements Serializable {
 		}else{
 			return "Femenino";
 		}
+	}
+	
+	public void abrirDialog1() {
+		if (guardia_id != null) 
+		RequestContext.getCurrentInstance().execute("PF('gu1').show();");
+		else
+		Mensaje.crearMensajeWARN("Cree el guardia primero");
+	}
+	
+	// nolugartrabaja
+
+	public void crearGuardiaNoTrabaja() {
+			try {
+				if (managergest.guardiaNoTrabajoById(guardia_id) == 0) {
+					managergest.asignarGuardiaNoTrabajo(guardia_id);
+					managergest.insertarGuardiaNoTrabaja(lug_lunes, lug_martes, lug_miercoles, lug_jueves, lug_viernes, lug_sabado, lug_domingo);
+					getListaGuardiaNoTrabaja().clear();
+					getListaGuardiaNoTrabaja()
+							.addAll(managergest.findGuardiaByIdGuardiaNT(guardia_id));
+					Mensaje.crearMensajeINFO("Almacenado correctamente");
+				} else {
+					Mensaje.crearMensajeWARN("YÃ¡ se encuentra creado");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	
+	public void eliminarguardiaNoTrabaja(HgGuardiasDiasNoTrabajo item) {
+		setGuardiaNoTrabajaElsita(item);
+		RequestContext.getCurrentInstance().execute("PF('ef').show();");
+	}
+	
+	public String eliminarGNT() {
+		try {
+			managergest.eliminarGuardiaNoTrabajo(getGuardiaNoTrabajaElsita().getGuaDiaTrabajoId());
+			getListaGuardiaNoTrabaja().clear();
+			getListaGuardiaNoTrabaja().addAll(managergest.findGuardiaByIdGuardiaNT(guardia_id));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "";
 	}
 }

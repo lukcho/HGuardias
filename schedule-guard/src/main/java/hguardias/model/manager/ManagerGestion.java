@@ -24,6 +24,7 @@ public class ManagerGestion {
 
 	private static HgTurno hg_turno;
 	private static HgLugare hg_lugar;
+	private static HgGuardia hg_guardianotrabajo;
 	String h = "";
 
 	public ManagerGestion() {
@@ -32,6 +33,7 @@ public class ManagerGestion {
 	// Turno
 	/**
 	 * Retorna el ultimo valor de id
+	 * 
 	 * @return
 	 */
 	public Integer ultimoOrdenCabeceraTurno() {
@@ -86,8 +88,8 @@ public class ManagerGestion {
 	 * @param tur_hora_fin
 	 * @throws Exception
 	 */
-	public void insertarTurno(Integer tur_id,String tur_descripcion, Time tur_hora_inicio,
-			Time tur_hora_fin) throws Exception {
+	public void insertarTurno(Integer tur_id, String tur_descripcion,
+			Time tur_hora_inicio, Time tur_hora_fin) throws Exception {
 		HgTurno turno = new HgTurno();
 		turno.setTurId(tur_id);
 		turno.setTurDescripcion(tur_descripcion);
@@ -266,11 +268,12 @@ public class ManagerGestion {
 	public void insertarGuardia(String gua_cedid, String gua_nombre,
 			String gua_apellido, Date gua_fechanac, String gue_ciudad,
 			String gua_sexo, String gua_telefono, String gua_celular,
-			String gua_correo, String gua_direccion, boolean gua_cctv,
-			boolean gua_motorizado, boolean gua_chofer,String gua_licencia_chofer,
-			boolean gua_controlaccs, Integer gua_casoturno,
-			boolean gua_casoestudio, boolean gua_casonocturno,
-			String gua_EstadoCivil, String gua_TipoSangre) throws Exception {
+			String gua_correo, String gua_direccion, boolean gua_cctv,boolean guardia_CentroEmprendimiento,
+			boolean gua_motorizado, boolean gua_chofer,
+			String gua_licencia_chofer, boolean gua_controlaccs,
+			Integer gua_casoturno, boolean gua_casoestudio,
+			boolean gua_casonocturno, String gua_EstadoCivil,
+			String gua_TipoSangre) throws Exception {
 
 		HgGuardia gua = new HgGuardia();
 		gua.setGuaCedula(gua_cedid);
@@ -284,16 +287,17 @@ public class ManagerGestion {
 		gua.setGuaCorreo(gua_correo);
 		gua.setGuaDireccion(gua_direccion);
 		gua.setGuaCctv(gua_cctv);
+		gua.setGuaCentroEmprendimiento(guardia_CentroEmprendimiento);
 		gua.setGuaMotorizado(gua_motorizado);
 		gua.setGuaChofer(gua_chofer);
-		if(gua_motorizado==true){
+		if (gua_motorizado == true) {
 			gua.setGuaTipoLicenciaMotorizado("A");
-		}else{
+		} else {
 			gua.setGuaTipoLicenciaMotorizado(null);
 		}
-		if(gua_chofer== true){
+		if (gua_chofer == true) {
 			gua.setGuaTipoLicenciaChofer(gua_licencia_chofer);
-		}else{
+		} else {
 			gua.setGuaTipoLicenciaChofer(null);
 		}
 		gua.setGuaControlAccesos(gua_controlaccs);
@@ -319,12 +323,12 @@ public class ManagerGestion {
 	public void editarGuardia(String gua_cedid, String gua_nombre,
 			String gua_apellido, Date gua_fechanac, String gue_ciudad,
 			String gua_sexo, String gua_telefono, String gua_celular,
-			String gua_correo, String gua_direccion, boolean gua_cctv,
-			boolean gua_motorizado, boolean gua_chofer,String gua_licencia_chofer,
-			boolean gua_controlaccs, Integer gua_casoturno,
-			boolean gua_casoestudio, boolean gua_casonocturno,
-			String gua_EstadoCivil, String gua_TipoSangre, String gua_estado)
-			throws Exception {
+			String gua_correo, String gua_direccion, boolean gua_cctv, boolean guardia_CentroEmprendimiento,
+			boolean gua_motorizado, boolean gua_chofer,
+			String gua_licencia_chofer, boolean gua_controlaccs,
+			Integer gua_casoturno, boolean gua_casoestudio,
+			boolean gua_casonocturno, String gua_EstadoCivil,
+			String gua_TipoSangre, String gua_estado) throws Exception {
 
 		HgGuardia gua = this.guardiaByID(gua_cedid);
 		gua.setGuaNombre(gua_nombre);
@@ -337,16 +341,17 @@ public class ManagerGestion {
 		gua.setGuaCorreo(gua_correo);
 		gua.setGuaDireccion(gua_direccion);
 		gua.setGuaCctv(gua_cctv);
+		gua.setGuaCentroEmprendimiento(guardia_CentroEmprendimiento);
 		gua.setGuaMotorizado(gua_motorizado);
 		gua.setGuaChofer(gua_chofer);
-		if(gua_motorizado==true){
+		if (gua_motorizado == true) {
 			gua.setGuaTipoLicenciaMotorizado("A");
-		}else{
+		} else {
 			gua.setGuaTipoLicenciaMotorizado(null);
 		}
-		if(gua_chofer== true){
+		if (gua_chofer == true) {
 			gua.setGuaTipoLicenciaChofer(gua_licencia_chofer);
-		}else{
+		} else {
 			gua.setGuaTipoLicenciaChofer(null);
 		}
 		gua.setGuaControlAccesos(gua_controlaccs);
@@ -399,6 +404,7 @@ public class ManagerGestion {
 
 	/**
 	 * Retorna el ultimo valor de id
+	 * 
 	 * @return
 	 */
 	public Integer ultimoOrdenCabeceraLugar() {
@@ -423,7 +429,7 @@ public class ManagerGestion {
 	public List<HgLugare> findAllLugares() {
 		return mDAO.findAll(HgLugare.class, " o.lugPrioridad asc ");
 	}
-	
+
 	/**
 	 * listar todos los Lugares
 	 * 
@@ -431,7 +437,8 @@ public class ManagerGestion {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<HgLugare> findAllLugaresActivos() {
-		return mDAO.findWhere(HgLugare.class, " o.lugEstado = 'A' ", "o.lugPrioridad asc");
+		return mDAO.findWhere(HgLugare.class, " o.lugEstado = 'A' ",
+				"o.lugPrioridad asc");
 	}
 
 	/**
@@ -466,10 +473,11 @@ public class ManagerGestion {
 	 * @param lug_controlaccs
 	 * @throws Exception
 	 */
-	public void insertarLugar(Integer lug_id,String lug_nombre, String lug_ciudad,Integer numeroguardia,
-			boolean lug_CCTV, boolean lug_controlaccs,
-			boolean lunes, boolean martes, boolean miercoles, boolean jueves,
-			boolean viernes, boolean sabado, boolean domingo, String lug_estado,Integer prioridad)
+	public void insertarLugar(Integer lug_id, String lug_nombre,
+			String lug_ciudad, Integer numeroguardia, boolean lug_CCTV, boolean lug_CentroEmprendimiento,
+			boolean lug_controlaccs, boolean lunes, boolean martes,
+			boolean miercoles, boolean jueves, boolean viernes, boolean sabado,
+			boolean domingo, String lug_estado, Integer prioridad)
 			throws Exception {
 		HgLugare lug = new HgLugare();
 		lug.setLugId(lug_id);
@@ -477,6 +485,7 @@ public class ManagerGestion {
 		lug.setLugCiudad(lug_ciudad);
 		lug.setLugNroGuardias(numeroguardia);
 		lug.setLugCctv(lug_CCTV);
+		lug.setLugCentroEmprendimiento(lug_CentroEmprendimiento);
 		lug.setLugControlAccesos(lug_controlaccs);
 		lug.setLugLunes(lunes);
 		lug.setLugMartes(martes);
@@ -503,7 +512,7 @@ public class ManagerGestion {
 	 * @throws Exception
 	 */
 	public void editarLugar(Integer lug_id, String lug_nombre,
-			String lug_ciudad,Integer numeroguardia, boolean lug_CCTV,
+			String lug_ciudad, Integer numeroguardia, boolean lug_CCTV, boolean lug_CentroEmprendimiento,
 			boolean lug_controlaccs, boolean lunes, boolean martes,
 			boolean miercoles, boolean jueves, boolean viernes, boolean sabado,
 			boolean domingo, String lug_estado) throws Exception {
@@ -512,6 +521,7 @@ public class ManagerGestion {
 		lug.setLugCiudad(lug_ciudad);
 		lug.setLugNroGuardias(numeroguardia);
 		lug.setLugCctv(lug_CCTV);
+		lug.setLugCentroEmprendimiento(lug_CentroEmprendimiento);
 		lug.setLugControlAccesos(lug_controlaccs);
 		lug.setLugLunes(lunes);
 		lug.setLugMartes(martes);
@@ -523,7 +533,7 @@ public class ManagerGestion {
 		lug.setLugEstado(lug_estado);
 		mDAO.actualizar(lug);
 	}
-	
+
 	/**
 	 * Cambiar datos de lugar
 	 * 
@@ -539,7 +549,6 @@ public class ManagerGestion {
 	public void actualizarPrioridad(HgLugare lugarPrioridad) throws Exception {
 		mDAO.actualizar(lugarPrioridad);
 	}
-	
 
 	/**
 	 * Cambiar estado lugar
@@ -580,6 +589,7 @@ public class ManagerGestion {
 	// Guardias Ausencia
 	/**
 	 * Retorna el ultimo valor de id
+	 * 
 	 * @return
 	 */
 	public Integer ultimoOrdenCabeceraAusencia() {
@@ -594,6 +604,7 @@ public class ManagerGestion {
 		}
 		return orden;
 	}
+
 	/**
 	 * listar todos las Ausencias
 	 * 
@@ -623,8 +634,8 @@ public class ManagerGestion {
 	 * @param aus_descripcion
 	 * @throws Exception
 	 */
-	public void insertarAusencia(Integer aus_id,Date aus_fecha_inicio, Date aus_fecha_fin,
-			String aus_descripcion) throws Exception {
+	public void insertarAusencia(Integer aus_id, Date aus_fecha_inicio,
+			Date aus_fecha_fin, String aus_descripcion) throws Exception {
 		HgAusencia aus = new HgAusencia();
 		aus.setAusId(aus_id);
 		aus.setHgGuardia(hg_gua);
@@ -635,7 +646,7 @@ public class ManagerGestion {
 
 		mDAO.insertar(aus);
 	}
-	
+
 	/**
 	 * Cambiar datos de Ausencia
 	 * 
@@ -657,9 +668,9 @@ public class ManagerGestion {
 
 		mDAO.actualizar(aus);
 	}
-	
-	//tipoausencias
-	
+
+	// tipoausencias
+
 	/**
 	 * listar todos las Ausencias
 	 * 
@@ -669,7 +680,7 @@ public class ManagerGestion {
 	public List<HgTipoAusencia> findAllTipoAusencias() {
 		return mDAO.findAll(HgTipoAusencia.class);
 	}
-	
+
 	/**
 	 * buscar Ausencia por ID
 	 * 
@@ -679,7 +690,7 @@ public class ManagerGestion {
 	public HgTipoAusencia tipoAusenciaByID(Integer aus_id) throws Exception {
 		return (HgTipoAusencia) mDAO.findById(HgTipoAusencia.class, aus_id);
 	}
-	
+
 	/**
 	 * metodo para asignar el guardia
 	 * 
@@ -695,7 +706,7 @@ public class ManagerGestion {
 		}
 		return hg_tipo_ausencia;
 	}
-	
+
 	/**
 	 * Agrega Ausencia
 	 * 
@@ -705,14 +716,15 @@ public class ManagerGestion {
 	 * @param aus_descripcion
 	 * @throws Exception
 	 */
-	public void insertarTipoAusencia(String tipoaus_nombre, String tipoaus_descripcion) throws Exception {
+	public void insertarTipoAusencia(String tipoaus_nombre,
+			String tipoaus_descripcion) throws Exception {
 		HgTipoAusencia tipoaus = new HgTipoAusencia();
 		tipoaus.setTipAusNombre(tipoaus_nombre);
 		tipoaus.setTipAusDescripcion(tipoaus_descripcion);
 
 		mDAO.insertar(tipoaus);
 	}
-	
+
 	/**
 	 * Cambiar datos de Ausencia
 	 * 
@@ -722,7 +734,8 @@ public class ManagerGestion {
 	 * @param aus_descripcion
 	 * @throws Exception
 	 */
-	public void editarTipoAusencia(Integer tipoaus_id, String tipoaus_nombre ,String tipoaus_descripcion) throws Exception {
+	public void editarTipoAusencia(Integer tipoaus_id, String tipoaus_nombre,
+			String tipoaus_descripcion) throws Exception {
 
 		HgTipoAusencia tipoaus = this.tipoAusenciaByID(tipoaus_id);
 		tipoaus.setTipAusNombre(tipoaus_nombre);
@@ -730,7 +743,6 @@ public class ManagerGestion {
 
 		mDAO.actualizar(tipoaus);
 	}
-
 
 	// asignaciones
 	/**
@@ -775,14 +787,16 @@ public class ManagerGestion {
 	@SuppressWarnings("unchecked")
 	public List<HgGuardia> findGuardiasDisponibles(Date fechainicial) {
 		List<HgGuardia> l = new ArrayList<HgGuardia>();
-		Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(restDays(fechainicial)));
+		Date finicial = java.sql.Date
+				.valueOf(new SimpleDateFormat("yyyy-MM-dd")
+						.format(restDays(fechainicial)));
 		List<Object> lista = mDAO
 				.ejectNativeSQL3("select o.gua_cedula, o.gua_nombre, o.gua_apellido, o.gua_estado, "
-						+ "o.gua_cctv, o.gua_motorizado, o.gua_chofer, o.gua_control_accesos, "
+						+ "o.gua_cctv,o.gua_centro_emprendimiento, o.gua_motorizado, o.gua_chofer, o.gua_control_accesos, "
 						+ "o.gua_caso_estudio, o.gua_caso_nocturno from hg_guardias o where "
 						+ "o.gua_estado='A' and o.gua_cedula not in "
 						+ "( select p.gua_cedula from hg_horario_det p where p.hdet_fecha_inicio = '"
-						+finicial+ "') order by o.gua_apellido");
+						+ finicial + "') order by o.gua_cctv desc, o.gua_control_accesos desc ,o.gua_centro_emprendimiento desc,o.gua_caso_estudio desc,o.gua_caso_nocturno desc");
 		l = ObjectToClass1(lista);
 		return l;
 	}
@@ -798,11 +812,13 @@ public class ManagerGestion {
 			s.setGuaApellido(String.valueOf(obj[2]));
 			s.setGuaEstado(String.valueOf(obj[3]));
 			s.setGuaCctv(Boolean.valueOf(String.valueOf(obj[4])));
-			s.setGuaMotorizado(Boolean.valueOf(String.valueOf(obj[5])));
-			s.setGuaChofer(Boolean.valueOf(String.valueOf(obj[6])));
-			s.setGuaControlAccesos(Boolean.valueOf(String.valueOf(obj[7])));
-			s.setGuaCasoEstudio(Boolean.valueOf(String.valueOf(obj[8])));
-			s.setGuaCasoNocturno(Boolean.valueOf(String.valueOf(obj[9])));
+			s.setGuaCentroEmprendimiento(Boolean.valueOf(String.valueOf(obj[5])));
+			s.setGuaMotorizado(Boolean.valueOf(String.valueOf(obj[6])));
+			s.setGuaChofer(Boolean.valueOf(String.valueOf(obj[7])));
+			s.setGuaControlAccesos(Boolean.valueOf(String.valueOf(obj[8])));
+			s.setGuaCasoEstudio(Boolean.valueOf(String.valueOf(obj[9])));
+			s.setGuaCasoNocturno(Boolean.valueOf(String.valueOf(obj[10])));
+			
 			li.add(s);
 		}
 		return li;
@@ -816,12 +832,14 @@ public class ManagerGestion {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<HgGuardia> findGuardiasUltimosDosDiasLibres(Date fechainicial) {
-		Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(restDays(fechainicial)));
-		Date finicial1 = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(restDays(restDays(fechainicial))));
+		Date finicial = java.sql.Date
+				.valueOf(new SimpleDateFormat("yyyy-MM-dd")
+						.format(restDays(fechainicial)));
+		Date finicial1 = java.sql.Date.valueOf(new SimpleDateFormat(
+				"yyyy-MM-dd").format(restDays(restDays(fechainicial))));
 		List<HgGuardia> l = new ArrayList<HgGuardia>();
 		List<Object> lista = mDAO
-				.ejectNativeSQL3("select o.gua_cedula, o.gua_nombre, o.gua_apellido, o.gua_estado, o.gua_cctv, "
-						+ ""
+				.ejectNativeSQL3("select o.gua_cedula, o.gua_nombre, o.gua_apellido, o.gua_estado, o.gua_cctv,o.gua_centro_emprendimiento, "
 						+ " o.gua_motorizado, o.gua_chofer, o.gua_control_accesos, o.gua_caso_estudio,"
 						+ "  o.gua_caso_nocturno from hg_guardias o"
 						+ " where o.gua_cedula not in (select p.gua_cedula "
@@ -833,11 +851,11 @@ public class ManagerGestion {
 						+ "'  and p.hdet_fecha_inicio = '"
 						+ finicial
 						+ "' "
-						+ " ) group by p.gua_cedula )");
+						+ " ) order by o.gua_cctv desc, o.gua_control_accesos desc ,o.gua_centro_emprendimiento desc,o.gua_caso_estudio desc,o.gua_caso_nocturno desc )");
 		l = ObjectToClass1(lista);
 		return l;
 	}
-	
+
 	/**
 	 * M�todo que permite obtener guardias 2 dias libres
 	 * 
@@ -846,20 +864,21 @@ public class ManagerGestion {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<HgGuardia> findGuardiasDisponiblesDiaAnterior(Date fechainicial) {
-		Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(restDays(fechainicial)));
+		Date finicial = java.sql.Date
+				.valueOf(new SimpleDateFormat("yyyy-MM-dd")
+						.format(restDays(fechainicial)));
 		List<HgGuardia> l = new ArrayList<HgGuardia>();
 		List<Object> lista = mDAO
-				.ejectNativeSQL3("select o.gua_cedula, o.gua_nombre, o.gua_apellido, o.gua_estado, o.gua_cctv, "
-						+ ""
+				.ejectNativeSQL3("select o.gua_cedula, o.gua_nombre, o.gua_apellido, o.gua_estado, o.gua_cctv,o.gua_centro_emprendimiento, "
 						+ " o.gua_motorizado, o.gua_chofer, o.gua_control_accesos, o.gua_caso_estudio,"
 						+ "  o.gua_caso_nocturno from hg_guardias o"
 						+ " where o.gua_cedula in (select p.gua_cedula "
-						+ "from hg_horario_det p where (p.hdet_fecha_inicio = '"+finicial+ "' "
-						+ " ) group by p.gua_cedula )");
+						+ "from hg_horario_det p where (p.hdet_fecha_inicio = '"
+						+ finicial + "' " + " ) order by o.gua_cctv desc, o.gua_control_accesos desc ,o.gua_centro_emprendimiento desc,o.gua_caso_estudio desc,o.gua_caso_nocturno desc)");
 		l = ObjectToClass1(lista);
 		return l;
 	}
-	
+
 	/**
 	 * Metodo para reducir en un dia cada fecha
 	 * 
@@ -872,7 +891,7 @@ public class ManagerGestion {
 		cal.add(Calendar.DATE, -1); // minus number would decrement the days
 		return cal.getTime();
 	}
-	
+
 	/**
 	 * Metodo para reducir en 5 dias cada fecha
 	 * 
@@ -885,9 +904,10 @@ public class ManagerGestion {
 		cal.add(Calendar.DATE, -5); // minus number would decrement the days
 		return cal.getTime();
 	}
-	
+
 	/**
-	 * M�todo que permite obtener guardias que se encuentran libres el dia anterior
+	 * M�todo que permite obtener guardias que se encuentran libres el dia
+	 * anterior
 	 * 
 	 * @param fechainicial
 	 * @return
@@ -895,17 +915,20 @@ public class ManagerGestion {
 	@SuppressWarnings("unchecked")
 	public List<HgGuardia> findGuardiasDisponiblesSinLibres(Date fechainicial) {
 		List<HgGuardia> l = new ArrayList<HgGuardia>();
-		Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(restDays(fechainicial)));
+		Date finicial = java.sql.Date
+				.valueOf(new SimpleDateFormat("yyyy-MM-dd")
+						.format(restDays(fechainicial)));
 		List<Object> lista = mDAO
 				.ejectNativeSQL3("select o.gua_cedula, o.gua_nombre, o.gua_apellido, o.gua_estado, "
-						+ "o.gua_cctv, o.gua_motorizado, o.gua_chofer, o.gua_control_accesos, "
+						+ "o.gua_cctv,o.gua_centro_emprendimiento, o.gua_motorizado, o.gua_chofer, o.gua_control_accesos, "
 						+ "o.gua_caso_estudio, o.gua_caso_nocturno from hg_guardias o where "
 						+ "o.gua_estado='A' and o.gua_cedula in "
 						+ "( select p.gua_cedula from hg_horario_det p where p.hdet_fecha_inicio = '"
-						+finicial+ "') order by o.gua_apellido ");
+						+ finicial + "') order by o.gua_cctv desc, o.gua_control_accesos desc ,o.gua_centro_emprendimiento desc,o.gua_caso_estudio desc,o.gua_caso_nocturno desc ");
 		l = ObjectToClass1(lista);
 		return l;
 	}
+
 	/**
 	 * M�todo que permite asegurar obtener guardias que estaban libres los 2
 	 * dias
@@ -917,14 +940,15 @@ public class ManagerGestion {
 	public List<HgGuardia> findGuardias7Dias(Date fecha7dias) {
 		Date f7dias = rest5Days(restDays(restDays(fecha7dias)));
 		List<HgGuardia> l = new ArrayList<HgGuardia>();
-		Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(f7dias));
+		Date finicial = java.sql.Date
+				.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(f7dias));
 		List<Object> lista = mDAO
 				.ejectNativeSQL3("select o.gua_cedula, o.gua_nombre, o.gua_apellido, o.gua_estado, "
-						+ "o.gua_cctv, o.gua_motorizado, o.gua_chofer, o.gua_control_accesos, "
+						+ "o.gua_cctv,o.gua_centro_emprendimiento, o.gua_motorizado, o.gua_chofer, o.gua_control_accesos, "
 						+ "o.gua_caso_estudio, o.gua_caso_nocturno from hg_guardias o where "
 						+ "o.gua_estado='A' and o.gua_cedula in "
 						+ "( select p.gua_cedula from hg_horario_det p where p.hdet_fecha_inicio = '"
-						+finicial+ "') order by o.gua_apellido");
+						+ finicial + "') order by o.gua_cctv desc, o.gua_control_accesos desc ,o.gua_centro_emprendimiento desc,o.gua_caso_estudio desc,o.gua_caso_nocturno desc");
 		l = ObjectToClass1(lista);
 		return l;
 	}
@@ -932,6 +956,7 @@ public class ManagerGestion {
 	// lugarturno
 	/**
 	 * Retorna el ultimo valor de id
+	 * 
 	 * @return
 	 */
 	public Integer ultimoOrdenCabeceraLugarTurno() {
@@ -946,7 +971,7 @@ public class ManagerGestion {
 		}
 		return orden;
 	}
-	
+
 	/**
 	 * buscar conductores por ID
 	 * 
@@ -966,8 +991,11 @@ public class ManagerGestion {
 	@SuppressWarnings("unchecked")
 	public List<HgLugarTurno> findLugarByIdLugar(Integer lugarId) {
 		List<HgLugarTurno> l = new ArrayList<HgLugarTurno>();
-		List<Object> lista = mDAO.ejectNativeSQL3("select o.lug_tur, o.lug_id, o.tur_id,o.lug_tur_numero_guardias "
-						+ " from hg_lugar_turno o where o.lug_id = "+lugarId+ ";");
+		List<Object> lista = mDAO
+				.ejectNativeSQL3("select o.lug_tur, o.lug_id, o.tur_id,o.lug_tur_numero_guardias "
+						+ " from hg_lugar_turno o where o.lug_id = "
+						+ lugarId
+						+ ";");
 
 		l = ObjectToClassLugarTurno(lista);
 		return l;
@@ -981,9 +1009,12 @@ public class ManagerGestion {
 				HgLugarTurno s = new HgLugarTurno();
 				Object[] obj = (Object[]) it.next();
 				s.setLugTur(Integer.parseInt(String.valueOf(obj[0])));
-				s.setHgLugare(this.LugarByID(Integer.parseInt(String.valueOf(obj[1]))));
-				s.setHgTurno(this.turnoByID(Integer.parseInt(String.valueOf(obj[2]))));
-				s.setLugTurNumeroGuardias(Integer.parseInt(String.valueOf(obj[3])));
+				s.setHgLugare(this.LugarByID(Integer.parseInt(String
+						.valueOf(obj[1]))));
+				s.setHgTurno(this.turnoByID(Integer.parseInt(String
+						.valueOf(obj[2]))));
+				s.setLugTurNumeroGuardias(Integer.parseInt(String
+						.valueOf(obj[3])));
 				li.add(s);
 			}
 		} catch (Exception e) {
@@ -1045,7 +1076,9 @@ public class ManagerGestion {
 	 * @param valor
 	 * @throws Exception
 	 */
-	public void insertarTurnoLugar(Integer turnlug_id,String direccion) throws Exception {
+	public void insertarTurnoLugar(Integer turnlug_id, String direccion)
+			throws Exception {
+		turnlug_id = this.ultimoOrdenCabeceraLugarTurno();
 		HgLugarTurno lugarTurno = new HgLugarTurno();
 		lugarTurno.setLugTur(turnlug_id);
 		lugarTurno.setHgLugare(hg_lugar);
@@ -1063,7 +1096,7 @@ public class ManagerGestion {
 	public void eliminarTurnoLugar(Integer itemf_id) throws Exception {
 		mDAO.eliminar(HgLugarTurno.class, itemf_id);
 	}
-	
+
 	/**
 	 * Elimina lugarturno
 	 * 
@@ -1102,7 +1135,7 @@ public class ManagerGestion {
 				" o.hgLugare.lugId = " + lug_id + " and o.hgTurno.turId = "
 						+ hg_turno.getTurId() + " ", null).size();
 	}
-	
+
 	/**
 	 * listar x guardia los horariosdet con la fecha contar los dias que trabaja
 	 * 
@@ -1112,9 +1145,10 @@ public class ManagerGestion {
 	 * @throws Exception
 	 */
 	public HgLugarTurno lugar_TurnoByIDid(Integer lugturn_id) throws Exception {
-		return (HgLugarTurno)  mDAO.findById(HgLugarTurno.class," o.lugTur = " + lugturn_id +" ");
+		return (HgLugarTurno) mDAO.findById(HgLugarTurno.class, " o.lugTur = "
+				+ lugturn_id + " ");
 	}
-	
+
 	/**
 	 * listar todos los turnos
 	 * 
@@ -1122,9 +1156,10 @@ public class ManagerGestion {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<HgLugaresTurnosVacio> allLugarTurnoByID(Integer cabId) {
-		return mDAO.findWhere(HgLugaresTurnosVacio.class," o.hgHorarioCab.hcabId = "+cabId+" ",null);
+		return mDAO.findWhere(HgLugaresTurnosVacio.class,
+				" o.hgHorarioCab.hcabId = " + cabId + " ", null);
 	}
-	
+
 	/**
 	 * Cambiar datos de lugar
 	 * 
@@ -1137,7 +1172,9 @@ public class ManagerGestion {
 	 * @param lug_controlaccs
 	 * @throws Exception
 	 */
-	public void editarLugarTurno(Integer lugturn_id,Integer lugturn_turno,Integer lugturn_lugar,Integer lugturn_nroGuardias) throws Exception {
+	public void editarLugarTurno(Integer lugturn_id, Integer lugturn_turno,
+			Integer lugturn_lugar, Integer lugturn_nroGuardias)
+			throws Exception {
 		HgLugarTurno lugarturno = this.lugar_TurnoByIDid(lugturn_id);
 		asignarTurno(lugturn_turno);
 		asignarLugar(lugturn_lugar);
@@ -1146,10 +1183,10 @@ public class ManagerGestion {
 		lugarturno.setLugTurNumeroGuardias(lugturn_nroGuardias);
 		mDAO.actualizar(lugarturno);
 	}
-	
-	
+
 	public Integer ultimoOrdenLugar() {
-		Integer orden = mDAO.tomarValorIntJPQL("select max(o.lugId) from HgLugare o");
+		Integer orden = mDAO
+				.tomarValorIntJPQL("select max(o.lugId) from HgLugare o");
 		if (orden == null) {
 			orden = 1;
 			System.out.println(orden);
@@ -1159,7 +1196,7 @@ public class ManagerGestion {
 		}
 		return orden;
 	}
-	
+
 	/**
 	 * M�todo que permite asegurar obtener guardias que estaban libres los 2
 	 * dias
@@ -1170,18 +1207,20 @@ public class ManagerGestion {
 	@SuppressWarnings("unchecked")
 	public List<HgGuardia> findGuardiasXFecha(Date fechainicial) {
 		List<HgGuardia> l = new ArrayList<HgGuardia>();
-		Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechainicial));
+		Date finicial = java.sql.Date
+				.valueOf(new SimpleDateFormat("yyyy-MM-dd")
+						.format(fechainicial));
 		List<Object> lista = mDAO
 				.ejectNativeSQL3("select o.gua_cedula, o.gua_nombre, o.gua_apellido, o.gua_estado, "
-						+ "o.gua_cctv, o.gua_motorizado, o.gua_chofer, o.gua_control_accesos, "
+						+ "o.gua_cctv,o.gua_centro_emprendimiento, o.gua_motorizado, o.gua_chofer, o.gua_control_accesos, "
 						+ "o.gua_caso_estudio, o.gua_caso_nocturno from hg_guardias o where "
 						+ "o.gua_estado='A' and o.gua_cedula in "
 						+ "( select p.gua_cedula from hg_horario_det p where p.hdet_fecha_inicio = '"
-						+finicial+ "') order by o.gua_apellido ");
+						+ finicial + "') order by o.gua_cctv desc, o.gua_control_accesos desc ,o.gua_centro_emprendimiento desc,o.gua_caso_estudio desc,o.gua_caso_nocturno desc ");
 		l = ObjectToClass1(lista);
 		return l;
 	}
-	
+
 	/**
 	 * Verifica si el guardia exite
 	 * 
@@ -1189,32 +1228,148 @@ public class ManagerGestion {
 	 *            guardia a analizar
 	 * @return true o false
 	 */
-	public Integer ausenciaXFecha(Date fechainicial,Date fechafinal,String gua_id){
+	public Integer ausenciaXFecha(Date fechainicial, Date fechafinal,
+			String gua_id) {
 		Date finicial = java.sql.Date
-				.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechainicial));
-		return mDAO.findWhere(HgAusencia.class," o.hgGuardia.guaCedula = '" + gua_id + "' "+ " and (o.ausFechaInicio <= '" + fechainicial
-						+ "' and o.ausFechaFin >= '" + finicial + "' or o.ausFechaInicio <= '" + fechafinal+"' "
-						+ " and o.ausFechaFin >= '" + fechafinal+"' ) ", null).size();
+				.valueOf(new SimpleDateFormat("yyyy-MM-dd")
+						.format(fechainicial));
+		return mDAO
+				.findWhere(
+						HgAusencia.class,
+						" o.hgGuardia.guaCedula = '" + gua_id + "' "
+								+ " and (o.ausFechaInicio <= '" + fechainicial
+								+ "' and o.ausFechaFin >= '" + finicial
+								+ "' or o.ausFechaInicio <= '" + fechafinal
+								+ "' " + " and o.ausFechaFin >= '" + fechafinal
+								+ "' ) ", null).size();
+	}
+
+	// Guardias Pendientes
+	/**
+	 * listar todos los guardiasp
+	 * 
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<HgGuardiasPendiente> findAllGuardiasPendientes() {
+		return mDAO.findAll(HgGuardiasPendiente.class, " o.guapenFecha asc ");
+	}
+
+	/**
+	 * buscar guardias por ID
+	 * 
+	 * @param con_id
+	 * @throws Exception
+	 */
+	public HgGuardiasPendiente guardiaPendienteByID(String guapen_id)
+			throws Exception {
+		return (HgGuardiasPendiente) mDAO.findById(HgGuardiasPendiente.class,
+				guapen_id);
+	}
+
+	// guardiadianotrabaja
+
+	public Integer ultimoOrdenCabeceraGuardiaNoTrabaja() {
+		Integer orden = mDAO
+				.tomarValorIntJPQL("select max(o.guaDiaTrabajoId) from HgGuardiasDiasNoTrabajo o");
+		if (orden == null) {
+			orden = 1;
+			System.out.println(orden);
+		} else {
+			orden += 1;
+			System.out.println(orden);
+		}
+		return orden;
+	}
+
+	public HgGuardiasDiasNoTrabajo guardiaNoTrabajoById(Integer GTN_id) throws Exception {
+		return (HgGuardiasDiasNoTrabajo) mDAO.findById(HgGuardiasDiasNoTrabajo.class, GTN_id);
 	}
 	
-	// Guardias Pendientes
-		/**
-		 * listar todos los guardiasp
-		 * 
-		 * @throws Exception
-		 */
-		@SuppressWarnings("unchecked")
-		public List<HgGuardiasPendiente> findAllGuardiasPendientes() {
-			return mDAO.findAll(HgGuardiasPendiente.class, " o.guapenFecha asc ");
-		}
+	public Integer guardiaNoTrabajoById(String guardia_id) {
+		return mDAO.findWhere(HgGuardiasDiasNoTrabajo.class,
+				" o.hgGuardia.guaCedula = '" + guardia_id + "' ", null).size();
+	}
 
-		/**
-		 * buscar guardias por ID
-		 * 
-		 * @param con_id
-		 * @throws Exception
-		 */
-		public HgGuardiasPendiente guardiaPendienteByID(String guapen_id) throws Exception {
-			return (HgGuardiasPendiente) mDAO.findById(HgGuardiasPendiente.class, guapen_id);
+	@SuppressWarnings("unchecked")
+	public List<HgGuardiasDiasNoTrabajo> findGuardiaByIdGuardiaNT(String GNT_Id) {
+		List<HgGuardiasDiasNoTrabajo> l = new ArrayList<HgGuardiasDiasNoTrabajo>();
+		List<Object> lista = mDAO
+				.ejectNativeSQL3("select o.gua_dia_trabajo_id, o.gua_dia_trabajo_lunes, o.gua_dia_trabajo_martes, "
+						+ " o.gua_dia_trabajo_miercoles, o.gua_dia_trabajo_jueves, o.gua_dia_trabajo_viernes, o.gua_dia_trabajo_sabado, "
+						+ " o.gua_dia_trabajo_domingo, o.gua_cedula "
+						+ " from hg_guardias_dias_no_trabajo o where o.gua_cedula = '"+GNT_Id+"' ;");
+
+		l = ObjectToClassGuardiaNoTrabajo(lista);
+		return l;
+	}
+
+	private List<HgGuardiasDiasNoTrabajo> ObjectToClassGuardiaNoTrabajo(List<Object> lista) {
+		List<HgGuardiasDiasNoTrabajo> li = new ArrayList<HgGuardiasDiasNoTrabajo>();
+		try {
+			Iterator it = lista.iterator();
+			while (it.hasNext()) {
+				HgGuardiasDiasNoTrabajo s = new HgGuardiasDiasNoTrabajo();
+				Object[] obj = (Object[]) it.next();
+				s.setGuaDiaTrabajoId(Integer.parseInt(String.valueOf(obj[0])));
+				s.setGuaDiaTrabajoLunes(Boolean.valueOf(String.valueOf(obj[1])));
+				s.setGuaDiaTrabajoMartes(Boolean.valueOf(String.valueOf(obj[2])));
+				s.setGuaDiaTrabajoMiercoles(Boolean.valueOf(String.valueOf(obj[3])));
+				s.setGuaDiaTrabajoJueves(Boolean.valueOf(String.valueOf(obj[4])));
+				s.setGuaDiaTrabajoViernes(Boolean.valueOf(String.valueOf(obj[5])));
+				s.setGuaDiaTrabajoSabado(Boolean.valueOf(String.valueOf(obj[6])));
+				s.setGuaDiaTrabajoDomingo(Boolean.valueOf(String.valueOf(obj[7])));
+				s.setHgGuardia(this.guardiaByID(String.valueOf(obj[8])));
+				li.add(s);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		return li;
+	}
+
+	public HgGuardia asignarGuardiaNoTrabajo(String guardiaNoTrabajo_id) {
+		try {
+			hg_guardianotrabajo = this.guardiaByID(guardiaNoTrabajo_id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return hg_guardianotrabajo;
+	}
+
+	public void insertarGuardiaNoTrabaja(boolean lunes,boolean martes,
+			boolean miercoles,boolean jueves,boolean viernes,boolean sabado, boolean domingo)
+			throws Exception {
+		HgGuardiasDiasNoTrabajo guardiaNoTrabaja = new HgGuardiasDiasNoTrabajo();
+		Integer id = this.ultimoOrdenCabeceraGuardiaNoTrabaja();
+		guardiaNoTrabaja.setGuaDiaTrabajoId(id);
+		guardiaNoTrabaja.setHgGuardia(hg_guardianotrabajo);
+		guardiaNoTrabaja.setGuaDiaTrabajoLunes(lunes);
+		guardiaNoTrabaja.setGuaDiaTrabajoMartes(martes);
+		guardiaNoTrabaja.setGuaDiaTrabajoMiercoles(miercoles);
+		guardiaNoTrabaja.setGuaDiaTrabajoJueves(jueves);
+		guardiaNoTrabaja.setGuaDiaTrabajoViernes(viernes);
+		guardiaNoTrabaja.setGuaDiaTrabajoSabado(sabado);
+		guardiaNoTrabaja.setGuaDiaTrabajoDomingo(domingo);
+		mDAO.insertar(guardiaNoTrabaja);
+	}
+
+	public void eliminarGuardiaNoTrabajo(Integer GNT_id) throws Exception {
+		mDAO.eliminar(HgGuardiasDiasNoTrabajo.class, GNT_id);
+	}
+
+	public void editarGuardiaNoTrabaja(Integer guardiaNotTrabaj_id, boolean lunes,boolean martes,
+			boolean miercoles,boolean jueves,boolean viernes,boolean sabado, boolean domingo)
+			throws Exception {
+		HgGuardiasDiasNoTrabajo guardiaNoTrabaja = this.guardiaNoTrabajoById(guardiaNotTrabaj_id);
+		guardiaNoTrabaja.setGuaDiaTrabajoLunes(lunes);
+		guardiaNoTrabaja.setGuaDiaTrabajoMartes(martes);
+		guardiaNoTrabaja.setGuaDiaTrabajoMiercoles(miercoles);
+		guardiaNoTrabaja.setGuaDiaTrabajoJueves(jueves);
+		guardiaNoTrabaja.setGuaDiaTrabajoViernes(viernes);
+		guardiaNoTrabaja.setGuaDiaTrabajoSabado(sabado);
+		guardiaNoTrabaja.setGuaDiaTrabajoDomingo(domingo);
+		mDAO.actualizar(guardiaNoTrabaja);
+	}
+
 }

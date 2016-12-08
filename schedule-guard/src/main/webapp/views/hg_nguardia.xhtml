@@ -209,6 +209,19 @@
 				<br />
 				<b:row>
 					<b:column span="2">
+						<h:outputLabel value="Maneja Centro de Emprendimiento:* " for="cenem" />
+					</b:column>
+					<b:column span="3" style="margin-bottom:10px">
+						<p:selectOneRadio id="cenem"
+							value="#{guardiaBean.guardia_CentroEmprendimiento}" style="margin-top:10px">
+							<f:selectItem itemLabel="SI" itemValue="true" />
+							<f:selectItem itemLabel="NO" itemValue="false" />
+						</p:selectOneRadio>
+					</b:column>
+				</b:row>
+				<br />
+				<b:row>	
+					<b:column span="2">
 						<h:outputLabel value="Es Motorizado:* " for="motor" />
 					</b:column>
 					<b:column span="3" style="margin-bottom:10px">
@@ -285,17 +298,6 @@
 				<br />
 				<b:row>
 					<b:column span="2">
-						<h:outputLabel value="Caso nocturno:* " for="noc" />
-					</b:column>
-					<b:column span="3" style="margin-bottom:10px">
-						<p:selectOneRadio id="noc"
-							value="#{guardiaBean.guardia_casonocturno}"
-							style="margin-top:10px">
-							<f:selectItem itemLabel="SI" itemValue="true" />
-							<f:selectItem itemLabel="NO" itemValue="false" />
-						</p:selectOneRadio>
-					</b:column>
-					<b:column span="2">
 						<h:outputLabel value="Estado*" for="est"
 							rendered="#{guardiaBean.edicion}" />
 					</b:column>
@@ -321,8 +323,88 @@
 					</b:column>
 				</b:row>
 			</h:form>
+				<br />
+			<h:form id="frm1">
+				<b:panel title="Listado de Días que no Trabaja" look="primary">
+					<b:row>
+						<b:column span="2">
+							<h:outputLabel value="Escoger Días* :" />
+						</b:column>
+						<b:column span="10" id="trabaja" style="margin-bottom:10px">
+							<h:outputText value="Lunes: " />
+							<p:selectBooleanCheckbox value="#{guardiaBean.lug_lunes}" />&nbsp;
+					<h:outputText value="Martes: " />
+							<p:selectBooleanCheckbox value="#{guardiaBean.lug_martes}" />&nbsp;
+					<h:outputText value="Miércoles: " />
+							<p:selectBooleanCheckbox value="#{guardiaBean.lug_miercoles}" />&nbsp;
+					<h:outputText value="Jueves: " />
+							<p:selectBooleanCheckbox value="#{guardiaBean.lug_jueves}" />&nbsp;
+					<h:outputText value="Viernes: " />
+							<p:selectBooleanCheckbox value="#{guardiaBean.lug_viernes}" />&nbsp;
+					<h:outputText value="Sábado: " />
+							<p:selectBooleanCheckbox value="#{guardiaBean.lug_sabado}" />&nbsp;
+					<h:outputText value="Domingo: " />
+							<p:selectBooleanCheckbox value="#{guardiaBean.lug_domingo}" />&nbsp;
+					</b:column>
+					</b:row>
+					<br />
+					<b:row>
+						<b:column span="5">
+							<p:commandButton value="Agregar" styleClass="btn btn-info"
+								style="padding:7px;"
+								actionListener="#{guardiaBean.abrirDialog1()}"
+								update=":frm:messages">
+							</p:commandButton>&nbsp;&nbsp;&nbsp;
+					</b:column>
+					</b:row>
+					<p:dataTable id="tbb" value="#{guardiaBean.listaGuardiaNoTrabaja}"
+						reflow="false" var="dias" rows="3" emptyMessage="Sin Datos"
+						paginator="true"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+						<p:column headerText="OPCIONES" width="40">
+							<p:commandButton id="btnE" icon="ui-icon-close"
+								action="#{guardiaBean.eliminarguardiaNoTrabaja(dias)}" update="frm1 tbb">
+								<p:tooltip id="toolTipTrack1" for="btnE"
+									value="Bot&oacute;n para borrar los dias" trackMouse="true" />
+							</p:commandButton>
+						</p:column>
+						<p:column headerText="LUNES" width="40">
+							<p:selectBooleanCheckbox disabled="true" value="#{dias.guaDiaTrabajoLunes}" />
+						</p:column>
+						<p:column headerText="MARTES" width="40">
+							<p:selectBooleanCheckbox disabled="true" value="#{dias.guaDiaTrabajoMartes}" />
+						</p:column>
+						<p:column headerText="MIERCOLES" width="40">
+							<p:selectBooleanCheckbox disabled="true" value="#{dias.guaDiaTrabajoMiercoles}" />
+						</p:column>
+						<p:column headerText="JUEVES" width="40">
+							<p:selectBooleanCheckbox disabled="true" value="#{dias.guaDiaTrabajoJueves}" />
+						</p:column>
+						<p:column headerText="VIERNES" width="40">
+							<p:selectBooleanCheckbox disabled="true" value="#{dias.guaDiaTrabajoViernes}" />
+						</p:column>
+						<p:column headerText="SABADO" width="40">
+							<p:selectBooleanCheckbox disabled="true" value="#{dias.guaDiaTrabajoSabado}" />
+						</p:column>
+						<p:column headerText="DOMINGO" width="40">
+							<p:selectBooleanCheckbox disabled="true" value="#{dias.guaDiaTrabajoDomingo}" />
+						</p:column>
+					</p:dataTable>
+				</b:panel>
+			</h:form>
 		</b:panel>
-
+		<p:confirmDialog header="Confirmación"
+			message="Está seguro de borrar el turno" closable="false"
+			showEffect="fade" hideEffect="explode" widgetVar="ef">
+			<h:form>
+				<p:commandButton value="Si" styleClass="ui-confirmdialog-yes"
+					icon="ui-icon-check" action="#{guardiaBean.eliminarGNT()}"
+					oncomplete="PF('ef').hide();" update="frm frm1:tbb" />
+				<p:commandButton value="No" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					onclick="PF('ef').hide();" />
+			</h:form>
+		</p:confirmDialog>
 		<p:confirmDialog header="Confirmación"
 			message="Está seguro de registrar la información?" closable="false"
 			showEffect="fade" hideEffect="explode" widgetVar="gu">
@@ -333,6 +415,18 @@
 				<p:commandButton value="No" type="button"
 					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
 					onclick="PF('gu').hide();" />
+			</h:form>
+		</p:confirmDialog>
+		<p:confirmDialog header="Confirmación"
+			message="Está seguro de guardar la información?" closable="false"
+			showEffect="fade" hideEffect="explode" widgetVar="gu1">
+			<h:form>
+				<p:commandButton value="Si" styleClass="ui-confirmdialog-yes"
+					icon="ui-icon-check" action="#{guardiaBean.crearGuardiaNoTrabaja()}"
+					oncomplete="PF('gu1').hide();" update="frm frm1:tbb" />
+				<p:commandButton value="No" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					onclick="PF('gu1').hide();" />
 			</h:form>
 		</p:confirmDialog>
 	</ui:define>

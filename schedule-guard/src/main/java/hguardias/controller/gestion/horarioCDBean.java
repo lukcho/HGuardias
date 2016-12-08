@@ -43,6 +43,7 @@ import hguardias.model.manager.ManagerCarga;
 import hguardias.controller.access.SesionBean;
 import hguardias.model.generic.Funciones;
 import hguardias.model.dao.entities.HgGuardia;
+import hguardias.model.dao.entities.HgGuardiasDiasNoTrabajo;
 import hguardias.model.dao.entities.HgHorarioCab;
 import hguardias.model.dao.entities.HgHorarioDet;
 import hguardias.model.dao.entities.HgLugarTurno;
@@ -678,6 +679,7 @@ public class horarioCDBean implements Serializable {
 			List<HgGuardia> guardiasDisponibles, Integer numeroDias,
 			boolean sinGuardia) {
 		HgGuardia guardiaelegido = new HgGuardia();
+		try {
 		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy");
 		java.util.Date date = fechainicial;
 		df.applyPattern("EEE");
@@ -685,6 +687,118 @@ public class horarioCDBean implements Serializable {
 			Boolean guardiaAplica = true;
 			Integer vecestrabajo = 0;
 			Integer diasTrabajados = 5;
+			
+				if(averiguarGuardiaNoTrabajo(guardia,fechainicial)==true){
+					
+				if (managerhorario.existeAusencia(guardia.getGuaCedula(),
+						fechainicial) == 0) {
+					if ((managerhorario.existeGuardia(cab_id, fechainicial,
+							guardia.getGuaCedula()) != 1)) {
+						if (managerhorario.trabajoDiaAnterior(guardia,
+								restDays(fechainicial)) == 1) {
+							vecestrabajo = managerhorario.findNumDiasxGuardia(
+									guardia, restDays(fechainicial),
+									rest5Days(restDays(fechainicial)));
+						} else if (managerhorario.trabajoDiaAnterior(guardia,
+								restDays(restDays(fechainicial))) == 1) {
+							vecestrabajo = managerhorario.findNumDiasxGuardia(
+									guardia, restDays(restDays(fechainicial)),
+									rest5Days(restDays(restDays(fechainicial))));
+						}
+						if (vecestrabajo < diasTrabajados) {
+							// if(managerhorario.trabajoSemanaAnteriorLugar(fechainicial,
+							// guardia.getGuaCedula(), lugar.getLugId()) == 0 )
+							// guardiaAplica = false;
+							// if(managerhorario.trabajoLugDiaAnterior(guardia,lugar,fechainicial)==1)
+							// guardiaAplica = false;
+							// if(managerhorario.trabajoLugDiaAnterior(guardia,lugar,restDays(fechainicial))==1)
+							// guardiaAplica = false;
+							// if(managerhorario.trabajoLugDiaAnterior(guardia,lugar,restDays(restDays(fechainicial)))==1)
+							// guardiaAplica = false;
+							// if(managerhorario.trabajoLugDiaAnterior(guardia,lugar,restDays(restDays(restDays(fechainicial))))==1)
+							// guardiaAplica = false;
+							if (sinGuardia == true) {
+								if (managerhorario.existeGuardiaXturnoMNoc(cab_id,restDays(fechainicial),guardia.getGuaCedula()) == 1
+										&& turno.getTurId() == 1)
+									guardiaAplica = false;
+								if (lugar.getLugCctv() == true && guardia.getGuaCctv() != true)
+									guardiaAplica = false;
+								if (lugar.getLugCentroEmprendimiento() == true && guardia.getGuaCentroEmprendimiento() != true)
+									guardiaAplica = false;
+								if (lugar.getLugControlAccesos() == true && guardia.getGuaControlAccesos() != true)
+									guardiaAplica = false;
+								if (guardia.getGuaCasoEstudio() == true && (df.format(date).equals("dom") || df.format(date).equals("sáb")))
+									guardiaAplica = false;
+								if (guardia.getGuaCasoNocturno() == true
+										&& turno.getTurId() == 3)
+									guardiaAplica = false;
+								if ((lugar.getLugNombre().equals("Instituto")
+										|| lugar.getLugNombre().equals("Centro de emprendimiento")
+										|| lugar.getLugNombre().equals("San Eloy")
+										|| lugar.getLugNombre().equals("CCTV")
+										|| lugar.getLugNombre().equals("Tanques de Agua") || lugar
+										.getLugNombre().equals("Control 1"))
+										&& guardia.getGuaMotorizado() == true)
+									guardiaAplica = false;
+							} else {
+								if(lugar.getLugCctv()==false || lugar.getLugControlAccesos()==false||lugar.getLugCentroEmprendimiento()==false){
+									if (managerhorario.existeGuardiaXturnoMNoc(cab_id,
+											restDays(fechainicial),
+											guardia.getGuaCedula()) == 1
+											&& turno.getTurId() == 1)
+										guardiaAplica = false;	
+									if (lugar.getLugCctv() == true
+											&& guardia.getGuaCctv() != true)
+										guardiaAplica = false;
+									if (lugar.getLugCentroEmprendimiento() == true && guardia.getGuaCentroEmprendimiento() != true)
+										guardiaAplica = false;
+									if (lugar.getLugControlAccesos() == true
+											&& guardia.getGuaControlAccesos() != true)
+										guardiaAplica = false;
+									if (guardia.getGuaCasoEstudio() == true
+											&& (df.format(date).equals("dom") || df.format(
+													date).equals("sáb")))
+										guardiaAplica = false;
+									if (guardia.getGuaCasoNocturno() == true
+											&& turno.getTurId() == 3)
+										guardiaAplica = false;
+								}else if(lugar.getLugNombre().equals("Bloques") || lugar.getLugNombre().equals("Centro de emprendimiento 1")){
+									if (managerhorario.existeGuardiaXturnoMNoc(cab_id,
+											restDays(fechainicial),
+											guardia.getGuaCedula()) == 1
+											&& turno.getTurId() == 1)
+										guardiaAplica = false;	
+								}
+							}
+							if (guardiaAplica) {
+								guardiaelegido = guardia;
+								break;
+							}
+						}
+					}
+				}
+				}
+			} 
+		}catch (ParseException e) {
+				e.printStackTrace();
+			}
+		return guardiaelegido;
+	}
+
+	private HgGuardia obtenerGuardiaCompatibleSexto(HgLugare lugar,
+			Date fechainicial, HgTurno turno,
+			List<HgGuardia> guardiasDisponibles, Integer numeroDias,
+			boolean sinGuardia) {
+		HgGuardia guardiaelegido = new HgGuardia();
+		try {
+		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy");
+		java.util.Date date = fechainicial;
+		df.applyPattern("EEE");
+		for (HgGuardia guardia : guardiasDisponibles) {
+			Boolean guardiaAplica = true;
+			Integer vecestrabajo = 0;
+			Integer diasTrabajados = 6;
+			if(averiguarGuardiaNoTrabajo(guardia,fechainicial)==true){
 			if (managerhorario.existeAusencia(guardia.getGuaCedula(),
 					fechainicial) == 0) {
 				if ((managerhorario.existeGuardia(cab_id, fechainicial,
@@ -713,38 +827,57 @@ public class horarioCDBean implements Serializable {
 						// if(managerhorario.trabajoLugDiaAnterior(guardia,lugar,restDays(restDays(restDays(fechainicial))))==1)
 						// guardiaAplica = false;
 						if (sinGuardia == true) {
-							if (managerhorario.existeGuardiaXturnoMNoc(cab_id,
-									restDays(fechainicial),
-									guardia.getGuaCedula()) == 1
+							if (managerhorario.existeGuardiaXturnoMNoc(cab_id,restDays(fechainicial),guardia.getGuaCedula()) == 1
 									&& turno.getTurId() == 1)
 								guardiaAplica = false;
-							if (lugar.getLugCctv() == true
-									&& guardia.getGuaCctv() != true)
+							if (lugar.getLugCctv() == true && guardia.getGuaCctv() != true)
 								guardiaAplica = false;
-							if (lugar.getLugControlAccesos() == true
-									&& guardia.getGuaControlAccesos() != true)
+							if (lugar.getLugCentroEmprendimiento() == true && guardia.getGuaCentroEmprendimiento() != true)
 								guardiaAplica = false;
-							if (guardia.getGuaCasoEstudio() == true
-									&& (df.format(date).equals("dom") || df
-											.format(date).equals("sáb")))
+							if (lugar.getLugControlAccesos() == true && guardia.getGuaControlAccesos() != true)
+								guardiaAplica = false;
+							if (guardia.getGuaCasoEstudio() == true && (df.format(date).equals("dom") || df.format(date).equals("sáb")))
 								guardiaAplica = false;
 							if (guardia.getGuaCasoNocturno() == true
 									&& turno.getTurId() == 3)
 								guardiaAplica = false;
-							if ((lugar.getLugNombre() == "Instituto"
-									|| lugar.getLugNombre() == "Centro de emprendimiento"
-									|| lugar.getLugNombre() == "San Eloy"
-									|| lugar.getLugNombre() == "CCTV"
-									|| lugar.getLugNombre() == "Tanques de Agua" || lugar
-									.getLugNombre() == "Control 1")
+							if ((lugar.getLugNombre().equals("Instituto")
+									|| lugar.getLugNombre().equals("Centro de emprendimiento")
+									|| lugar.getLugNombre().equals("San Eloy")
+									|| lugar.getLugNombre().equals("CCTV")
+									|| lugar.getLugNombre().equals("Tanques de Agua") || lugar
+									.getLugNombre().equals("Control 1"))
 									&& guardia.getGuaMotorizado() == true)
 								guardiaAplica = false;
 						} else {
-							if (managerhorario.existeGuardiaXturnoMNoc(cab_id,
-									restDays(fechainicial),
-									guardia.getGuaCedula()) == 1
-									&& turno.getTurId() == 1)
-								guardiaAplica = false;
+							if(lugar.getLugCctv()==false || lugar.getLugControlAccesos()==false||lugar.getLugCentroEmprendimiento()==false){
+								if (managerhorario.existeGuardiaXturnoMNoc(cab_id,
+										restDays(fechainicial),
+										guardia.getGuaCedula()) == 1
+										&& turno.getTurId() == 1)
+									guardiaAplica = false;	
+								if (lugar.getLugCctv() == true
+										&& guardia.getGuaCctv() != true)
+									guardiaAplica = false;
+								if (lugar.getLugCentroEmprendimiento() == true && guardia.getGuaCentroEmprendimiento() != true)
+									guardiaAplica = false;
+								if (lugar.getLugControlAccesos() == true
+										&& guardia.getGuaControlAccesos() != true)
+									guardiaAplica = false;
+								if (guardia.getGuaCasoEstudio() == true
+										&& (df.format(date).equals("dom") || df.format(
+												date).equals("sáb")))
+									guardiaAplica = false;
+								if (guardia.getGuaCasoNocturno() == true
+										&& turno.getTurId() == 3)
+									guardiaAplica = false;
+							}else if(lugar.getLugNombre().equals("Bloques") || lugar.getLugNombre().equals("Centro de emprendimiento 1")){
+								if (managerhorario.existeGuardiaXturnoMNoc(cab_id,
+										restDays(fechainicial),
+										guardia.getGuaCedula()) == 1
+										&& turno.getTurId() == 1)
+									guardiaAplica = false;	
+							}
 						}
 						if (guardiaAplica) {
 							guardiaelegido = guardia;
@@ -753,73 +886,13 @@ public class horarioCDBean implements Serializable {
 					}
 				}
 			}
-		}
-		return guardiaelegido;
-	}
-
-	private HgGuardia obtenerGuardiaCompatibleSexto(HgLugare lugar,
-			Date fechainicial, HgTurno turno,
-			List<HgGuardia> guardiasDisponibles, Integer numeroDias,
-			boolean sinGuardia) {
-		HgGuardia guardiaelegido = new HgGuardia();
-		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy");
-		java.util.Date date = fechainicial;
-		df.applyPattern("EEE");
-		for (HgGuardia guardia : guardiasDisponibles) {
-			Boolean guardiaAplica = true;
-			Integer vecestrabajo = 0;
-			Integer diasTrabajados = 6;
-			if (managerhorario.existeAusencia(guardia.getGuaCedula(),
-					fechainicial) == 0) {
-				if ((managerhorario.existeGuardia(cab_id, fechainicial,
-						guardia.getGuaCedula()) != 1)) {
-					if (managerhorario.trabajoDiaAnterior(guardia,
-							restDays(fechainicial)) == 1) {
-						vecestrabajo = managerhorario.findNumDiasxGuardia(
-								guardia, restDays(fechainicial),
-								rest5Days(restDays(fechainicial)));
-					} else if (managerhorario.trabajoDiaAnterior(guardia,
-							restDays(restDays(fechainicial))) == 1) {
-						vecestrabajo = managerhorario.findNumDiasxGuardia(
-								guardia, restDays(restDays(fechainicial)),
-								rest5Days(restDays(restDays(fechainicial))));
-					}
-					if (vecestrabajo < diasTrabajados) {
-						if (managerhorario.existeGuardiaXturnoMNoc(cab_id,
-								restDays(fechainicial), guardia.getGuaCedula()) == 1
-								&& turno.getTurId() == 1)
-							guardiaAplica = false;
-						if (lugar.getLugCctv() == true
-								&& guardia.getGuaCctv() != true)
-							guardiaAplica = false;
-						if (lugar.getLugControlAccesos() == true
-								&& guardia.getGuaControlAccesos() != true)
-							guardiaAplica = false;
-						if (guardia.getGuaCasoEstudio() == true
-								&& (df.format(date).equals("dom") || df.format(
-										date).equals("sáb")))
-							guardiaAplica = false;
-						if (guardia.getGuaCasoNocturno() == true
-								&& turno.getTurId() == 3)
-							guardiaAplica = false;
-						if ((lugar.getLugNombre() == "Instituto"
-								|| lugar.getLugNombre() == "Centro de emprendimiento"
-								|| lugar.getLugNombre() == "San Eloy"
-								|| lugar.getLugNombre() == "CCTV"
-								|| lugar.getLugNombre() == "Tanques de Agua" || lugar
-								.getLugNombre() == "Control 1")
-								&& guardia.getGuaMotorizado() == true)
-							guardiaAplica = false;
-						if (guardiaAplica) {
-							guardiaelegido = guardia;
-							break;
-						}
-					}
-				}
 			}
+		} 
+	}catch (ParseException e) {
+			e.printStackTrace();
 		}
-		return guardiaelegido;
-	}
+	return guardiaelegido;
+}
 
 	public boolean averiguarDia(HgLugare lugar, Date fechainicial)
 			throws ParseException {
@@ -827,7 +900,6 @@ public class horarioCDBean implements Serializable {
 		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy");
 		java.util.Date date = fechainicial;
 		df.applyPattern("EEE");
-		System.out.println("Day of Week = " + df.format(date));
 
 		if (lugar.getLugDomingo() == false && df.format(date).equals("dom")) {
 			resultado = false;
@@ -849,6 +921,43 @@ public class horarioCDBean implements Serializable {
 		}
 		if (lugar.getLugSabado() == false && df.format(date).equals("sáb")) {
 			resultado = false;
+		}
+		return resultado;
+	}
+	
+	public boolean averiguarGuardiaNoTrabajo(HgGuardia guardia, Date fechainicial)
+			throws ParseException {
+		boolean resultado = true;
+		try{
+		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy");
+		java.util.Date date = fechainicial;
+		df.applyPattern("EEE");
+		for(HgGuardiasDiasNoTrabajo guardiaNoTrabajo : managergest.findGuardiaByIdGuardiaNT(guardia.getGuaCedula())){
+
+		if (guardiaNoTrabajo.getGuaDiaTrabajoDomingo() == true && df.format(date).equals("dom")) {
+			resultado = false;
+		}
+		if (guardiaNoTrabajo.getGuaDiaTrabajoLunes() == true && df.format(date).equals("lun")) {
+			resultado = false;
+		}
+		if (guardiaNoTrabajo.getGuaDiaTrabajoMartes() == true && df.format(date).equals("mar")) {
+			resultado = false;
+		}
+		if (guardiaNoTrabajo.getGuaDiaTrabajoMiercoles() == true && df.format(date).equals("mié")) {
+			resultado = false;
+		}
+		if (guardiaNoTrabajo.getGuaDiaTrabajoJueves() == true && df.format(date).equals("jue")) {
+			resultado = false;
+		}
+		if (guardiaNoTrabajo.getGuaDiaTrabajoViernes() == true && df.format(date).equals("vie")) {
+			resultado = false;
+		}
+		if (guardiaNoTrabajo.getGuaDiaTrabajoSabado() == true && df.format(date).equals("sáb")) {
+			resultado = false;
+		}
+		}
+		}catch(Exception e){
+			e.printStackTrace();
 		}
 		return resultado;
 	}
@@ -974,8 +1083,7 @@ public class horarioCDBean implements Serializable {
 			edicion = true;
 			ediciontipo = false;
 			eventModel = new DefaultScheduleModel();
-			for (HgHorarioDet e : managerhorario
-					.findAllHorariosDetXIdCab(cab_id)) {
+			for (HgHorarioDet e : managerhorario.findAllHorariosDetXIdCab(cab_id)) {
 				String lugarguardia = e.getHgLugare().getLugNombre() + " - "
 						+ e.getHgGuardia().getGuaApellido() + " "
 						+ e.getHgGuardia().getGuaNombre();
@@ -1241,10 +1349,10 @@ public class horarioCDBean implements Serializable {
 					.getRealPath(File.separatorChar + "reports");
 			String rutaReporte = carpetaReportes + File.separatorChar
 					+ "ReportIngSalGuardias.jasper";
-			 Connection conexion =
-			 DriverManager.getConnection("jdbc:postgresql://10.1.0.158:5432/horario_guardias?user=adm_horario_guardias&password={Jt26qGTf#T");
-//			Connection conexion = DriverManager
-//					.getConnection("jdbc:postgresql://localhost:5432/horario_guardias?user=postgres&password=root");
+//			 Connection conexion =
+//			 DriverManager.getConnection("jdbc:postgresql://10.1.0.158:5432/horario_guardias?user=adm_horario_guardias&password={Jt26qGTf#T");
+			Connection conexion = DriverManager
+					.getConnection("jdbc:postgresql://localhost:5432/horario_guardias?user=postgres&password=root");
 			sqlfechai = java.sql.Date
 					.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(horcab
 							.getHcabFechaInicio()));

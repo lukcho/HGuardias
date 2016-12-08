@@ -22,6 +22,9 @@ public class HgLugare implements Serializable {
 	@Column(name="lug_cctv")
 	private Boolean lugCctv;
 
+	@Column(name="lug_centro_emprendimiento")
+	private Boolean lugCentroEmprendimiento;
+
 	@Column(name="lug_ciudad", length=50)
 	private String lugCiudad;
 
@@ -90,6 +93,14 @@ public class HgLugare implements Serializable {
 
 	public void setLugCctv(Boolean lugCctv) {
 		this.lugCctv = lugCctv;
+	}
+
+	public Boolean getLugCentroEmprendimiento() {
+		return this.lugCentroEmprendimiento;
+	}
+
+	public void setLugCentroEmprendimiento(Boolean lugCentroEmprendimiento) {
+		this.lugCentroEmprendimiento = lugCentroEmprendimiento;
 	}
 
 	public String getLugCiudad() {

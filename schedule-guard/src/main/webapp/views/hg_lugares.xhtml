@@ -59,21 +59,27 @@
 						</p:commandButton>
 					</p:column>
 					<p:column filterBy="#{lug.lugNombre}" filterMatchMode="contains"
-						headerText="NOMBRE" width="100">
+						headerText="NOMBRE" width="60">
 						<h:outputText value="#{lug.lugNombre}"></h:outputText>
 					</p:column>
 					<p:column filterBy="#{lug.lugCiudad}" filterMatchMode="contains"
-						headerText="SECTOR" width="40">
+						headerText="SECTOR" width="35">
 						<h:outputText value="#{lug.lugCiudad}"></h:outputText>
 					</p:column>
-					<p:column headerText="CCTV" width="20" sortBy="#{lug.lugCctv}">
+					<p:column headerText="CCTV" width="10" sortBy="#{lug.lugCctv}">
 						<p:selectBooleanCheckbox disabled="true" value="#{lug.lugCctv}">
 						</p:selectBooleanCheckbox>
 					</p:column>
-					<p:column headerText="CONTROL ACCESOS" width="30"
+					<p:column headerText="CONTROL ACCESOS" width="15"
 						sortBy="#{lug.lugControlAccesos}">
 						<p:selectBooleanCheckbox disabled="true"
 							value="#{lug.lugControlAccesos}">
+						</p:selectBooleanCheckbox>
+					</p:column>
+					<p:column headerText="CENTRO EMPRENDIMIENTO" width="30"
+						sortBy="#{lug.lugCentroEmprendimiento}">
+						<p:selectBooleanCheckbox disabled="true"
+							value="#{lug.lugCentroEmprendimiento}">
 						</p:selectBooleanCheckbox>
 					</p:column>
 					<p:column filterMatchMode="contains" headerText="PRIORIDAD"
@@ -81,7 +87,7 @@
 						<h:outputText value="#{lug.lugPrioridad}"></h:outputText>
 					</p:column>
 					<p:column filterMatchMode="contains" sortBy="#{lug.lugEstado}"
-						headerText="ESTADO" width="30">
+						headerText="ESTADO" width="20">
 						<h:outputText value="#{lugarBean.cambiarNombre(lug.lugEstado)}"></h:outputText>
 					</p:column>
 				</p:dataTable>
@@ -104,20 +110,20 @@
 			</b:panel>
 		</h:form>
 		<p:dialog positionType="center" responsive="true"
-			header="Prioridad de lugares" width="350" height="300"
+			header="Prioridad de lugares" width="500" height="300"
 			draggable="true" closable="true" closeOnEscape="true" dynamic="true"
 			showEffect="fade" hideEffect="explode" widgetVar="dlgprioridad"
 			modal="true" id="prioridad" resizable="false">
 			<h:form>
 				<b:panel look="primary">
 					<b:row>
-						<b:column span="3">
+						<b:column span="6">
 							<p:orderList id="orderlist" controlsLocation="left"
-								value="#{lugarBean.lugaresPriorizar}" var="lug"
+								responsive="true" value="#{lugarBean.lugaresPriorizar}"
+								var="lug" rendered="true" moveTopLabel="Mover al inicio"
 								moveUpLabel="Subir" moveDownLabel="Bajar"
-								moveBottomLabel="Mover al fondo" moveTopLabel="Mover al inicio"
-								itemValue="#{lug.lugId}">
-								<p:column>
+								moveBottomLabel="Mover al fondo" itemValue="#{lug.lugId}">
+								<p:column span="6" style="width:80%">
 									<h:outputText value="#{lug.lugNombre}" />
 								</p:column>
 								<p:ajax event="select" listener="#{lugarBean.onSelect}"

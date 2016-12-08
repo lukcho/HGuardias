@@ -32,6 +32,12 @@
 							maxlength="255">
 						</p:inputTextarea>
 					</b:column>
+					<b:column span="2">
+						<h:outputLabel value="Color:* " for="color" rendered="#{turnoBean.edicion}"/>
+					</b:column>
+					<b:column span="4">
+						<h:outputLabel value="#{turnoBean.turno_color}"  rendered="#{turnoBean.edicion}"/>
+					</b:column>
 				</b:row>
 				<b:row>
 					<b:column span="2">

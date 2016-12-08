@@ -59,8 +59,7 @@
 						</h:outputText>
 					</p:column>
 					<p:column headerText="Color" width="30">
-						<h:outputText value="Color"
-							style="color: \##{tur.turCodigoColor}"></h:outputText>
+						<h:outputText value="#{tur.turCodigoColor}"></h:outputText>
 					</p:column>
 					<p:column filterBy="#{tur.turEstado}" filterMatchMode="contains"
 						headerText="ESTADO" width="40">

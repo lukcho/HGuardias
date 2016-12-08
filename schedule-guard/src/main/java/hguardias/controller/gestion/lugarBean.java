@@ -42,6 +42,7 @@ public class lugarBean implements Serializable {
 	private String lug_ciudad;
 	private String lug_estado;
 	private boolean lug_CCTV;
+	private boolean lug_CentroEmprendimiento;
 	private boolean lug_controlaccs;
 	private boolean lug_lunes;
 	private boolean lug_martes;
@@ -109,6 +110,7 @@ public class lugarBean implements Serializable {
 		mostrarlug_id = false;
 		numeroGuardias = "0";
 		guardado = false;
+		lug_CentroEmprendimiento = false;
 		lugturn_id = null;
 		lugturn_turno = 0;
 		lugturn_lugar = 0;
@@ -379,6 +381,14 @@ public class lugarBean implements Serializable {
 	public void setLugardelsita(HgLugare lugardelsita) {
 		this.lugardelsita = lugardelsita;
 	}
+	
+	public boolean isLug_CentroEmprendimiento() {
+		return lug_CentroEmprendimiento;
+	}
+	
+	public void setLug_CentroEmprendimiento(boolean lug_CentroEmprendimiento) {
+		this.lug_CentroEmprendimiento = lug_CentroEmprendimiento;
+	}
 
 	// Lugares
 	/**
@@ -395,7 +405,7 @@ public class lugarBean implements Serializable {
 			Integer numguardia = 1;
 			if (edicion) {
 				managergest.editarLugar(lug_id, lug_nombre.trim(),
-						lug_ciudad.trim(), numguardia, lug_CCTV,
+						lug_ciudad.trim(), numguardia, lug_CCTV,lug_CentroEmprendimiento,
 						lug_controlaccs, lug_lunes, lug_martes, lug_miercoles,
 						lug_jueves, lug_viernes, lug_sabado, lug_domingo,
 						lug_estado.trim());
@@ -406,7 +416,7 @@ public class lugarBean implements Serializable {
 			} else {
 				prioridad = managergest.ultimoOrdenLugar();
 				managergest.insertarLugar(lug_id,lug_nombre.trim(), lug_ciudad.trim(),
-						numguardia, lug_CCTV, lug_controlaccs, lug_lunes,
+						numguardia, lug_CCTV,lug_CentroEmprendimiento, lug_controlaccs, lug_lunes,
 						lug_martes, lug_miercoles, lug_jueves, lug_viernes,
 						lug_sabado, lug_domingo, lug_estado.trim(), prioridad);
 				for (HgLugare lug : managergest.findLugarByNombre(lug_nombre)) {
@@ -511,7 +521,7 @@ public class lugarBean implements Serializable {
 					RequestContext.getCurrentInstance().execute(
 							"PF('gu1').show();");
 				} else {
-					Mensaje.crearMensajeWARN("Debe agregar un valor a número de guardias");
+					Mensaje.crearMensajeWARN("Debe agregar un valor a nï¿½mero de guardias");
 				}
 			} else {
 				Mensaje.crearMensajeWARN("Debe seleccionar un turno");
@@ -539,6 +549,7 @@ public class lugarBean implements Serializable {
 			lug_nroguardias = lug.getLugNroGuardias().toString();
 			lug_estado = lug.getLugEstado();
 			lug_CCTV = lug.getLugCctv();
+			lug_CentroEmprendimiento = lug.getLugCentroEmprendimiento();
 			lug_controlaccs = lug.getLugControlAccesos();
 			lug_lunes = lug.getLugLunes();
 			lug_martes = lug.getLugMartes();
@@ -568,7 +579,7 @@ public class lugarBean implements Serializable {
 	public String cambiarEstadoLugar() {
 		try {
 			FacesContext context = FacesContext.getCurrentInstance();
-			context.addMessage(null, new FacesMessage("INFORMACIÓN",
+			context.addMessage(null, new FacesMessage("INFORMACIï¿½N",
 					managergest.cambioEstadoLugar(getLug().getLugId())));
 			getListaLugares().clear();
 			getListaLugares().addAll(managergest.findAllLugares());
@@ -602,7 +613,7 @@ public class lugarBean implements Serializable {
 			if (y.getLugId().equals(lug_id)) {
 				t = 1;
 				r = true;
-				Mensaje.crearMensajeWARN("El código del lugar existe");
+				Mensaje.crearMensajeWARN("El cï¿½digo del lugar existe");
 			}
 		}
 		if (t == 0) {
@@ -639,6 +650,7 @@ public class lugarBean implements Serializable {
 		lug_nroguardias = null;
 		lug_estado = "A";
 		lug_CCTV = false;
+		lug_CentroEmprendimiento = false;
 		lug_controlaccs = false;
 		lug_lunes = false;
 		lug_martes = false;
@@ -670,6 +682,7 @@ public class lugarBean implements Serializable {
 		lug_nroguardias = null;
 		lug_estado = "A";
 		lug_CCTV = false;
+		lug_CentroEmprendimiento = false;
 		lug_controlaccs = false;
 		lug_lunes = false;
 		lug_martes = false;
@@ -709,7 +722,7 @@ public class lugarBean implements Serializable {
 						.addAll(managergest.LugarTurnoById1(lug_id));
 				Mensaje.crearMensajeINFO("Turno creado");
 			} else {
-				Mensaje.crearMensajeWARN("Yá se encuentra el turno creado");
+				Mensaje.crearMensajeWARN("YÃ¡ se encuentra el turno creado");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -793,7 +806,7 @@ public class lugarBean implements Serializable {
 				numlugarprio.get(i).setLugPrioridad(i+1);
 				managergest.actualizarPrioridad(numlugarprio.get(i));
 		}
-		Mensaje.crearMensajeINFO("Actualización de lugares");
+		Mensaje.crearMensajeINFO("Actualizaciï¿½n de lugares");
 		listaLugares = managergest.findAllLugares();
 		RequestContext.getCurrentInstance().execute("PF('dlgprioridad').hide();");
 	}
@@ -837,7 +850,7 @@ public class lugarBean implements Serializable {
 	
 
 	/**
-	 * Método para activar y desactivar estado del item
+	 * Mï¿½todo para activar y desactivar estado del item
 	 * 
 	 * @param pro_id
 	 * @throws Exception

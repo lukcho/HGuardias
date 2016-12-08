@@ -54,7 +54,7 @@
 				</h:panelGroup>
 			</div>
 			<p:schedule id="schedule" value="#{horarioCDBean.eventModel}"
-				widgetVar="myschedule" locale="es" timeZone="GMT-5"
+				widgetVar="myschedule" locale="es" timeZone="GMT-5" initialDate="#{horarioCDBean.horcab_fechainicio}"
 				showHeader="true" draggable="false" resizable="false">
 				<p:ajax event="eventSelect"
 					listener="#{horarioCDBean.onEventSelect}" update="dialog "

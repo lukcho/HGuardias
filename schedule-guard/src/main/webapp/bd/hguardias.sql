@@ -77,23 +77,40 @@ create table HG_GUARDIAS (
    GUA_FECHANAC         DATE                 null,
    GUA_CIUDAD           VARCHAR(100)         null,
    GUA_SEXO             CHAR(1)              null,
-   GUA_TIPO_SANGRE      VARCHAR(100)         null,
    GUA_TELEFONO         VARCHAR(10)          null,
    GUA_CELULAR          VARCHAR(10)          null,
    GUA_CORREO           VARCHAR(255)         null,
-   GUA_DIRECCION        VARCHAR(255)         null, 
+   GUA_TIPO_SANGRE      VARCHAR(100)         null,
    GUA_ESTADO_CIVIL     VARCHAR(100)         null,
+   GUA_DIRECCION        VARCHAR(255)         null,
    GUA_ESTADO           CHAR(1)              null,
    GUA_CCTV             BOOL                 null,
-   GUA_MOTORIZADO       BOOL                 null,   
+   GUA_CENTRO_EMPRENDIMIENTO BOOL            null,
+   GUA_MOTORIZADO       BOOL                 null,
    GUA_CHOFER           BOOL                 null,
-   GUA_TIPO_LICENCIA_CHOFER VARCHAR(2)       null,
-   GUA_TIPO_LICENCIA_MOTORIZADO VARCHAR(2)   null,
    GUA_CONTROL_ACCESOS  BOOL                 null,
-   GUA_CASO_TURNO       INT4	             null,
+   GUA_CASO_TURNO       INT4                 null,
    GUA_CASO_ESTUDIO     BOOL                 null,
    GUA_CASO_NOCTURNO    BOOL                 null,
+   GUA_TIPO_LICENCIA_CHOFER VARCHAR(2)       null,
+   GUA_TIPO_LICENCIA_MOTORIZADO VARCHAR(2)   null,
    constraint PK_HG_GUARDIAS primary key (GUA_CEDULA)
+);
+
+/*==============================================================*/
+/* Table: HG_GUARDIAS_DIAS_NO_TRABAJO                           */
+/*==============================================================*/
+create table HG_GUARDIAS_DIAS_NO_TRABAJO (
+   GUA_DIA_TRABAJO_ID   INT4                 not null,
+   GUA_CEDULA           VARCHAR(100)         null,
+   GUA_DIA_TRABAJO_LUNES BOOL                null,
+   GUA_DIA_TRABAJO_MARTES BOOL               null,
+   GUA_DIA_TRABAJO_MIERCOLES BOOL            null,
+   GUA_DIA_TRABAJO_JUEVES BOOL               null,
+   GUA_DIA_TRABAJO_VIERNES BOOL              null,
+   GUA_DIA_TRABAJO_SABADO BOOL               null,
+   GUA_DIA_TRABAJO_DOMINGO BOOL              null,
+   constraint PK_HG_GUARDIAS_DIAS_NO_TRABAJO primary key (GUA_DIA_TRABAJO_ID)
 );
 
 /*==============================================================*/
@@ -130,6 +147,7 @@ create table HG_LUGARES (
    LUG_NRO_GUARDIAS     INT4                 null,
    LUG_CIUDAD           VARCHAR(50)          null,
    LUG_CCTV             BOOL                 null,
+   LUG_CENTRO_EMPRENDIMIENTO BOOL            null,
    LUG_CONTROL_ACCESOS  BOOL                 null,
    LUG_LUNES            BOOL                 null,
    LUG_MARTES           BOOL                 null,
@@ -217,6 +235,11 @@ alter table HG_FALTOS
 alter table HG_FALTOS
    add constraint FK_HG_FALTO_REFERENCE_HG_HORAR foreign key (HDET_ID)
       references HG_HORARIO_DET (HDET_ID)
+      on delete restrict on update restrict;
+      
+alter table HG_GUARDIAS_DIAS_NO_TRABAJO
+   add constraint FK_HG_GUARD_REFERENCE_HG_GUARD foreign key (GUA_CEDULA)
+      references HG_GUARDIAS (GUA_CEDULA)
       on delete restrict on update restrict;
       
 alter table HG_GUARDIAS_PENDIENTE

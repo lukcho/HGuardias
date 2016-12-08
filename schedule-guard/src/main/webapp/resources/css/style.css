@@ -167,3 +167,12 @@ body {
     border-color: #ed7d31 !important;
     color: Black !important;
 }
+
+.ui-orderlist .ui-orderlist-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow:auto;
+    height:200px;
+    width:100%;
+}

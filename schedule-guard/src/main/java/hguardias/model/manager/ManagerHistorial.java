@@ -2,12 +2,7 @@ package hguardias.model.manager;
 
 import hguardias.model.dao.entities.*;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
 
