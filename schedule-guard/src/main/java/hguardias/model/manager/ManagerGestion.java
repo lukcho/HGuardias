@@ -271,7 +271,7 @@ public class ManagerGestion {
 			String gua_correo, String gua_direccion, boolean gua_cctv,boolean guardia_CentroEmprendimiento,
 			boolean gua_motorizado, boolean gua_chofer,
 			String gua_licencia_chofer, boolean gua_controlaccs,
-			Integer gua_casoturno, boolean gua_casoestudio,
+			boolean gua_casoestudio,
 			boolean gua_casonocturno, String gua_EstadoCivil,
 			String gua_TipoSangre) throws Exception {
 
@@ -301,7 +301,7 @@ public class ManagerGestion {
 			gua.setGuaTipoLicenciaChofer(null);
 		}
 		gua.setGuaControlAccesos(gua_controlaccs);
-		gua.setGuaCasoTurno(gua_casoturno);
+		gua.setGuaCasoTurno(hg_turno.getTurId());
 		gua.setGuaCasoEstudio(gua_casoestudio);
 		gua.setGuaCasoNocturno(gua_casonocturno);
 		gua.setGuaEstadoCivil(gua_EstadoCivil);
@@ -326,7 +326,7 @@ public class ManagerGestion {
 			String gua_correo, String gua_direccion, boolean gua_cctv, boolean guardia_CentroEmprendimiento,
 			boolean gua_motorizado, boolean gua_chofer,
 			String gua_licencia_chofer, boolean gua_controlaccs,
-			Integer gua_casoturno, boolean gua_casoestudio,
+			boolean gua_casoestudio,
 			boolean gua_casonocturno, String gua_EstadoCivil,
 			String gua_TipoSangre, String gua_estado) throws Exception {
 
@@ -355,7 +355,7 @@ public class ManagerGestion {
 			gua.setGuaTipoLicenciaChofer(null);
 		}
 		gua.setGuaControlAccesos(gua_controlaccs);
-		gua.setGuaCasoTurno(gua_casoturno);
+		gua.setGuaCasoTurno(hg_turno.getTurId());
 		gua.setGuaCasoEstudio(gua_casoestudio);
 		gua.setGuaCasoNocturno(gua_casonocturno);
 		gua.setGuaEstadoCivil(gua_EstadoCivil);
@@ -1157,7 +1157,7 @@ public class ManagerGestion {
 	@SuppressWarnings("unchecked")
 	public List<HgLugaresTurnosVacio> allLugarTurnoByID(Integer cabId) {
 		return mDAO.findWhere(HgLugaresTurnosVacio.class,
-				" o.hgHorarioCab.hcabId = " + cabId + " ", null);
+				" o.hgHorarioCab.hcabId = " + cabId + " "," o.hglugturFechaInicio asc ");
 	}
 
 	/**

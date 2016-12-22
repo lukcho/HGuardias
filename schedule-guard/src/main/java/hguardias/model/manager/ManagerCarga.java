@@ -8,10 +8,11 @@ import java.sql.Statement;
 import javax.ejb.EJB;
 
 import hguardias.general.connection.SingletonJDBC;
+import hguardias.model.dao.entities.HgParametro;
 import hguardias.model.dao.entities.Persona;
 
 /**
- * Contiene la lógica de negocio para realizar el proceso de reserva de sitios
+ * Contiene la lï¿½gica de negocio para realizar el proceso de reserva de sitios
  * 
  * @author
  * 
@@ -114,4 +115,17 @@ public class ManagerCarga {
 		}
 		return f;
 	}
+	
+	/**
+	 * Metodo para obtener el Atributo mediante un ID
+	 * 
+	 * @param dni
+	 * @return Objeto
+	 * @throws Exception
+	 */
+	public String ParametroByID(String dni) throws Exception {
+		HgParametro p = (HgParametro) mDAO.findById(HgParametro.class, dni);
+		return p.getParValor();
+	}// Cierre del metodo
+
 }

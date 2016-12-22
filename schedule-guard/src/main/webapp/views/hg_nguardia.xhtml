@@ -276,6 +276,7 @@
 							value="#{guardiaBean.guardia_casoturno}">
 							<f:selectItem itemLabel="Selección Turno" itemValue="" />
 							<f:selectItems value="#{guardiaBean.listaTurno}" />
+							<f:ajax listener="#{guardiaBean.asignarTurno()}" />
 						</h:selectOneMenu>
 
 					</b:column>

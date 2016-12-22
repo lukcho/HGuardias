@@ -43,7 +43,7 @@
 							action="#{horarioCDBean.cargarHorarioCab(horc)}">
 							<p:tooltip id="toolTipTrack1" for="btnE"
 								value="Bot&oacute;n para observar el horario" trackMouse="true" />
-						</p:commandButton>
+						</p:commandButton>&nbsp;
 						<p:commandButton id="btnEliminar" icon="ui-icon-close"
 							action="#{horarioCDBean.abrirDialogHorarioEliminar(horc)}">
 							<p:tooltip id="toolTipTrack2" for="btnEliminar"
@@ -56,6 +56,14 @@
 							update=":frm">
 							<p:tooltip id="toolTipTrack9" for="trackcer6"
 								value="Horario diario Ingreso/Salidas" trackMouse="true" />
+						</p:commandButton>&nbsp;
+						<p:commandButton id="btnExcelHG" icon="ui-icon-calendar"
+							action="#{horarioCDBean.GenerarExcel(horc)}"
+							onclick="PF('dlgLoad').show();"
+							oncomplete="PF('dlgLoad').hide();PF('dlgExcel').show();"
+							update=":frm:messages">
+							<p:tooltip id="toolTipTrack3" for="btnExcelHG"
+								value="Bot&oacute;n para reporte del Horario" trackMouse="true" />
 						</p:commandButton>
 					</p:column>
 					<p:column filterBy="#{horc.hcabId}" filterMatchMode="contains"
@@ -91,18 +99,46 @@
 				<p:commandButton value="Si" styleClass="ui-confirmdialog-yes"
 					icon="ui-icon-check" action="#{horarioCDBean.eliminarHorarioCab()}"
 					onclick="PF('dlgLoad').show();"
-					oncomplete="PF('dlgLoad').hide();PF('ef').hide();" update="frm frm:tbb" />
+					oncomplete="PF('dlgLoad').hide();PF('ef').hide();"
+					update="frm frm:tbb" />
 				<p:commandButton value="No" type="button"
 					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
 					onclick="PF('ef').hide();" />
 			</h:form>
 		</p:confirmDialog>
+
 		<p:dialog widgetVar="dlgLoad" modal="true" draggable="false"
 			closable="false" resizable="false" showHeader="false">
 			<h:form>
 				<p:graphicImage value="/resources/img/loader.gif" />
 			</h:form>
 		</p:dialog>
+
+		<p:confirmDialog header="Descargar"
+			message="Para descargar el archivo, de clic en la imagen." closable="false"
+			showEffect="fade" hideEffect="explode" widgetVar="dlgExcel">
+			<h:form>
+				<b:row>
+					<b:column span="1"/>
+					<b:column span="2">
+						<h:commandButton style="width:50px;height:50px" ajax="false"
+							image="/resources/img/excel.png"
+							action="#{horarioCDBean.descargarArchivo()}">
+						</h:commandButton>
+					</b:column>
+				</b:row>
+				<b:row>
+					<b:column span="1">
+						<b:commandButton value="Volver" styleClass="btn btn-info"
+							style="padding:7px;" process="@this" look="info"
+							action="#{horarioCDBean.cerrarHorarioCab()}"
+							onclick="PF('dlgExcel').close();"
+							oncomplete="PF('dlgExcel').close();" update="frm">
+						</b:commandButton>
+					</b:column>
+				</b:row>
+			</h:form>
+		</p:confirmDialog>
 	</ui:define>
 </ui:composition>
 </html>

@@ -408,6 +408,13 @@ public class ManagerHorario {
 		return mDAO.findWhere(
 				HgHorarioDet.class," o.hdetFechaInicio = '" + fantes + "' "+ " and o.hgGuardia.guaCedula = '" + cedula+ "' and o.hgTurno.turId= 3 ", null).size();
 	}
+	
+	public Integer existeGuardiaXturnoMNocSiguiente(Integer cab_id, Date fechadespues,
+			String cedula) {
+		Date fdespues = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechadespues));
+		return mDAO.findWhere(
+				HgHorarioDet.class," o.hdetFechaInicio = '" + fdespues + "' "+ " and o.hgGuardia.guaCedula = '" + cedula+ "' and o.hgTurno.turId= 3 ", null).size();
+	}
 
 	public Integer trabajoSemanaAnteriorLugar(Date fecha7dias, String cedula,
 			Integer id_lugar) {
@@ -438,7 +445,7 @@ public class ManagerHorario {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<HgHorarioCab> findAllHorariosCab() {
-		return mDAO.findAll(HgHorarioCab.class);
+		return mDAO.findAll(HgHorarioCab.class," o.hcabFechaInicio desc ");
 	}
 
 	/**
@@ -775,6 +782,22 @@ public class ManagerHorario {
 	}
 	
 	/**
+	 * buscar los horariosdet por ID
+	 * 
+	 * @param hdet_id
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public List<HgHorarioDet> horarioDetByCedulaFechaExcel(String cedula, Date fecha)
+			throws Exception {
+		Date finicial = java.sql.Date
+				.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fecha));
+		return mDAO.findWhere(HgHorarioDet.class, " o.hdetFechaInicio = '"
+				+ finicial + "' and o.hgGuardia.guaCedula = '" + cedula + "' ",
+				null);
+	}
+	
+	/**
 	 * buscar horairodetalle por ID
 	 * 
 	 * @param con_id
@@ -810,6 +833,13 @@ public class ManagerHorario {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		cal.add(Calendar.DATE, -1); // minus number would decrement the days
+		return cal.getTime();
+	}
+	
+	public static Date addDays(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.DATE, 1); // minus number would decrement the days
 		return cal.getTime();
 	}
 

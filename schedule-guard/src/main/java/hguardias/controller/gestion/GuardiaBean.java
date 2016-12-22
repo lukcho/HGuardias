@@ -463,7 +463,7 @@ public class GuardiaBean implements Serializable {
 						guardia_telefono.trim(), guardia_celular.trim(),
 						guardia_correo.trim(), guardia_direccion.trim(),
 						guardia_CCTV,guardia_CentroEmprendimiento, guardia_motorizado, guardia_chofer,guardia_licencia_chofer,
-						guardia_controlaccesos, guardia_casoturno,
+						guardia_controlaccesos,
 						guardia_casoestudio, guardia_casonocturno,
 						guardia_estadoCivil, guardia_tipoSangre,
 						guardia_estado.trim());
@@ -485,7 +485,7 @@ public class GuardiaBean implements Serializable {
 							guardia_celular.trim(), guardia_correo.trim(),
 							guardia_direccion.trim(), guardia_CCTV,guardia_CentroEmprendimiento,
 							guardia_motorizado, guardia_chofer,guardia_licencia_chofer,
-							guardia_controlaccesos, guardia_casoturno,
+							guardia_controlaccesos,
 							guardia_casoestudio, guardia_casonocturno,
 							guardia_estadoCivil, guardia_tipoSangre);
 					Mensaje.crearMensajeINFO("Registrado - Creado");
@@ -985,4 +985,14 @@ public class GuardiaBean implements Serializable {
 		}
 		return "";
 	}
+	
+	/**
+	 * metodo para asignar el lugarorigen a solicitud
+	 * 
+	 */
+	public String asignarTurno() {
+		managergest.asignarTurno(guardia_casoturno);
+		return "";
+	}
+	
 }
