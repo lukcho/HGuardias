@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReportIngSalGuardias" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="bb86ff8b-6053-4cc0-995c-79c3d6c50066">
-	<property name="ireport.zoom" value="1.1000000000000183"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.zoom" value="2.5937424601000454"/>
+	<property name="ireport.x" value="332"/>
+	<property name="ireport.y" value="73"/>
 	<parameter name="pImagen" class="java.lang.String"/>
 	<parameter name="pImagen2" class="java.lang.String"/>
 	<parameter name="pIdhcab" class="java.lang.Integer">
@@ -51,7 +51,7 @@
 	<detail>
 		<band height="20" splitType="Immediate">
 			<subreport>
-				<reportElement stretchType="RelativeToBandHeight" x="10" y="0" width="792" height="20" uuid="5d0c40bc-3e95-4b3a-a3ba-cffcc4054667"/>
+				<reportElement stretchType="RelativeToBandHeight" x="10" y="0" width="792" height="20" isPrintWhenDetailOverflows="true" uuid="5d0c40bc-3e95-4b3a-a3ba-cffcc4054667"/>
 				<subreportParameter name="pFechaFinal">
 					<subreportParameterExpression><![CDATA[$F{hcab_fecha_fin}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -69,52 +69,52 @@
 	<pageFooter>
 		<band height="118">
 			<textField>
-				<reportElement x="690" y="98" width="60" height="20" uuid="1d04037d-798b-4e4c-9453-3d5383bde391"/>
+				<reportElement x="642" y="98" width="60" height="20" uuid="1d04037d-798b-4e4c-9453-3d5383bde391"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="751" y="97" width="40" height="20" uuid="d4633530-07bc-4e65-9742-b98d7ce11313"/>
+				<reportElement x="702" y="98" width="40" height="20" uuid="d4633530-07bc-4e65-9742-b98d7ce11313"/>
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="88" y="98" width="136" height="20" uuid="affba5e9-29b6-4ef8-afdc-9c9d36ddd39a"/>
-				<textElement>
+				<reportElement x="86" y="106" width="136" height="12" uuid="affba5e9-29b6-4ef8-afdc-9c9d36ddd39a"/>
+				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[DIRECTOR DE SEGURIDAD]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="123" y="79" width="81" height="20" uuid="c35b5e61-3461-4420-969f-0697f1e46823"/>
+				<reportElement x="123" y="95" width="81" height="11" uuid="c35b5e61-3461-4420-969f-0697f1e46823"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Mauro Pazmiño]]></text>
 			</staticText>
 			<line>
-				<reportElement x="88" y="77" width="136" height="1" uuid="f4fa6577-fe89-40bc-882a-2eca72230d6b"/>
+				<reportElement x="86" y="92" width="136" height="1" uuid="f4fa6577-fe89-40bc-882a-2eca72230d6b"/>
 			</line>
 			<staticText>
-				<reportElement x="338" y="98" width="132" height="20" uuid="9bd46f47-d5b7-41af-8bdf-3254ed3b2a70"/>
-				<textElement>
+				<reportElement x="330" y="106" width="132" height="12" uuid="9bd46f47-d5b7-41af-8bdf-3254ed3b2a70"/>
+				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[SUPERVISOR DE TURNO]]></text>
 			</staticText>
 			<line>
-				<reportElement x="334" y="78" width="136" height="1" uuid="a6b03d0a-8e2f-491c-8fc7-e2fede092882"/>
+				<reportElement x="330" y="93" width="132" height="1" uuid="a6b03d0a-8e2f-491c-8fc7-e2fede092882"/>
 			</line>
 			<image>
-				<reportElement stretchType="RelativeToTallestObject" x="690" y="65" width="101" height="34" uuid="46175ac4-6182-413d-8d57-56b3bbd0ca15"/>
+				<reportElement stretchType="RelativeToTallestObject" x="641" y="64" width="101" height="34" uuid="46175ac4-6182-413d-8d57-56b3bbd0ca15"/>
 				<imageExpression><![CDATA[$P{pImagen2}]]></imageExpression>
 			</image>
 			<rectangle>
-				<reportElement x="10" y="23" width="666" height="29" uuid="a661e360-c39a-4745-bf90-6a540c7cd19e"/>
+				<reportElement x="10" y="13" width="691" height="33" uuid="a661e360-c39a-4745-bf90-6a540c7cd19e"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="10" y="0" width="113" height="23" forecolor="#003399" uuid="c3449d76-8240-4261-8de4-289521a7eb9e"/>
+				<reportElement x="10" y="0" width="113" height="13" forecolor="#003399" uuid="c3449d76-8240-4261-8de4-289521a7eb9e"/>
 				<textElement>
-					<font size="14" isBold="true"/>
+					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Observación:]]></text>
 			</staticText>

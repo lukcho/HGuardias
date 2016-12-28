@@ -33,9 +33,11 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultScheduleEvent;
@@ -556,6 +558,14 @@ public class horarioCDBean implements Serializable {
 	public String getHcab_descripcion() {
 		return hcab_descripcion;
 	}
+	
+	public String getUrl_doc() {
+		return url_doc;
+	}
+	
+	public void setUrl_doc(String url_doc) {
+		this.url_doc = url_doc;
+	}
 
 	// horario cabecera
 	public void crearHorarioCab() {
@@ -694,9 +704,7 @@ public class horarioCDBean implements Serializable {
 		return guardiaelegido;
 	}
 
-	private HgGuardia obtenerGuardiaCompatible(HgLugare lugar,
-			Date fechainicial, HgTurno turno,
-			List<HgGuardia> guardiasDisponibles, Integer numeroDias,
+	private HgGuardia obtenerGuardiaCompatible(HgLugare lugar,Date fechainicial, HgTurno turno,List<HgGuardia> guardiasDisponibles, Integer numeroDias,
 			boolean sinGuardia) {
 		HgGuardia guardiaelegido = new HgGuardia();
 		try {
@@ -707,27 +715,13 @@ public class horarioCDBean implements Serializable {
 				Boolean guardiaAplica = true;
 				Integer vecestrabajo = 0;
 				Integer diasTrabajados = 5;
-
 				if (averiguarGuardiaNoTrabajo(guardia, fechainicial, turno) == true) {
-
-					if (managerhorario.existeAusencia(guardia.getGuaCedula(),
-							fechainicial) == 0) {
-						if ((managerhorario.existeGuardia(cab_id, fechainicial,
-								guardia.getGuaCedula()) != 1)) {
-							if (managerhorario.trabajoDiaAnterior(guardia,
-									restDays(fechainicial)) == 1) {
-								vecestrabajo = managerhorario
-										.findNumDiasxGuardia(
-												guardia,
-												restDays(fechainicial),
-												rest5Days(restDays(fechainicial)));
-							} else if (managerhorario.trabajoDiaAnterior(
-									guardia, restDays(restDays(fechainicial))) == 1) {
-								vecestrabajo = managerhorario
-										.findNumDiasxGuardia(
-												guardia,
-												restDays(restDays(fechainicial)),
-												rest5Days(restDays(restDays(fechainicial))));
+					if (managerhorario.existeAusencia(guardia.getGuaCedula(),fechainicial) == 0) {
+						if ((managerhorario.existeGuardia(cab_id, fechainicial,guardia.getGuaCedula()) != 1)) {
+							if (managerhorario.trabajoDiaAnterior(guardia,restDays(fechainicial)) == 1) {
+								vecestrabajo = managerhorario.findNumDiasxGuardia(guardia,restDays(fechainicial),rest5Days(restDays(fechainicial)));
+							} else if (managerhorario.trabajoDiaAnterior(guardia, restDays(restDays(fechainicial))) == 1) {vecestrabajo = managerhorario
+										.findNumDiasxGuardia(guardia,restDays(restDays(fechainicial)),rest5Days(restDays(restDays(fechainicial))));
 							}
 							if (vecestrabajo < diasTrabajados) {
 								// if(managerhorario.trabajoSemanaAnteriorLugar(fechainicial,
@@ -743,81 +737,42 @@ public class horarioCDBean implements Serializable {
 								// if(managerhorario.trabajoLugDiaAnterior(guardia,lugar,restDays(restDays(restDays(fechainicial))))==1)
 								// guardiaAplica = false;
 								if (sinGuardia == true) {
-									if (managerhorario.existeGuardiaXturnoMNoc(
-											cab_id, restDays(fechainicial),
-											guardia.getGuaCedula()) == 1
-											&& turno.getTurId() == 1)
+									if (managerhorario.existeGuardiaXturnoMNoc(cab_id, restDays(fechainicial),guardia.getGuaCedula()) == 1&& turno.getTurId() == 1)
 										guardiaAplica = false;
-									if (lugar.getLugCctv() == true
-											&& guardia.getGuaCctv() != true)
+									if (guardia.getGuaCasoEstudio() == true && df.format(date).equals("vie") && turno.getTurId() == 3)
 										guardiaAplica = false;
-									if (lugar.getLugCentroEmprendimiento() == true
-											&& guardia
-													.getGuaCentroEmprendimiento() != true)
+									if (lugar.getLugCctv() == true&& guardia.getGuaCctv() != true)
 										guardiaAplica = false;
-									if (lugar.getLugControlAccesos() == true
-											&& guardia.getGuaControlAccesos() != true)
+									if (lugar.getLugCentroEmprendimiento() == true&& guardia.getGuaCentroEmprendimiento() != true)
 										guardiaAplica = false;
-									if (guardia.getGuaCasoEstudio() == true
-											&& (df.format(date).equals("dom") || df
-													.format(date).equals("sáb")))
+									if (lugar.getLugControlAccesos() == true&& guardia.getGuaControlAccesos() != true)
 										guardiaAplica = false;
-									if (guardia.getGuaCasoNocturno() == true
-											&& turno.getTurId() == 3)
+									if (guardia.getGuaCasoNocturno() == true&& turno.getTurId() == 3)
 										guardiaAplica = false;
-									if ((lugar.getLugNombre().equals(
-											"Instituto")
-											|| lugar.getLugNombre().equals(
-													"Centro de emprendimiento")
-											|| lugar.getLugNombre().equals(
-													"San Eloy")
-											|| lugar.getLugNombre().equals(
-													"CCTV")
-											|| lugar.getLugNombre().equals(
-													"Tanques de Agua") || lugar
-											.getLugNombre().equals("Control 1"))
+									if ((lugar.getLugNombre().equals("Instituto")
+											|| lugar.getLugNombre().equals("Centro de emprendimiento 1")
+											|| lugar.getLugNombre().equals("San Eloy")
+											|| lugar.getLugNombre().equals("CCTV")
+											|| lugar.getLugNombre().equals("Tanques de Agua") || lugar.getLugNombre().equals("Control 1"))
 											&& guardia.getGuaMotorizado() == true)
 										guardiaAplica = false;
 								} else {
-									if (lugar.getLugCctv() == false
-											|| lugar.getLugControlAccesos() == false
-											|| lugar.getLugCentroEmprendimiento() == false) {
-										if (managerhorario
-												.existeGuardiaXturnoMNoc(
-														cab_id,
-														restDays(fechainicial),
-														guardia.getGuaCedula()) == 1
-												&& turno.getTurId() == 1)
+									if (lugar.getLugCctv() == false|| lugar.getLugControlAccesos() == false|| lugar.getLugCentroEmprendimiento() == false) {
+										if (managerhorario.existeGuardiaXturnoMNoc(cab_id,restDays(fechainicial),guardia.getGuaCedula()) == 1 && turno.getTurId() == 1)
 											guardiaAplica = false;
-										if (lugar.getLugCctv() == true
-												&& guardia.getGuaCctv() != true)
+										if (guardia.getGuaCasoEstudio() == true && df.format(date).equals("vie") && turno.getTurId() == 3)
 											guardiaAplica = false;
-										if (lugar.getLugCentroEmprendimiento() == true
-												&& guardia
-														.getGuaCentroEmprendimiento() != true)
+										if (lugar.getLugCctv() == true&& guardia.getGuaCctv() != true)
 											guardiaAplica = false;
-										if (lugar.getLugControlAccesos() == true
-												&& guardia
-														.getGuaControlAccesos() != true)
+										if (lugar.getLugCentroEmprendimiento() == true&& guardia.getGuaCentroEmprendimiento() != true)
 											guardiaAplica = false;
-										if (guardia.getGuaCasoEstudio() == true
-												&& (df.format(date).equals(
-														"dom") || df.format(
-														date).equals("sáb")))
+										if (lugar.getLugControlAccesos() == true&& guardia.getGuaControlAccesos() != true)
 											guardiaAplica = false;
-										if (guardia.getGuaCasoNocturno() == true
-												&& turno.getTurId() == 3)
+										if (guardia.getGuaCasoNocturno() == true&& turno.getTurId() == 3)guardiaAplica = false;
+									} else if (lugar.getLugNombre().equals("Bloques")|| lugar.getLugNombre().equals("Centro de emprendimiento 1")) {
+										if (managerhorario.existeGuardiaXturnoMNoc(cab_id,restDays(fechainicial),guardia.getGuaCedula()) == 1&& turno.getTurId() == 1)
 											guardiaAplica = false;
-									} else if (lugar.getLugNombre().equals(
-											"Bloques")
-											|| lugar.getLugNombre()
-													.equals("Centro de emprendimiento 1")) {
-										if (managerhorario
-												.existeGuardiaXturnoMNoc(
-														cab_id,
-														restDays(fechainicial),
-														guardia.getGuaCedula()) == 1
-												&& turno.getTurId() == 1)
+										if (guardia.getGuaCasoEstudio() == true && df.format(date).equals("vie") && turno.getTurId() == 3)
 											guardiaAplica = false;
 									}
 								}
@@ -998,8 +953,50 @@ public class horarioCDBean implements Serializable {
 			for (HgGuardiasDiasNoTrabajo guardiaNoTrabajo : managergest
 					.findGuardiaByIdGuardiaNT(guardia.getGuaCedula())) {
 
-				if (guardiaNoTrabajo.getGuaDiaTrabajoDomingo() == true
-						&& df.format(date).equals("dom")) {
+				if (guardiaNoTrabajo.getGuaDiaTrabajoDomingo() == true && df.format(date).equals("dom")) {
+					if(guardia.getGuaCedula().equals("1002988309")){
+						resultado = false;
+						break;
+					}
+					if (turno.getTurId() == (guardiaNoTrabajo.getHgGuardia().getGuaCasoTurno())) {
+						resultado = false;
+					} else {
+						resultado = true;
+						break;
+					}
+					resultado = false;
+				}
+				if (guardiaNoTrabajo.getGuaDiaTrabajoLunes() == true&& df.format(date).equals("lun")) {
+					if(guardia.getGuaCedula().equals("1004193908") && turno.getTurId() == 1){
+						resultado = false;
+						break;
+					}
+					if (turno.getTurId() == (guardiaNoTrabajo.getHgGuardia().getGuaCasoTurno())) {
+						resultado = false;
+					} else {
+						resultado = true;
+						break;
+					}
+					resultado = false;
+				}
+				if (guardiaNoTrabajo.getGuaDiaTrabajoMartes() == true&& df.format(date).equals("mar")) {
+					if(guardia.getGuaCedula().equals("1004193908") && turno.getTurId() == 1){
+						resultado = false;
+						break;
+					}
+					if (turno.getTurId() == (guardiaNoTrabajo.getHgGuardia().getGuaCasoTurno())) {
+						resultado = false;
+					} else {
+						resultado = true;
+						break;
+					}
+					resultado = false;
+				}
+				if (guardiaNoTrabajo.getGuaDiaTrabajoMiercoles() == true&& df.format(date).equals("mié")) {
+					if(guardia.getGuaCedula().equals("1004193908") && turno.getTurId() == 1){
+						resultado = false;
+						break;
+					}
 					if (turno.getTurId() == (guardiaNoTrabajo.getHgGuardia()
 							.getGuaCasoTurno())) {
 						resultado = false;
@@ -1009,8 +1006,11 @@ public class horarioCDBean implements Serializable {
 					}
 					resultado = false;
 				}
-				if (guardiaNoTrabajo.getGuaDiaTrabajoLunes() == true
-						&& df.format(date).equals("lun")) {
+				if (guardiaNoTrabajo.getGuaDiaTrabajoJueves() == true&& df.format(date).equals("jue")) {
+					if(guardia.getGuaCedula().equals("1004193908") && turno.getTurId() == 1){
+						resultado = false;
+						break;
+					}
 					if (turno.getTurId() == (guardiaNoTrabajo.getHgGuardia()
 							.getGuaCasoTurno())) {
 						resultado = false;
@@ -1020,8 +1020,11 @@ public class horarioCDBean implements Serializable {
 					}
 					resultado = false;
 				}
-				if (guardiaNoTrabajo.getGuaDiaTrabajoMartes() == true
-						&& df.format(date).equals("mar")) {
+				if (guardiaNoTrabajo.getGuaDiaTrabajoViernes() == true&& df.format(date).equals("vie")) {
+					if(guardia.getGuaCedula().equals("1004193908") && turno.getTurId() == 1){
+						resultado = false;
+						break;
+					}
 					if (turno.getTurId() == (guardiaNoTrabajo.getHgGuardia()
 							.getGuaCasoTurno())) {
 						resultado = false;
@@ -1031,43 +1034,12 @@ public class horarioCDBean implements Serializable {
 					}
 					resultado = false;
 				}
-				if (guardiaNoTrabajo.getGuaDiaTrabajoMiercoles() == true
-						&& df.format(date).equals("mié")) {
-					if (turno.getTurId() == (guardiaNoTrabajo.getHgGuardia()
-							.getGuaCasoTurno())) {
+				if (guardiaNoTrabajo.getGuaDiaTrabajoSabado() == true&& df.format(date).equals("sáb")) {
+					if(guardia.getGuaCedula().equals("1002988309")){
 						resultado = false;
-					} else {
-						resultado = true;
 						break;
 					}
-					resultado = false;
-				}
-				if (guardiaNoTrabajo.getGuaDiaTrabajoJueves() == true
-						&& df.format(date).equals("jue")) {
-					if (turno.getTurId() == (guardiaNoTrabajo.getHgGuardia()
-							.getGuaCasoTurno())) {
-						resultado = false;
-					} else {
-						resultado = true;
-						break;
-					}
-					resultado = false;
-				}
-				if (guardiaNoTrabajo.getGuaDiaTrabajoViernes() == true
-						&& df.format(date).equals("vie")) {
-					if (turno.getTurId() == (guardiaNoTrabajo.getHgGuardia()
-							.getGuaCasoTurno())) {
-						resultado = false;
-					} else {
-						resultado = true;
-						break;
-					}
-					resultado = false;
-				}
-				if (guardiaNoTrabajo.getGuaDiaTrabajoSabado() == true
-						&& df.format(date).equals("sáb")) {
-					if (turno.getTurId() == (guardiaNoTrabajo.getHgGuardia()
-							.getGuaCasoTurno())) {
+					if (turno.getTurId() == (guardiaNoTrabajo.getHgGuardia().getGuaCasoTurno())) {
 						resultado = false;
 					} else {
 						resultado = true;
@@ -1081,6 +1053,7 @@ public class horarioCDBean implements Serializable {
 		}
 		return resultado;
 	}
+
 
 	public Integer diasXFi_Ff(Date fechaf, Date fechai) {
 		Long diff = fechaf.getTime() - fechai.getTime();
@@ -1763,7 +1736,7 @@ public class horarioCDBean implements Serializable {
 			// + "resources/doc/descarga/");
 			HSSFWorkbook libro = new HSSFWorkbook();
 			HSSFSheet hoja = libro.createSheet("Datos");
-			llenarFila(ext, ext.get(0), hoja);
+			llenarFila(ext, ext.get(0), hoja,libro);
 			OutputStream out = new FileOutputStream(url
 					+ "DatosExcel_Horario.xls");
 			libro.write(out);
@@ -1789,7 +1762,9 @@ public class horarioCDBean implements Serializable {
 	 * @param row
 	 */
 	public void llenarFila(List<HgHorarioDet> listext, HgHorarioDet ext,
-			HSSFSheet hoja) {
+			HSSFSheet hoja, HSSFWorkbook libro) {
+		HSSFCellStyle style = libro.createCellStyle();
+		HSSFCellStyle style1 = libro.createCellStyle();
 		try {
 			HSSFRow row = hoja.createRow(0);
 			Integer filas = 1;
@@ -1804,24 +1779,14 @@ public class horarioCDBean implements Serializable {
 			HSSFCell celda1 = row.createCell(1);
 			celda1.setCellValue("FECHAS");
 			row = hoja.createRow(1);
-			for (Integer fecha = 0; fecha <= this.diasXFi_Ff(
-					managerhorario.horarioCabByID(
-							ext.getHgHorarioCab().getHcabId())
-							.getHcabFechaFin(),
-					managerhorario.horarioCabByID(
-							ext.getHgHorarioCab().getHcabId())
-							.getHcabFechaInicio()); fecha++) {
+			for (Integer fecha = 0; fecha <= this.diasXFi_Ff(managerhorario.horarioCabByID(
+							ext.getHgHorarioCab().getHcabId()).getHcabFechaFin(),managerhorario.horarioCabByID(
+							ext.getHgHorarioCab().getHcabId()).getHcabFechaInicio()); fecha++) {
 				celda0 = row.createCell(0);
 				celda0.setCellValue("");
-				if (filas <= this.diasXFi_Ff(
-						managerhorario.horarioCabByID(
-								ext.getHgHorarioCab().getHcabId())
-								.getHcabFechaFin(),
-						managerhorario.horarioCabByID(
-								ext.getHgHorarioCab().getHcabId())
-								.getHcabFechaInicio()) + 1) {
-					row.createCell(filas).setCellValue(
-							Funciones.dateToString(fechainicial));
+				if (filas <= this.diasXFi_Ff(managerhorario.horarioCabByID(ext.getHgHorarioCab().getHcabId()).getHcabFechaFin(),
+						managerhorario.horarioCabByID(ext.getHgHorarioCab().getHcabId()).getHcabFechaInicio()) + 1) {
+					row.createCell(filas).setCellValue(Funciones.dateToString(fechainicial));
 					fechainicial = addDays(fechainicial);
 					fechainicial = java.sql.Date.valueOf(new SimpleDateFormat(
 							"yyyy-MM-dd").format(fechainicial));
@@ -1831,36 +1796,36 @@ public class horarioCDBean implements Serializable {
 			Integer loop = 0;
 			for (HgGuardia guardiaMostrar : listGuardias) {
 				loop++;
-				fechainicial = java.sql.Date.valueOf(new SimpleDateFormat(
-						"yyyy-MM-dd").format(ext.getHdetFechaInicio()));
+				fechainicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(ext.getHdetFechaInicio()));
 				Date fechainicialfilasfecha = fechainicial;
 				row = hoja.createRow(columasguardias);
 				celda0 = row.createCell(0);
-				celda0.setCellValue(guardiaMostrar.getGuaNombre() + " "
-						+ guardiaMostrar.getGuaApellido());
+				celda0.setCellValue(guardiaMostrar.getGuaApellido()+" "+guardiaMostrar.getGuaNombre());
 				filasGuardiaFecha = 1;
 				for (Integer fecha = 1; fecha <= this.diasXFi_Ff(managerhorario.horarioCabByID(ext.getHgHorarioCab().getHcabId()).getHcabFechaFin(),
 						managerhorario.horarioCabByID(ext.getHgHorarioCab().getHcabId()).getHcabFechaInicio())+1; fecha++) {
 					List<HgHorarioDet> listdetalleguardia = managerhorario
-							.horarioDetByCedulaFecha(
-									guardiaMostrar.getGuaCedula(),
+							.horarioDetByCedulaFecha(guardiaMostrar.getGuaCedula(),
 									fechainicialfilasfecha);
-					row.createCell(filasGuardiaFecha).setCellValue("Libre");
+					
+					HSSFCell cell1 = row.createCell(filasGuardiaFecha);
+					style1.setFillForegroundColor(HSSFColor.AQUA.index);
+					style1.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND); 
+					cell1.setCellStyle(style1);
+					cell1.setCellValue("Libre");
+					
 					for (HgHorarioDet detalleGuardiaMostrar : listdetalleguardia) {
 						if (!detalleGuardiaMostrar.getHdetId().equals(null)) {
-							row.createCell(filasGuardiaFecha).setCellValue(
-									detalleGuardiaMostrar.getHgLugare()
-											.getLugNombre()
-											+ " - "
-											+ detalleGuardiaMostrar
-													.getHgTurno()
-													.getTurDescripcion());
+							HSSFCell cell = row.createCell(filasGuardiaFecha);
+							cell = row.createCell(filasGuardiaFecha);
+							style.setFillForegroundColor(HSSFColor.WHITE.index);
+							style.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+							cell.setCellStyle(style);
+							cell.setCellValue(detalleGuardiaMostrar.getHgLugare().getLugNombre()+ " - "+ detalleGuardiaMostrar.getHgTurno().getTurDescripcion());
 						}
 					}
 					fechainicialfilasfecha = addDays(fechainicialfilasfecha);
-					fechainicialfilasfecha = java.sql.Date
-							.valueOf(new SimpleDateFormat("yyyy-MM-dd")
-									.format(fechainicialfilasfecha));
+					fechainicialfilasfecha = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fechainicialfilasfecha));
 					filasGuardiaFecha++;
 				}
 				columasguardias++;

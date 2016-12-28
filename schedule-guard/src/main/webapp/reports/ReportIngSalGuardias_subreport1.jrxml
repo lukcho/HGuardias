@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReportIngSalGuardias_subreport1" printOrder="Horizontal" pageWidth="802" pageHeight="555" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="2a0643f8-9fdb-47d8-8258-452e38ae213b">
-	<property name="ireport.zoom" value="1.3310000000000206"/>
+	<property name="ireport.zoom" value="3.1384283767210515"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="pHcabId" class="java.lang.Integer">
@@ -30,7 +30,7 @@ order by numerofila,fecha,nombreturno,nombrelugar;]]>
 	<variable name="fecha_1" class="java.lang.Integer" resetType="Page" calculation="Count">
 		<variableExpression><![CDATA[$F{fecha}]]></variableExpression>
 	</variable>
-	<group name="TF">
+	<group name="TF" isStartNewPage="true" keepTogether="true">
 		<groupExpression><![CDATA[$F{nombreturno}]]></groupExpression>
 		<groupHeader>
 			<band height="43">
@@ -45,21 +45,21 @@ order by numerofila,fecha,nombreturno,nombrelugar;]]>
 					<text><![CDATA[APELLIDOS/NOMBRES]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="504" y="29" width="54" height="13" forecolor="#003399" uuid="df48a106-47bf-4645-948f-99a0b16fbd24"/>
+					<reportElement x="486" y="29" width="72" height="13" forecolor="#003399" uuid="df48a106-47bf-4645-948f-99a0b16fbd24"/>
 					<textElement textAlignment="Center">
 						<font size="10" isBold="true"/>
 					</textElement>
 					<text><![CDATA[FIRMA]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="311" y="29" width="65" height="13" forecolor="#003399" uuid="18fd066e-d1d1-41f9-8327-62d6bd9082fb"/>
+					<reportElement x="308" y="29" width="49" height="13" forecolor="#003399" uuid="18fd066e-d1d1-41f9-8327-62d6bd9082fb"/>
 					<textElement textAlignment="Center">
 						<font size="10" isBold="true"/>
 					</textElement>
 					<text><![CDATA[INGRESO]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="442" y="29" width="55" height="13" forecolor="#003399" uuid="eb52d4d0-20ec-402b-8152-e61054142845"/>
+					<reportElement x="439" y="29" width="40" height="13" forecolor="#003399" uuid="eb52d4d0-20ec-402b-8152-e61054142845"/>
 					<textElement textAlignment="Center">
 						<font size="10" isBold="true"/>
 					</textElement>
@@ -73,7 +73,7 @@ order by numerofila,fecha,nombreturno,nombrelugar;]]>
 					<text><![CDATA[PUESTO]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="559" y="29" width="127" height="13" forecolor="#003399" uuid="4b38cc4e-f7a3-463b-a389-51870b44ed03"/>
+					<reportElement x="571" y="29" width="115" height="13" forecolor="#003399" uuid="4b38cc4e-f7a3-463b-a389-51870b44ed03"/>
 					<textElement textAlignment="Center">
 						<font size="10" isBold="true"/>
 					</textElement>
@@ -86,20 +86,20 @@ order by numerofila,fecha,nombreturno,nombrelugar;]]>
 					<reportElement x="124" y="28" width="1" height="14" uuid="a9f7c889-5bb4-4d1d-be1c-58fc9ac510ff"/>
 				</line>
 				<line>
-					<reportElement x="377" y="28" width="1" height="14" uuid="b0b785a3-16fc-44ec-b3ad-f28baa8a73a8"/>
+					<reportElement x="357" y="28" width="1" height="14" uuid="b0b785a3-16fc-44ec-b3ad-f28baa8a73a8"/>
 				</line>
 				<line>
 					<reportElement x="438" y="28" width="1" height="14" uuid="f81709cd-de28-4327-b0f2-bec37bf397d9"/>
 				</line>
 				<line>
-					<reportElement x="558" y="28" width="1" height="14" uuid="227eb4be-4529-4da0-9066-7af789bcba93"/>
+					<reportElement x="570" y="28" width="1" height="14" uuid="227eb4be-4529-4da0-9066-7af789bcba93"/>
 				</line>
 				<line>
 					<reportElement x="687" y="28" width="1" height="15" uuid="e66afaf9-bcea-41b0-b13a-b3b141fad20d"/>
 				</line>
 				<staticText>
-					<reportElement x="385" y="29" width="49" height="13" forecolor="#003399" uuid="6bd754c8-6a27-43c1-a985-da1f1401741f"/>
-					<textElement>
+					<reportElement x="358" y="29" width="80" height="13" forecolor="#003399" uuid="6bd754c8-6a27-43c1-a985-da1f1401741f"/>
+					<textElement textAlignment="Center">
 						<font size="10" isBold="true"/>
 					</textElement>
 					<text><![CDATA[FIRMA]]></text>
@@ -136,7 +136,7 @@ order by numerofila,fecha,nombreturno,nombrelugar;]]>
 					<reportElement x="307" y="28" width="1" height="14" uuid="1547355e-a176-4a58-9abd-b21a57bfc8c7"/>
 				</line>
 				<line>
-					<reportElement x="500" y="28" width="1" height="14" uuid="ac2e1838-65cd-4a92-a3c9-80763831b089"/>
+					<reportElement x="485" y="28" width="1" height="14" uuid="ac2e1838-65cd-4a92-a3c9-80763831b089"/>
 				</line>
 			</band>
 		</groupHeader>
@@ -181,16 +181,16 @@ order by numerofila,fecha,nombreturno,nombrelugar;]]>
 				<reportElement x="124" y="0" width="1" height="21" uuid="640c7627-a99b-4ad7-9957-1779f22aedc9"/>
 			</line>
 			<line>
-				<reportElement x="377" y="0" width="1" height="21" uuid="1dc15dc0-169c-42b8-91af-fd680adcb3de"/>
+				<reportElement x="357" y="0" width="1" height="21" uuid="1dc15dc0-169c-42b8-91af-fd680adcb3de"/>
 			</line>
 			<line>
 				<reportElement x="438" y="0" width="1" height="21" uuid="92ce7632-d68d-442e-a27e-748adacc374d"/>
 			</line>
 			<line>
-				<reportElement x="500" y="0" width="1" height="21" uuid="e9e35f01-5db6-45bb-8351-c1a7038c5be2"/>
+				<reportElement x="485" y="0" width="1" height="21" uuid="e9e35f01-5db6-45bb-8351-c1a7038c5be2"/>
 			</line>
 			<line>
-				<reportElement x="558" y="0" width="1" height="21" uuid="1d2d3ff1-6e3b-4abd-b1e3-f48bafac3c1b"/>
+				<reportElement x="570" y="0" width="1" height="21" uuid="1d2d3ff1-6e3b-4abd-b1e3-f48bafac3c1b"/>
 			</line>
 			<line>
 				<reportElement x="687" y="0" width="1" height="21" uuid="093bdfd2-0344-487a-b14b-93de5e003979"/>

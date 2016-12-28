@@ -587,6 +587,7 @@ public class GuardiaBean implements Serializable {
 			guardia_casonocturno = guardia.getGuaCasoNocturno();
 			listaGuardiaNoTrabaja=managergest.findGuardiaByIdGuardiaNT(guardia_id);
 			edicion = true;
+			managergest.asignarTurno(guardia.getGuaCasoTurno());
 			ediciontipo = false;
 			edicionbuscar = false;
 			if(guardia_chofer==true){

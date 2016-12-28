@@ -321,7 +321,7 @@ public class ManagerGestion {
 	 * @throws Exception
 	 */
 	public void editarGuardia(String gua_cedid, String gua_nombre,
-			String gua_apellido, Date gua_fechanac, String gue_ciudad,
+			String gua_apellido, Date gua_fechanac, String gua_ciudad,
 			String gua_sexo, String gua_telefono, String gua_celular,
 			String gua_correo, String gua_direccion, boolean gua_cctv, boolean guardia_CentroEmprendimiento,
 			boolean gua_motorizado, boolean gua_chofer,
@@ -334,7 +334,7 @@ public class ManagerGestion {
 		gua.setGuaNombre(gua_nombre);
 		gua.setGuaApellido(gua_apellido);
 		gua.setGuaFechanac(gua_fechanac);
-		gua.setGuaCiudad(gue_ciudad);
+		gua.setGuaCiudad(gua_ciudad);
 		gua.setGuaSexo(gua_sexo);
 		gua.setGuaTelefono(gua_telefono);
 		gua.setGuaCelular(gua_celular);
@@ -796,7 +796,7 @@ public class ManagerGestion {
 						+ "o.gua_caso_estudio, o.gua_caso_nocturno from hg_guardias o where "
 						+ "o.gua_estado='A' and o.gua_cedula not in "
 						+ "( select p.gua_cedula from hg_horario_det p where p.hdet_fecha_inicio = '"
-						+ finicial + "') order by o.gua_cctv desc, o.gua_control_accesos desc ,o.gua_centro_emprendimiento desc,o.gua_caso_estudio desc,o.gua_caso_nocturno desc");
+						+ finicial + "') order by o.gua_caso_estudio desc, o.gua_cctv desc, o.gua_control_accesos desc ,o.gua_centro_emprendimiento desc,o.gua_caso_nocturno desc");
 		l = ObjectToClass1(lista);
 		return l;
 	}
@@ -851,7 +851,7 @@ public class ManagerGestion {
 						+ "'  and p.hdet_fecha_inicio = '"
 						+ finicial
 						+ "' "
-						+ " ) order by o.gua_cctv desc, o.gua_control_accesos desc ,o.gua_centro_emprendimiento desc,o.gua_caso_estudio desc,o.gua_caso_nocturno desc )");
+						+ " ) order by o.gua_caso_estudio desc, o.gua_cctv desc, o.gua_control_accesos desc ,o.gua_centro_emprendimiento desc,o.gua_caso_nocturno desc ) ");
 		l = ObjectToClass1(lista);
 		return l;
 	}
@@ -924,7 +924,7 @@ public class ManagerGestion {
 						+ "o.gua_caso_estudio, o.gua_caso_nocturno from hg_guardias o where "
 						+ "o.gua_estado='A' and o.gua_cedula in "
 						+ "( select p.gua_cedula from hg_horario_det p where p.hdet_fecha_inicio = '"
-						+ finicial + "') order by o.gua_cctv desc, o.gua_control_accesos desc ,o.gua_centro_emprendimiento desc,o.gua_caso_estudio desc,o.gua_caso_nocturno desc ");
+						+ finicial + "') order by o.gua_caso_estudio desc, o.gua_cctv desc, o.gua_control_accesos desc ,o.gua_centro_emprendimiento desc,o.gua_caso_nocturno desc");
 		l = ObjectToClass1(lista);
 		return l;
 	}
