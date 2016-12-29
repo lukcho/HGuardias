@@ -169,15 +169,10 @@ public class ManagerHorario {
 	 */
 	public Integer findNumDiasxGuardia(HgGuardia g, Date fecha_inicial,
 			Date fecha5dias) {
-		Date finicial = java.sql.Date
-				.valueOf(new SimpleDateFormat("yyyy-MM-dd")
-						.format(fecha_inicial));
-		Date finicial5dias = java.sql.Date.valueOf(new SimpleDateFormat(
-				"yyyy-MM-dd").format(fecha5dias));
+		Date finicial = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fecha_inicial));
+		Date finicial5dias = java.sql.Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(fecha5dias));
 		return mDAO.findWhere(
-				HgHorarioDet.class,
-				" o.hgGuardia.guaCedula = '" + g.getGuaCedula()
-						+ "'  and o.hdetFechaInicio between '" + finicial5dias
+				HgHorarioDet.class," o.hgGuardia.guaCedula = '" + g.getGuaCedula()+ "'  and o.hdetFechaInicio between '" + finicial5dias
 						+ "' and  '" + finicial + "'  ", null).size();
 	}
 

@@ -274,7 +274,7 @@
 					<b:column span="3" style="margin-bottom:10px">
 						<h:selectOneMenu id="turn" styleClass="form-control"
 							value="#{guardiaBean.guardia_casoturno}">
-							<f:selectItem itemLabel="Selección Turno" itemValue="" />
+							<f:selectItem itemLabel="Selección Turno" itemValue="-1" />
 							<f:selectItems value="#{guardiaBean.listaTurno}" />
 							<f:ajax listener="#{guardiaBean.asignarTurno()}" />
 						</h:selectOneMenu>

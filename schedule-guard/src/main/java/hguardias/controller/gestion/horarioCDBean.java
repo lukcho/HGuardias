@@ -720,8 +720,8 @@ public class horarioCDBean implements Serializable {
 						if ((managerhorario.existeGuardia(cab_id, fechainicial,guardia.getGuaCedula()) != 1)) {
 							if (managerhorario.trabajoDiaAnterior(guardia,restDays(fechainicial)) == 1) {
 								vecestrabajo = managerhorario.findNumDiasxGuardia(guardia,restDays(fechainicial),rest5Days(restDays(fechainicial)));
-							} else if (managerhorario.trabajoDiaAnterior(guardia, restDays(restDays(fechainicial))) == 1) {vecestrabajo = managerhorario
-										.findNumDiasxGuardia(guardia,restDays(restDays(fechainicial)),rest5Days(restDays(restDays(fechainicial))));
+							} else if (managerhorario.trabajoDiaAnterior(guardia, restDays(restDays(fechainicial))) == 1) {
+								vecestrabajo = managerhorario.findNumDiasxGuardia(guardia,restDays(restDays(fechainicial)),rest5Days(restDays(restDays(fechainicial))));
 							}
 							if (vecestrabajo < diasTrabajados) {
 								// if(managerhorario.trabajoSemanaAnteriorLugar(fechainicial,

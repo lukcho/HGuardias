@@ -770,6 +770,7 @@ public class ManagerGestion {
 	 */
 	public HgTurno asignarTurno(Integer turno_id) {
 		try {
+			if(turno_id != null)
 			hg_turno = this.turnoByID(turno_id);
 		} catch (Exception e) {
 			e.printStackTrace();
