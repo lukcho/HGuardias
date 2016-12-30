@@ -185,9 +185,12 @@
 				<br />
 				<b:row>
 					<b:column span="2">
-						<h:outputLabel value="Maneja CCTV:* " for="cctv" />
+						<h:outputLabel value="Maneja"/>
 					</b:column>
-					<b:column span="3" style="margin-bottom:10px">
+					<b:column span="2">
+						<h:outputLabel value="CCTV:" for="cctv" />
+					</b:column>
+					<b:column span="1" style="margin-bottom:10px">
 						<p:selectOneRadio id="cctv" value="#{guardiaBean.guardia_CCTV}"
 							style="margin-top:10px">
 							<f:selectItem itemLabel="SI" itemValue="true" />
@@ -195,7 +198,7 @@
 						</p:selectOneRadio>
 					</b:column>
 					<b:column span="2">
-						<h:outputLabel value="Maneja Control de accesos:* " for="cntrl" />
+						<h:outputLabel value="Control de accesos:" for="cntrl" />
 					</b:column>
 					<b:column span="3" style="margin-bottom:10px">
 						<p:selectOneRadio id="cntrl"
@@ -206,10 +209,10 @@
 						</p:selectOneRadio>
 					</b:column>
 				</b:row>
-				<br />
 				<b:row>
+					<b:column span="2"></b:column>
 					<b:column span="2">
-						<h:outputLabel value="Maneja Centro de Emprendimiento:* " for="cenem" />
+						<h:outputLabel value="Centro de Emprendimiento:" for="cenem" />
 					</b:column>
 					<b:column span="3" style="margin-bottom:10px">
 						<p:selectOneRadio id="cenem"

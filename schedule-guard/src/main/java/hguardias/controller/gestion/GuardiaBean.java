@@ -466,7 +466,7 @@ public class GuardiaBean implements Serializable {
 						guardia_controlaccesos,
 						guardia_casoestudio, guardia_casonocturno,
 						guardia_estadoCivil, guardia_tipoSangre,
-						guardia_estado.trim());
+						guardia_estado.trim(),guardia_casoturno);
 				getListaguardias().clear();
 				getListaguardias().addAll(managergest.findAllGuardias());
 				Mensaje.crearMensajeINFO("Actualizado - Modificado");
@@ -487,7 +487,7 @@ public class GuardiaBean implements Serializable {
 							guardia_motorizado, guardia_chofer,guardia_licencia_chofer,
 							guardia_controlaccesos,
 							guardia_casoestudio, guardia_casonocturno,
-							guardia_estadoCivil, guardia_tipoSangre);
+							guardia_estadoCivil, guardia_tipoSangre, guardia_casoturno);
 					Mensaje.crearMensajeINFO("Registrado - Creado");
 					getListaguardias().clear();
 					getListaguardias().addAll(managergest.findAllGuardias());

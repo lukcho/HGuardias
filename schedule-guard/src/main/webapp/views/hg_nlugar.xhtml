@@ -56,20 +56,22 @@
 				</b:row>
 				<b:row>
 					<b:column span="2">
-						<h:outputLabel value="Contiene CCTV:* " for="cctv" />
+						<h:outputLabel value="Requiere especialistas"/>
 					</b:column>
-					<b:column span="4" id="cctv" style="margin-bottom:10px">
+					<b:column span="2">
+						<h:outputLabel value="CCTV:" for="cctv" />
+					</b:column>
+					<b:column span="2" id="cctv" style="margin-bottom:10px">
 						<p:selectOneRadio value="#{lugarBean.lug_CCTV}"
 							style="margin-top:10px">
 							<f:selectItem itemLabel=" SI" itemValue="true" />
 							<f:selectItem itemLabel=" NO" itemValue="false" />
 						</p:selectOneRadio>
 					</b:column>
-					<b:column span="6" />
 					<b:column span="2">
-						<h:outputLabel value="Contiene control de accesos:* " for="cntrl" />
+						<h:outputLabel value="Control de Accesos:" for="cntrl" />
 					</b:column>
-					<b:column span="4" id="cntrl" style="margin-bottom:10px">
+					<b:column span="1" id="cntrl" style="margin-bottom:10px">
 						<p:selectOneRadio value="#{lugarBean.lug_controlaccs}"
 							style="margin-top:10px">
 							<f:selectItem itemLabel=" SI" itemValue="true" />
@@ -77,12 +79,12 @@
 						</p:selectOneRadio>
 					</b:column>
 				</b:row>
-				<br />
 				<b:row>
-					<b:column span="3">
-						<h:outputLabel value="Contiene Centro de Emprendimiento:* " for="centroemp" />
+					<b:column span="2"></b:column>
+					<b:column span="2">
+						<h:outputLabel value="Centro de Emprendimiento:" for="centroemp" />
 					</b:column>
-					<b:column span="4" id="centroemp" style="margin-bottom:10px">
+					<b:column span="1" id="centroemp" style="margin-bottom:10px">
 						<p:selectOneRadio value="#{lugarBean.lug_CentroEmprendimiento}"
 							style="margin-top:10px">
 							<f:selectItem itemLabel=" SI" itemValue="true" />

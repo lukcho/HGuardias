@@ -273,7 +273,7 @@ public class ManagerGestion {
 			String gua_licencia_chofer, boolean gua_controlaccs,
 			boolean gua_casoestudio,
 			boolean gua_casonocturno, String gua_EstadoCivil,
-			String gua_TipoSangre) throws Exception {
+			String gua_TipoSangre, Integer casoturno) throws Exception {
 
 		HgGuardia gua = new HgGuardia();
 		gua.setGuaCedula(gua_cedid);
@@ -301,6 +301,8 @@ public class ManagerGestion {
 			gua.setGuaTipoLicenciaChofer(null);
 		}
 		gua.setGuaControlAccesos(gua_controlaccs);
+		hg_turno =	asignarTurno(casoturno);
+		if(hg_turno != null)
 		gua.setGuaCasoTurno(hg_turno.getTurId());
 		gua.setGuaCasoEstudio(gua_casoestudio);
 		gua.setGuaCasoNocturno(gua_casonocturno);
@@ -328,7 +330,7 @@ public class ManagerGestion {
 			String gua_licencia_chofer, boolean gua_controlaccs,
 			boolean gua_casoestudio,
 			boolean gua_casonocturno, String gua_EstadoCivil,
-			String gua_TipoSangre, String gua_estado) throws Exception {
+			String gua_TipoSangre, String gua_estado,Integer casoturno) throws Exception {
 
 		HgGuardia gua = this.guardiaByID(gua_cedid);
 		gua.setGuaNombre(gua_nombre);
@@ -355,6 +357,8 @@ public class ManagerGestion {
 			gua.setGuaTipoLicenciaChofer(null);
 		}
 		gua.setGuaControlAccesos(gua_controlaccs);
+		hg_turno =	asignarTurno(casoturno);
+		if(hg_turno != null)
 		gua.setGuaCasoTurno(hg_turno.getTurId());
 		gua.setGuaCasoEstudio(gua_casoestudio);
 		gua.setGuaCasoNocturno(gua_casonocturno);
